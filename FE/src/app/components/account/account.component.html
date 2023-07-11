@@ -1,0 +1,92 @@
+<main>
+
+  <section class="flex-center flex-col">
+
+    <div class="modal mt-44">
+
+      <div class="flex-center w-full">
+        <div class="space-y-6 flex-center flex-col w-full">
+          <h1 class="text-lg font-bold">Modifica i tuoi dati</h1>
+          <div class="flex justify-center items-center gap-3 w-full">
+            <div class="flex-center flex-col w-full space-y-2">
+              <div class="w-full">
+                <label for="nome" class="label-form">Nome</label>
+                <input [(ngModel)]="userData.nome" name="nome" type="text" class="input-form" required />
+              </div>
+
+              <div class="w-full">
+                <label for="cognome" class="label-form">Cognome</label>
+                <input [(ngModel)]="userData.cognome" class='input-form' name="cognome" type="text" class="input-form"
+                  required />
+              </div>
+
+              <div class="w-full">
+                <label for="email" class="label-form">Email</label>
+                <input [(ngModel)]="userData.email" class='input-form' name="email" type="email" class="input-form"
+                  required />
+              </div>
+
+              <div class="w-full">
+                <label for="username" class="label-form">Username</label>
+                <input [(ngModel)]="userData.username" class='input-form' name="username" type="text" class="input-form"
+                  required />
+              </div>
+            </div>
+
+            <div class="flex-center flex-col w-full space-y-2">
+              <div class=" w-full">
+                <label for="vecchia_password" class="label-form">Vecchia password</label>
+                <div class="flex-center flex-col relative">
+                  <input [(ngModel)]="userData.vecchia_password" name="password"
+                    [type]="!showVecchiaPassword ? 'password' : 'text'" class='input-form' required>
+                  <span (click)="toggleShowPassword('vecchia')"
+                    class="material-icons right-2 absolute text-xl text-gray-900 cursor-pointer">
+                    {{!showVecchiaPassword ? 'visibility_off' : 'visibility'}}
+                  </span>
+                </div>
+              </div>
+
+              <div class="w-full">
+                <label for="password" class="label-form">Nuova password</label>
+                <div class="flex-center flex-col relative">
+                  <input [(ngModel)]="userData.password" name="password" [type]="!showPassword ? 'password' : 'text'"
+                    class='input-form' required>
+                  <span (click)="toggleShowPassword('no-repeat')"
+                    class="material-icons right-2 absolute text-xl text-gray-900 cursor-pointer">
+                    {{!showPassword ? 'visibility_off' : 'visibility'}}
+                  </span>
+                </div>
+              </div>
+
+              <div class="w-full">
+                <label for="ripeti_password" class="label-form">Ripeti nuova password</label>
+                <div class="flex-center flex-col relative">
+                  <input [(ngModel)]="ripeti_password" name="ripeti_password"
+                    [type]="!showRepeatPassword ? 'password' : 'text'" class='input-form' required />
+                  <span (click)="toggleShowPassword('repeat')"
+                    class="material-icons right-2 absolute text-xl text-gray-900 cursor-pointer">
+                    {{!showRepeatPassword ? 'visibility_off' : 'visibility'}}
+                  </span>
+                </div>
+                <ng-container
+                  *ngIf="ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== '')">
+                  <p class="text-xs text-red-600 absolute">
+                    {{ripetiPasswordNotOk() ? 'Le due password non corrispondono!' : 'Vecchia e nuova password uguali!'}}
+                  </p>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <div class="w-full">
+            <button type="submit"
+              [ngClass]="(ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== '')) ? 'btn-submit cursor-pointer opacity-50' : 'btn-submit cursor-pointer'"
+              [disabled]="(ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== ''))"
+              (click)="updateUserData()">Modifica</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</main>

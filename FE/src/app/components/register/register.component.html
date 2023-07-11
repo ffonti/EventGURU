@@ -1,0 +1,96 @@
+<main class="h-screen w-screen">
+
+  <section class="flex-center flex-col h-full w-full bg-slate-50">
+
+    <div class="modal">
+
+      <!-- Logo -->
+      <div>
+        <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+          alt="EventGURU">
+        <h2 class="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          Registrazione
+        </h2>
+      </div>
+
+      <!-- Card centerata -->
+      <div class="mt-5 flex-center w-full">
+        <form [formGroup]="registerForm" (ngSubmit)="register()" class="space-y-6 flex-center flex-col w-full">
+          <div class="flex justify-center items-center gap-3 w-full">
+            <div class="flex-center flex-col w-full space-y-2">
+              <div class="w-full">
+                <label for="nome" class="label-form">Nome</label>
+                <input [ngClass]="emptyAndTouched('nome') ? 'input-form-red' : 'input-form'" formControlName="nome"
+                  name="nome" type="text" class="input-form" required />
+              </div>
+
+              <div class="w-full">
+                <label for="cognome" class="label-form">Cognome</label>
+                <input [ngClass]="emptyAndTouched('cognome') ? 'input-form-red' : 'input-form'"
+                  formControlName="cognome" name="cognome" type="text" class="input-form" required />
+              </div>
+
+              <div class="w-full">
+                <label for="email" class="label-form">Email</label>
+                <input [ngClass]="emptyAndTouched('email') ? 'input-form-red' : 'input-form'" formControlName="email"
+                  name="email" type="email" class="input-form" required />
+              </div>
+            </div>
+
+            <div class="flex-center flex-col w-full space-y-2">
+              <div class="w-full">
+                <label for="username" class="label-form">Username</label>
+                <input [ngClass]="emptyAndTouched('username') ? 'input-form-red' : 'input-form'"
+                  formControlName="username" name="username" type="text" class="input-form" required />
+              </div>
+
+              <div class="w-full">
+                <label for="password" class="label-form">Password</label>
+                <div class="flex-center flex-col relative">
+                  <input [(ngModel)]="password" formControlName="password" name="password"
+                    [type]="!showPassword ? 'password' : 'text'"
+                    [ngClass]="emptyAndTouched('password') ? 'input-form-red' : 'input-form'" required>
+                  <span (click)="toggleShowPassword('no-repeat')"
+                    class="material-icons right-2 absolute text-xl text-gray-900 cursor-pointer">
+                    {{!showPassword ? 'visibility_off' : 'visibility'}}
+                  </span>
+                </div>
+              </div>
+
+              <div class="w-full">
+                <label for="ripeti_password" class="label-form">Ripeti password</label>
+                <div class="flex-center flex-col relative">
+                  <input [(ngModel)]="ripeti_password" formControlName="ripeti_password" name="ripeti_password"
+                    [type]="!showRepeatPassword ? 'password' : 'text'"
+                    [ngClass]="(ripetiPasswordNotOk() || emptyAndTouched('ripeti_password')) ? 'input-form-red' : 'input-form'"
+                    required />
+                  <span (click)="toggleShowPassword('repeat')"
+                    class="material-icons right-2 absolute text-xl text-gray-900 cursor-pointer">
+                    {{!showRepeatPassword ? 'visibility_off' : 'visibility'}}
+                  </span>
+                </div>
+                <ng-container *ngIf="ripetiPasswordNotOk()">
+                  <p class="text-xs text-red-600 absolute">Le due password non corrispondono!</p>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3 w-full flex-center flex-col">
+            <div class="w-[45%]">
+              <button type="submit"
+                [ngClass]="registerForm.valid ? 'btn-submit cursor-pointer' : 'btn-submit opacity-50 cursor-default'">Registrati</button>
+            </div>
+
+            <div>
+              <p class="label-form">
+                Hai già un account?
+                <a routerLink="/login" class="font-medium hover:underline text-indigo-600">Accedi</a>
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>

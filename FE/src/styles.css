@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@import "ngx-toastr/toastr";
+
+.flex-center {
+  @apply flex justify-center items-center;
+}
+
+.btn {
+  @apply py-2 px-4 rounded-sm;
+}
+
+.btn-white-default {
+  @apply bg-white text-blue-700 border-2 border-blue-700 hover:bg-blue-700/10;
+}
