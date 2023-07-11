@@ -1,2 +1,4 @@
 .idea
+
+#per password db
 ./BE/src/main/resources/application.yml
