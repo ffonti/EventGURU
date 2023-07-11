@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/EventGURU
-    username:
-    password:
+    username: postgres
+    password: FabFonti!2002?
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
