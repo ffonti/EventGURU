@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * @- Model che rappresenta l'utente sul db.
- * @- Implementa UserDetails, un'interfaccia di Spring Security che espone una serie di metodi utili
+ * @- Implementa UserDetails, un'interfaccia di Spring Security che espone una serie di metodi utili per la sicurezza.
  */
 @Data
 @Builder
@@ -88,7 +88,7 @@ public class User implements UserDetails {
      */
     @Override
     public boolean isAccountNonExpired() {
-        return true; //Non è stata gestita la scadenza del token, quindi ritorna "true" a prescindere
+        return true; //Non è stata gestita la scadenza del token, quindi ritorna "true" a prescindere.
     }
 
     /**
@@ -97,7 +97,7 @@ public class User implements UserDetails {
      */
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return true; //Non è stato gestito il blocco, quindi ritorna "true" a prescindere.
     }
 
     /**
@@ -106,7 +106,7 @@ public class User implements UserDetails {
      */
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return true; //Non è stata gestita la scadenza delle credenziali, quindi ritorna "true" a prescindere.
     }
 
     /**
@@ -115,6 +115,6 @@ public class User implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-        return true;
+        return true; //Non è stata gestita l'abilitazione dell'utente, quindi ritorna "true" a prescindere.
     }
 }

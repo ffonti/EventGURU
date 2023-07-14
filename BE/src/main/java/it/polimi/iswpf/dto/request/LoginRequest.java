@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
+@Builder //TODO implementare da zero il pattern
 @AllArgsConstructor
 public class LoginRequest {
 

@@ -13,5 +13,6 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: true
 server:
   port: 8080

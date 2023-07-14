@@ -1,10 +1,11 @@
-package it.polimi.iswpf.service;
+package it.polimi.iswpf.service.implementation;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import it.polimi.iswpf.service._interface.JwtService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import java.util.function.Function;
  * Service per gestire tutti i metodi inerenti al jwt.
  */
 @Service
-public class JwtService {
+public class JwtServiceImpl implements JwtService {
 
     //Stringa che elabora una chiave segreta per codificare e decodificare il token.
     private static final String SECRET_KEY = "4D30457130736F38466A626A6251534F6D61366E31674F7356394B395031676A";
@@ -28,6 +29,7 @@ public class JwtService {
      * @param token stringa jwt.
      * @return username dell'utente in sessione.
      */
+    @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject); //getSubject restituisce l'attributo univoco dell'utente.
     }
@@ -39,6 +41,7 @@ public class JwtService {
      * @return il singolo dato richiesto codificato nel jwt.
      * @param <T> tipo del dato che voglio estrarre dal jwt.
      */
+    @Override
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token); //Estraggo tutti i dati codificati nel token.
         //Estraggo il singolo dato (generico) dall'insieme di tutti i dati codificati nel token.
@@ -53,6 +56,7 @@ public class JwtService {
      * @param userDetails dati dell'utente in sessione.
      * @return stringa jwt.
      */
+    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
@@ -63,6 +67,7 @@ public class JwtService {
      * @param userDetails dati dell'utente in sessione.
      * @return stringa jwt.
      */
+    @Override
     public String generateToken(
         Map<String, Object> extraClaims,
         UserDetails userDetails
@@ -84,6 +89,7 @@ public class JwtService {
      * @param userDetails dati dell'utente in sessione.
      * @return "true" se il token è valido, "false" se il token non è valido.
      */
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return ((username.equals(userDetails.getUsername())) && !isTokenExpired(token));

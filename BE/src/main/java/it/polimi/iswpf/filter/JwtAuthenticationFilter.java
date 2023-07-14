@@ -1,6 +1,6 @@
 package it.polimi.iswpf.filter;
 
-import it.polimi.iswpf.service.JwtService;
+import it.polimi.iswpf.service.implementation.JwtServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final JwtServiceImpl jwtServiceImpl;
     private final UserDetailsService userDetailsService;
 
     /**
@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring("Bearer ".length()); //Estraggo l'effettivo jwt dall'header.
-        username = jwtService.extractUsername(jwt); //Estraggo l'username codificato nel jwt.
+        username = jwtServiceImpl.extractUsername(jwt); //Estraggo l'username codificato nel jwt.
 
         /* Se l'attributo univoco esiste e l'utente non è autenticato, controllo
         se ho un utente sul db con questo username. */
@@ -65,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             //Controllo se il token è valido.
-            if(jwtService.isTokenValid(jwt, userDetails)) {
+            if(jwtServiceImpl.isTokenValid(jwt, userDetails)) {
                 //Aggiorno il token con i dati dell'utente.
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
