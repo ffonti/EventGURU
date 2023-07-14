@@ -11,7 +11,23 @@ import lombok.NonNull;
  * Implementazione -> {@link AuthenticationServiceImpl}.
  */
 public interface AuthenticationService {
-    void register(@NonNull RegisterRequest request) throws Exception;
 
+    /**
+     * Metodo per la registrazione. Chiamando la repository, viene prima controllato se
+     * esiste già un utente registrato con quell'username, poi viene controllato che ogni
+     * campo non sia vuoto, poi viene salvato l'utente sul database e infine viene chiamato
+     * di nuovo il database per controllare se l'utente è stato salvato correttamente.
+     * @param request DTO con i dati per la registrazione -> {@link RegisterRequest }.
+     * @throws Exception eccezione generale causata dal client.
+     */
+    void register(@NonNull RegisterRequest request) throws Exception; //TODO custom exceptions
+
+    /**
+     * Metodo per il login. Viene chiamato l'authenticationManager a cui vengono passate
+     * le credenziali per eseguire il login e gestirà anche le eccezioni. Successivamente
+     * viene preso l'utente dal database con quell'username così da codificare i dati nel jwt.
+     * @param request DTO con i dati per il login -> {@link LoginRequest }.
+     * @return DTO con la stringa jwt -> {@link LoginResponse }.
+     */
     LoginResponse login(@NonNull LoginRequest request);
 }

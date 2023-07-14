@@ -1,11 +1,9 @@
 package it.polimi.iswpf.dto.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
-@Builder //TODO implementare da zero il pattern
+@Getter
 @AllArgsConstructor
 public class LoginRequest {
 

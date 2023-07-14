@@ -17,7 +17,7 @@ import java.util.List;
  * @- Implementa UserDetails, un'interfaccia di Spring Security che espone una serie di metodi utili per la sicurezza.
  */
 @Data
-@Builder
+@Builder //TODO builder da zero
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
