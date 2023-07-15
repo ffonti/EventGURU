@@ -27,7 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtServiceImpl jwtServiceImpl;
+    private final JwtServiceImpl jwtService;
     private final AuthenticationManager authenticationManager;
 
     /**
@@ -99,7 +99,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow();
 
         //Codifico i dati dell'utente nel jwt.
-        String jwt = jwtServiceImpl.generateToken(user);
+        String jwt = jwtService.generateToken(user);
 
         return new LoginResponse(jwt);
     }

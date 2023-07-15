@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import it.polimi.iswpf.service._interface.JwtService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,8 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
 
     //Stringa che elabora una chiave segreta per codificare e decodificare il token.
-    private static final String SECRET_KEY = "4D30457130736F38466A626A6251534F6D61366E31674F7356394B395031676A";
+    @Value("${security.secret-key}")
+    private String secretKey;
 
     /**
      * Metodo usato nel filter, semplicemente estrae l'username codificato nel jwt.
@@ -133,7 +135,7 @@ public class JwtServiceImpl implements JwtService {
      * @return la chiave codificata, con cui gestire il jwt.
      */
     private Key getSigninKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY); //Decodifico la chiave secreta in base 64.
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey); //Decodifico la chiave segreta in base 64.
         /* Viene codificata la chiave secondo un tipo di algoritmo di hash a chiave costruito a partire
         dalla funzione di hash SHA-256 e utilizzato come Hash-based Message Authentication Code (HMAC). */
         return Keys.hmacShaKeyFor(keyBytes);

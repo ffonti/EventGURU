@@ -26,7 +26,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtServiceImpl jwtServiceImpl;
+    private final JwtServiceImpl jwtService;
     private final UserDetailsService userDetailsService;
 
     /**
@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring("Bearer ".length()); //Estraggo l'effettivo jwt dall'header.
-        username = jwtServiceImpl.extractUsername(jwt); //Estraggo l'username codificato nel jwt.
+        username = jwtService.extractUsername(jwt); //Estraggo l'username codificato nel jwt.
 
         /* Se l'attributo univoco esiste e l'utente non è autenticato, controllo
         se ho un utente sul db con questo username. */
@@ -65,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             //Controllo se il token è valido.
-            if(jwtServiceImpl.isTokenValid(jwt, userDetails)) {
+            if(jwtService.isTokenValid(jwt, userDetails)) {
                 //Aggiorno il token con i dati dell'utente.
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,

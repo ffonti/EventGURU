@@ -14,5 +14,12 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: true
+    generate-ddl: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 server:
   port: 8080
+  error:
+    include-message: always
+security:
+  secret-key: "4D30457130736F38466A626A6251534F6D61366E31674F7356394B395031676A"
