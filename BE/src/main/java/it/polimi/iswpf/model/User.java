@@ -1,10 +1,8 @@
 package it.polimi.iswpf.model;
 
+import it.polimi.iswpf.builder.UserBuilder;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,9 +15,7 @@ import java.util.List;
  * @- Implementa UserDetails, un'interfaccia di Spring Security che espone una serie di metodi utili per la sicurezza.
  */
 @Data
-@Builder //TODO builder da zero
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(
         name = "_user",
@@ -56,6 +52,22 @@ public class User implements UserDetails {
     private Ruolo ruolo;
 
     private boolean iscritto;
+
+    /**
+     * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
+     * settati con il builder (viene eseguito alla chiamata del metodo build() di {@link UserBuilder}).
+     * @param builder dati appena settati tramite il pattern.
+     */
+    public User(@NonNull UserBuilder builder) {
+        this.id = builder.getId();
+        this.nome = builder.getNome();
+        this.cognome = builder.getCognome();
+        this.email = builder.getEmail();
+        this.username = builder.getUsername();
+        this.password = builder.getPassword();
+        this.ruolo = builder.getRuolo();
+        this.iscritto = builder.isIscritto();
+    }
 
     /**
      * In base al ruolo, viene generata una lista delle funzionalità concesse.

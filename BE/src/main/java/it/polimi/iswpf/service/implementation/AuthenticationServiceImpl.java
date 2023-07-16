@@ -1,8 +1,10 @@
 package it.polimi.iswpf.service.implementation;
 
+import it.polimi.iswpf.builder.UserBuilder;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
+import it.polimi.iswpf.exception.ApiRequestException;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
@@ -56,8 +58,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //Controllo che tutti i campi non siano vuoti.
         checkUserData(List.of(nome, cognome, email, username, password));
 
-        User user = User
-                .builder()
+        //Creo un'istanza di user, tramite il builder implementato da zero.
+        User user = new UserBuilder()
                 .nome(nome)
                 .cognome(cognome)
                 .email(email)
