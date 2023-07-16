@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import it.polimi.iswpf.service._interface.JwtService;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class JwtServiceImpl implements JwtService {
      * @param <T> tipo del dato che voglio estrarre dal jwt.
      */
     @Override
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token, @NonNull Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token); //Estraggo tutti i dati codificati nel token.
         //Estraggo il singolo dato (generico) dall'insieme di tutti i dati codificati nel token.
         return claimsResolver.apply(claims);
@@ -71,8 +72,8 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public String generateToken(
-        Map<String, Object> extraClaims,
-        UserDetails userDetails
+            Map<String, Object> extraClaims,
+            @NonNull UserDetails userDetails
     ) {
         return Jwts
             .builder()
@@ -92,7 +93,7 @@ public class JwtServiceImpl implements JwtService {
      * @return "true" se il token è valido, "false" se il token non è valido.
      */
     @Override
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token, @NonNull UserDetails userDetails) {
         final String username = extractUsername(token);
         return ((username.equals(userDetails.getUsername())) && !isTokenExpired(token));
     }
@@ -134,7 +135,7 @@ public class JwtServiceImpl implements JwtService {
      * Decodifica la stringa in base 64 e la codifica secondo un algoritmo di hash, così da poter lavorare con il jwt.
      * @return la chiave codificata, con cui gestire il jwt.
      */
-    private Key getSigninKey() {
+    private @NonNull Key getSigninKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey); //Decodifico la chiave segreta in base 64.
         /* Viene codificata la chiave secondo un tipo di algoritmo di hash a chiave costruito a partire
         dalla funzione di hash SHA-256 e utilizzato come Hash-based Message Authentication Code (HMAC). */

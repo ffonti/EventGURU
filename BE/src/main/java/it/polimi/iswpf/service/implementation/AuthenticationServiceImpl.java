@@ -109,7 +109,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param dataList lista con i campi inseriti dal client.
      * @throws Exception eccezione causata dal campo vuoto.
      */
-    public void checkUserData(List<String> dataList) throws Exception {
+    public void checkUserData(@NonNull List<String> dataList) throws Exception {
         for(String data : dataList) {
             if(data.isEmpty() || data.isBlank()) {
                 throw new Exception("Inserire tutti i campi");
