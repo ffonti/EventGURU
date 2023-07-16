@@ -29,6 +29,7 @@ public class AuthenticationController {
      */
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) throws Exception {
+        System.out.println(request);
         authenticationService.register(request);
         return ResponseEntity.ok("Registrazione completata");
     }

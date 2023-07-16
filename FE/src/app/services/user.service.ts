@@ -6,18 +6,20 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
+  private backendUrl: string = 'http://localhost:8080/';
+
   constructor(private http: HttpClient) { }
 
   getUserData(): Observable<any> {
     const header = this.getHeader();
 
-    return this.http.get('http://localhost:3000/api/v1/user/getUserData', { headers: header, observe: 'response' });
+    return this.http.get(this.backendUrl + 'api/v1/user/getUserData', { headers: header, observe: 'response' });
   }
 
   updateUserData(userData: any): Observable<any> {
     const header = this.getHeader();
 
-    return this.http.put('http://localhost:3000/api/v1/user/updateUserData', { userData }, { headers: header, observe: 'response' });
+    return this.http.put(this.backendUrl + 'api/v1/user/updateUserData', { userData }, { headers: header, observe: 'response' });
   }
 
   private getHeader(): HttpHeaders {

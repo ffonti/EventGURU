@@ -6,12 +6,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EventService {
+  private backendUrl: string = 'http://localhost:8080/';
+
   constructor(private http: HttpClient) { }
 
   getAllEvents(): Observable<any> {
     const header = this.getHeader();
 
-    return this.http.get('http://localhost:3000/api/v1/event/getAllEvents', { headers: header });
+    return this.http.get(this.backendUrl + 'api/v1/event/getAllEvents', { headers: header });
   }
 
   getHeader(): HttpHeaders {

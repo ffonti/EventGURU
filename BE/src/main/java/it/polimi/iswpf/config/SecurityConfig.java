@@ -32,8 +32,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors() //Controlla la provenienza del client.
-            .and()
             .csrf() //Controlla se la richiesta è stata inviata intenzionalmente o meno.
             .disable() //Disabilita le due configurazioni precedenti.
             .authorizeHttpRequests() //Autorizza le richieste http.

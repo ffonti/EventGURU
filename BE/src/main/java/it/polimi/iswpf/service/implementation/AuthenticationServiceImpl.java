@@ -52,7 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //Controllo se esiste già un utente con questo username sul database.
         Optional<User> userAlreadyRegistered = userRepository.findByUsername(username);
         if(userAlreadyRegistered.isPresent()) {
-            throw new Exception("Username già registrato!");
+            throw new ApiRequestException("Username già registrato");
         }
 
         //Controllo che tutti i campi non siano vuoti.
@@ -75,7 +75,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //Controllo se il salvataggio è andato a buon fine.
         Optional<User> userRegistered = userRepository.findByUsername(username);
         if(userRegistered.isEmpty()) {
-            throw new Exception("Errore nella registrazione");
+            throw new ApiRequestException("Errore nella registrazione");
         }
     }
 
@@ -114,7 +114,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void checkUserData(@NonNull List<String> dataList) throws Exception {
         for(String data : dataList) {
             if(data.isEmpty() || data.isBlank()) {
-                throw new Exception("Inserire tutti i campi");
+                throw new ApiRequestException("Inserire tutti i campi");
             }
         }
     }
