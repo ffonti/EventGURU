@@ -1,6 +1,7 @@
 package it.polimi.iswpf.config;
 
 import it.polimi.iswpf.filter.JwtAuthenticationFilter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,7 @@ public class SecurityConfig {
      * @throws Exception eccezione generale a cui si può andare incontro.
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(@NonNull HttpSecurity http) throws Exception {
 
         http
             .csrf() //Controlla se la richiesta è stata inviata intenzionalmente o meno.
