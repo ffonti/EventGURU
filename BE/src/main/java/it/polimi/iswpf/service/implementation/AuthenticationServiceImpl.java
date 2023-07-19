@@ -66,7 +66,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .ruolo(Ruolo.USER)
-                .iscritto(false)
+                .iscrittoNewsletter(false)
                 .build();
 
         //Salvo l'utente sul database.

@@ -19,7 +19,7 @@ public class UserBuilder {
     private String username;
     private String password;
     private Ruolo ruolo;
-    private boolean iscritto;
+    private boolean iscrittoNewsletter;
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
@@ -96,8 +96,8 @@ public class UserBuilder {
      * @param iscritto Booleano che indica se è iscritto o meno alla newsletter.
      * @return Un'istanza della classe stessa.
      */
-    public UserBuilder iscritto(boolean iscritto) {
-        this.iscritto = iscritto;
+    public UserBuilder iscrittoNewsletter(boolean iscrittoNewsletter) {
+        this.iscrittoNewsletter = iscrittoNewsletter;
         return this;
     }
 

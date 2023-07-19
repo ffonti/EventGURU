@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@Entity
+@Entity(name = "User")
 @Table(
         name = "_user",
         uniqueConstraints = @UniqueConstraint(
@@ -26,6 +26,8 @@ import java.util.List;
 )
 public class User implements UserDetails {
 
+    /* @SequenceGenerator e @GeneratedValue servono per
+    configurare l'id con l'autoincrement (+1 ogni riga) */
     @Id
     @SequenceGenerator(
             name = "user_sequence",
@@ -36,22 +38,30 @@ public class User implements UserDetails {
             generator = "user_sequence",
             strategy = GenerationType.SEQUENCE
     )
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
+    @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")
     private String nome;
 
+    @Column(name = "cognome", nullable = false, columnDefinition = "VARCHAR(50)")
     private String cognome;
 
+    @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(100)")
     private String email;
 
+    @Column(name = "username", nullable = false, columnDefinition = "VARCHAR(50)", unique = true)
     private String username;
 
+    @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(100)")
     private String password;
 
+    @Column(name = "ruolo", nullable = false, updatable = false, columnDefinition = "VARCHAR(5)")
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
 
-    private boolean iscritto;
+    @Column(name = "iscritto_newsletter", nullable = false)
+    private boolean iscrittoNewsletter;
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
@@ -66,7 +76,7 @@ public class User implements UserDetails {
         this.username = builder.getUsername();
         this.password = builder.getPassword();
         this.ruolo = builder.getRuolo();
-        this.iscritto = builder.isIscritto();
+        this.iscrittoNewsletter = builder.isIscrittoNewsletter();
     }
 
     /**
