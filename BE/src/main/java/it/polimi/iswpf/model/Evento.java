@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @- Model che rappresenta l'evento sul db.
@@ -58,6 +59,12 @@ public class Evento {
 
     @Column(name = "data_fine", nullable = false, updatable = false)
     private LocalDateTime dataFine;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Recensione> recensioni;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Iscrizione> iscrizioni;
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori

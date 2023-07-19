@@ -63,6 +63,18 @@ public class User implements UserDetails {
     @Column(name = "iscritto_newsletter", nullable = false)
     private boolean iscrittoNewsletter;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Recensione> recensioni;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Iscrizione> iscrizioni;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<User> seguaci;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<User> seguiti;
+
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
      * settati con il builder (viene eseguito alla chiamata del metodo build() di {@link UserBuilder}).

@@ -29,4 +29,12 @@ public class Iscrizione {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "id_evento")
+    private Evento evento;
 }

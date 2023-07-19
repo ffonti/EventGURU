@@ -29,4 +29,12 @@ public class Segue {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_seguace")
+    private User seguace;
+
+    @ManyToOne
+    @JoinColumn(name = "id_seguito")
+    private User seguito;
 }
