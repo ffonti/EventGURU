@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UserBuilder {
+
     private Long id;
     private String nome;
     private String cognome;

@@ -1,8 +1,10 @@
 package it.polimi.iswpf.model;
 
+import it.polimi.iswpf.builder.EventoBuilder;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.time.LocalDateTime;
 
@@ -56,4 +58,20 @@ public class Evento {
 
     @Column(name = "data_fine", nullable = false, updatable = false)
     private LocalDateTime dataFine;
+
+    /**
+     * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
+     * settati con il builder (viene eseguito alla chiamata del metodo build() di {@link EventoBuilder}).
+     * @param builder dati appena settati tramite il pattern.
+     */
+    public Evento(@NonNull EventoBuilder builder) {
+        this.id = builder.getId();
+        this.titolo = builder.getTitolo();
+        this.descrizione = builder.getDescrizione();
+        this.dataCreazione = builder.getDataCreazione();
+        this.lat = builder.getLat();
+        this.lng = builder.getLng();
+        this.dataInizio = builder.getDataInizio();
+        this.dataFine = builder.getDataFine();
+    }
 }

@@ -1,10 +1,12 @@
 package it.polimi.iswpf.model;
 
+import it.polimi.iswpf.builder.RecensioneBuilder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 /**
  * @- Model che rappresenta l'associazione N:M tra user ed evento. Gli utenti possono
@@ -39,4 +41,15 @@ public class Recensione {
     @Min(1)
     @Max(5)
     private Integer voto;
+
+    /**
+     * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
+     * settati con il builder (viene eseguito alla chiamata del metodo build() di {@link RecensioneBuilder}).
+     * @param builder dati appena settati tramite il pattern.
+     */
+    public Recensione(@NonNull RecensioneBuilder builder) {
+        this.id = builder.getId();
+        this.testo = builder.getTesto();
+        this.voto = builder.getVoto();
+    }
 }
