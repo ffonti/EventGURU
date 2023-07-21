@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class EventoBuilder {
 
-    private Long id;
+    private Long eventoId;
     private String titolo;
     private String descrizione;
     private LocalDateTime dataCreazione;
@@ -28,8 +28,8 @@ public class EventoBuilder {
      * @param id Valore dell'id univoco.
      * @return Un'istanza della classe stessa.
      */
-    public EventoBuilder id(Long id) {
-        this.id = id;
+    public EventoBuilder eventoId(Long eventoId) {
+        this.eventoId = eventoId;
         return this;
     }
 

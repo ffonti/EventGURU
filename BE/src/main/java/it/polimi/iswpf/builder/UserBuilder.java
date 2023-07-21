@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserBuilder {
 
-    private Long id;
+    private Long userId;
     private String nome;
     private String cognome;
     private String email;
@@ -27,8 +27,8 @@ public class UserBuilder {
      * @param id Valore dell'id univoco.
      * @return Un'istanza della classe stessa.
      */
-    public UserBuilder id(Long id) {
-        this.id = id;
+    public UserBuilder userId(Long userId) {
+        this.userId = userId;
         return this;
     }
 

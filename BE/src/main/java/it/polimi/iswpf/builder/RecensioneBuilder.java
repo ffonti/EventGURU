@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RecensioneBuilder {
 
-    private Long id;
+    private Long recensioneId;
     private String testo;
     private Integer voto;
 
@@ -21,8 +21,8 @@ public class RecensioneBuilder {
      * @param id Valore dell'id univoco.
      * @return Un'istanza della classe stessa.
      */
-    public RecensioneBuilder id(Long id) {
-        this.id = id;
+    public RecensioneBuilder recensioneId(Long recensioneId) {
+        this.recensioneId = recensioneId;
         return this;
     }
 

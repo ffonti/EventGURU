@@ -36,8 +36,8 @@ public class Evento {
             generator = "evento_sequence",
             strategy = GenerationType.SEQUENCE
     )
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    @Column(name = "evento_id", updatable = false, nullable = false)
+    private Long eventoId;
 
     @Column(name = "titolo", nullable = false, columnDefinition = "VARCHAR(100)", unique = true)
     private String titolo;
@@ -72,7 +72,7 @@ public class Evento {
      * @param builder dati appena settati tramite il pattern.
      */
     public Evento(@NonNull EventoBuilder builder) {
-        this.id = builder.getId();
+        this.eventoId = builder.getEventoId();
         this.titolo = builder.getTitolo();
         this.descrizione = builder.getDescrizione();
         this.dataCreazione = builder.getDataCreazione();

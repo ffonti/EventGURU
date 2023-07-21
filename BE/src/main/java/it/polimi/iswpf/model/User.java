@@ -39,8 +39,8 @@ public class User implements UserDetails {
             generator = "user_sequence",
             strategy = GenerationType.SEQUENCE
     )
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    @Column(name = "user_id", updatable = false, nullable = false)
+    private Long userId;
 
 //    @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")
 //    private String nome;
@@ -79,7 +79,7 @@ public class User implements UserDetails {
      * @param builder dati appena settati tramite il pattern.
      */
     public User(@NonNull UserBuilder builder) {
-//        this.id = builder.getId();
+//        this.userId = builder.getUserId();
 //        this.nome = builder.getNome();
 //        this.cognome = builder.getCognome();
 //        this.email = builder.getEmail();

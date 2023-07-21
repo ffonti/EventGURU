@@ -31,8 +31,8 @@ public class Recensione {
             generator = "recensione_sequence",
             strategy = GenerationType.SEQUENCE
     )
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    @Column(name = "recensione_id", updatable = false, nullable = false)
+    private Long recensioneId;
 
     @Column(name = "testo", columnDefinition = "VARCHAR(1000)")
     private String testo;
@@ -56,7 +56,7 @@ public class Recensione {
      * @param builder dati appena settati tramite il pattern.
      */
     public Recensione(@NonNull RecensioneBuilder builder) {
-        this.id = builder.getId();
+        this.recensioneId = builder.getRecensioneId();
         this.testo = builder.getTesto();
         this.voto = builder.getVoto();
     }
