@@ -60,11 +60,20 @@ public class Evento {
     @Column(name = "data_fine", nullable = false, updatable = false)
     private LocalDateTime dataFine;
 
-//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Evento> iscrizioni;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Recensione> recensioni;
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "iscrizione",
+            joinColumns = { @JoinColumn(name = "evento_id") },
+            inverseJoinColumns = { @JoinColumn(name = "turista_user_id") }
+    )
+    private List<Turista> iscritti;
+
+    @OneToMany(mappedBy = "evento")
+    private List<Recensione> recensioni;
+
+    @ManyToOne
+    @JoinColumn(name = "organizzatore_user_id")
+    private Organizzatore organizzatore;
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori

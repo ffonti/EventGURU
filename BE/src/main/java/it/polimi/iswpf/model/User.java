@@ -42,12 +42,6 @@ public class User implements UserDetails {
     @Column(name = "user_id", updatable = false, nullable = false)
     private Long userId;
 
-//    @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")
-//    private String nome;
-//
-//    @Column(name = "cognome", nullable = false, columnDefinition = "VARCHAR(50)")
-//    private String cognome;
-
     @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(100)")
     private String email;
 
@@ -60,18 +54,6 @@ public class User implements UserDetails {
     @Column(name = "ruolo", nullable = false, updatable = false, columnDefinition = "VARCHAR(5)")
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
-
-//    @Column(name = "iscritto_newsletter", nullable = false)
-//    private boolean iscrittoNewsletter;
-//
-//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Evento> iscrizioni;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Recensione> recensioni;
-//
-//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<User> seguiti;
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori

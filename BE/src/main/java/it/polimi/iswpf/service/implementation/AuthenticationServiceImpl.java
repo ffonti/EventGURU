@@ -65,7 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email(email)
                 .username(username)
                 .password(passwordEncoder.encode(password))
-                .ruolo(Ruolo.USER)
+                .ruolo(Ruolo.TURISTA)
                 .iscrittoNewsletter(false)
                 .build();
 
