@@ -4,12 +4,14 @@ import it.polimi.iswpf.builder.UserBuilder;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
+import it.polimi.iswpf.exception.UsernameRegistratoException;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.AuthenticationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +27,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
+
+    public static String AUTHORIZATION = "Authorization";
+    public static String BEARER = "Bearer: ";
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -47,29 +52,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final String email = request.getEmail().trim().toLowerCase();
         final String username = request.getUsername().trim().toLowerCase();
         final String password = request.getPassword();
+        final Ruolo ruolo = request.getRuolo();
 
         //Controllo se esiste già un utente con questo username sul database.
         Optional<User> userAlreadyRegistered = userRepository.findByUsername(username);
         if(userAlreadyRegistered.isPresent()) {
-            throw new Exception("Username già registrato");
+            throw new UsernameRegistratoException();
         }
 
         //Controllo che tutti i campi non siano vuoti.
-        checkUserData(List.of(nome, cognome, email, username, password));
+        checkUserData(List.of(nome, cognome, email, username, password, ruolo.name()));
 
         //Creo un'istanza di user, tramite il builder implementato da zero.
-        User user = new UserBuilder()
-                .nome(nome)
-                .cognome(cognome)
-                .email(email)
-                .username(username)
-                .password(passwordEncoder.encode(password))
-                .ruolo(Ruolo.TURISTA)
-                .iscrittoNewsletter(false)
-                .build();
-
-        //Salvo l'utente sul database.
-        userRepository.save(user);
+//        User user = new UserBuilder()
+//                .nome(nome)
+//                .cognome(cognome)
+//                .email(email)
+//                .username(username)
+//                .password(passwordEncoder.encode(password))
+//                .ruolo(Ruolo.TURISTA)
+//                .iscrittoNewsletter(false)
+//                .build();
+//
+//        //Salvo l'utente sul database.
+//        userRepository.save(user);
 
         //Controllo se il salvataggio è andato a buon fine.
         Optional<User> userRegistered = userRepository.findByUsername(username);
@@ -116,5 +122,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new Exception("Inserire tutti i campi");
             }
         }
+    }
+
+    @Override
+    public HttpHeaders putJwtInHttpHeaders(String jwt) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, BEARER + jwt);
+        return headers;
     }
 }

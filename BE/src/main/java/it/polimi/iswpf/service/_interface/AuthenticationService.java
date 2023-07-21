@@ -5,6 +5,9 @@ import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
 import it.polimi.iswpf.service.implementation.AuthenticationServiceImpl;
 import lombok.NonNull;
+import org.springframework.http.HttpHeaders;
+
+import java.util.List;
 
 /**
  * Interfaccia che contiene le firme dei metodi del service.
@@ -30,4 +33,8 @@ public interface AuthenticationService {
      * @return DTO con la stringa jwt -> {@link LoginResponse }.
      */
     LoginResponse login(@NonNull LoginRequest request);
+
+    public void checkUserData(@NonNull List<String> dataList) throws Exception;
+
+    HttpHeaders putJwtInHttpHeaders(String jwt);
 }

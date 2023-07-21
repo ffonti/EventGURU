@@ -5,8 +5,9 @@ import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
 import it.polimi.iswpf.exception.RuoloNonValidoException;
 import it.polimi.iswpf.model.Ruolo;
-import it.polimi.iswpf.service.implementation.AuthenticationServiceImpl;
+import it.polimi.iswpf.service._interface.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 
-    private final AuthenticationServiceImpl authenticationService;
+    private final AuthenticationService authenticationService;
 
     /**
      * Metodo per la registrazione. Chiama il service che chiamerà la repository.
-     * @param request DTO con i dati per la registrazione -> {@link RegisterRequest }.
+     * @param request DTO con i dati per la registrazione -> {@link RegisterRequest}.
      * @return Risposta al client.
      */
     @PostMapping("/register")
@@ -36,7 +37,10 @@ public class AuthenticationController {
         }
 
         authenticationService.register(request);
-        return ResponseEntity.ok("Registrazione completata");
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("Registrazione completata!");
     }
 
     /**
