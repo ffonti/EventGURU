@@ -7,7 +7,7 @@ import org.springframework.core.env.Environment;
 @SpringBootApplication
 public class EventGURUApplication {
 
-    private static Environment env; //ok
+    private static Environment env;
 
     public EventGURUApplication(Environment env) {
         EventGURUApplication.env = env;

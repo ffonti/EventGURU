@@ -42,13 +42,13 @@ public class Recensione {
     @Max(5)
     private Integer voto;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "id_evento")
-    private Evento evento;
+//    @ManyToOne
+//    @JoinColumn(name = "id_user")
+//    private User user;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "id_evento")
+//    private Evento evento;
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori

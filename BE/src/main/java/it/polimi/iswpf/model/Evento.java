@@ -60,11 +60,11 @@ public class Evento {
     @Column(name = "data_fine", nullable = false, updatable = false)
     private LocalDateTime dataFine;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Recensione> recensioni;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Iscrizione> iscrizioni;
+//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Evento> iscrizioni;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Recensione> recensioni;
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori

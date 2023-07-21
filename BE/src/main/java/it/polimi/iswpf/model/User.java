@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity(name = "User")
 @Table(
         name = "_user",
@@ -41,11 +42,11 @@ public class User implements UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")
-    private String nome;
-
-    @Column(name = "cognome", nullable = false, columnDefinition = "VARCHAR(50)")
-    private String cognome;
+//    @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")
+//    private String nome;
+//
+//    @Column(name = "cognome", nullable = false, columnDefinition = "VARCHAR(50)")
+//    private String cognome;
 
     @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(100)")
     private String email;
@@ -60,20 +61,17 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
 
-    @Column(name = "iscritto_newsletter", nullable = false)
-    private boolean iscrittoNewsletter;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Recensione> recensioni;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Iscrizione> iscrizioni;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<User> seguaci;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<User> seguiti;
+//    @Column(name = "iscritto_newsletter", nullable = false)
+//    private boolean iscrittoNewsletter;
+//
+//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Evento> iscrizioni;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Recensione> recensioni;
+//
+//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<User> seguiti;
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
@@ -81,14 +79,14 @@ public class User implements UserDetails {
      * @param builder dati appena settati tramite il pattern.
      */
     public User(@NonNull UserBuilder builder) {
-        this.id = builder.getId();
-        this.nome = builder.getNome();
-        this.cognome = builder.getCognome();
-        this.email = builder.getEmail();
-        this.username = builder.getUsername();
-        this.password = builder.getPassword();
-        this.ruolo = builder.getRuolo();
-        this.iscrittoNewsletter = builder.isIscrittoNewsletter();
+//        this.id = builder.getId();
+//        this.nome = builder.getNome();
+//        this.cognome = builder.getCognome();
+//        this.email = builder.getEmail();
+//        this.username = builder.getUsername();
+//        this.password = builder.getPassword();
+//        this.ruolo = builder.getRuolo();
+//        this.iscrittoNewsletter = builder.isIscrittoNewsletter();
     }
 
     /**
