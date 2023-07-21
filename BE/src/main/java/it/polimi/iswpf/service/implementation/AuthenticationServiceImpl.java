@@ -4,13 +4,20 @@ import it.polimi.iswpf.builder.UserBuilder;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
+import it.polimi.iswpf.exception.RuoloInesistenteException;
+import it.polimi.iswpf.exception.RuoloNonValidoException;
 import it.polimi.iswpf.exception.UsernameRegistratoException;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.repository.TuristaRepository;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.AuthenticationService;
+import it.polimi.iswpf.strategy.AuthContext;
+import it.polimi.iswpf.strategy.AuthOrganizzatoreStrategy;
+import it.polimi.iswpf.strategy.AuthTuristaStrategy;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,10 +35,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    public static String AUTHORIZATION = "Authorization";
-    public static String BEARER = "Bearer: ";
+    private final AuthContext authContext = new AuthContext();
 
     private final UserRepository userRepository;
+    private final TuristaRepository turistaRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtServiceImpl jwtService;
     private final AuthenticationManager authenticationManager;
@@ -47,21 +54,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public void register(@NonNull RegisterRequest request) throws Exception {
 
-        final String nome = request.getNome().trim();
-        final String cognome = request.getCognome().trim();
-        final String email = request.getEmail().trim().toLowerCase();
-        final String username = request.getUsername().trim().toLowerCase();
-        final String password = request.getPassword();
-        final Ruolo ruolo = request.getRuolo();
-
         //Controllo se esiste già un utente con questo username sul database.
-        Optional<User> userAlreadyRegistered = userRepository.findByUsername(username);
+        Optional<User> userAlreadyRegistered = userRepository.findByUsername(request.getUsername());
         if(userAlreadyRegistered.isPresent()) {
             throw new UsernameRegistratoException();
         }
 
-        //Controllo che tutti i campi non siano vuoti.
-        checkUserData(List.of(nome, cognome, email, username, password, ruolo.name()));
+        switch(request.getRuolo().name()) {
+            case "TURISTA" -> authContext.setAuthStrategy(new AuthTuristaStrategy(turistaRepository));
+            case "ORGANIZZATORE" -> authContext.setAuthStrategy(new AuthOrganizzatoreStrategy());
+            default -> throw new RuoloInesistenteException();
+        }
+
+        authContext.executeStrategy(request);
 
         //Creo un'istanza di user, tramite il builder implementato da zero.
 //        User user = new UserBuilder()
@@ -78,10 +83,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 //        userRepository.save(user);
 
         //Controllo se il salvataggio è andato a buon fine.
-        Optional<User> userRegistered = userRepository.findByUsername(username);
-        if(userRegistered.isEmpty()) {
-            throw new Exception("Errore nella registrazione");
-        }
+//        Optional<User> userRegistered = userRepository.findByUsername(username);
+//        if(userRegistered.isEmpty()) {
+//            throw new Exception("Errore nella registrazione");
+//        }
     }
 
     /**
@@ -111,23 +116,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new LoginResponse(jwt);
     }
 
-    /**
-     * Per ogni elemento della lista, viene controllato che non sia vuoto.
-     * @param dataList lista con i campi inseriti dal client.
-     * @throws Exception eccezione causata dal campo vuoto.
-     */
-    public void checkUserData(@NonNull List<String> dataList) throws Exception {
-        for(String data : dataList) {
-            if(data.isEmpty() || data.isBlank()) {
-                throw new Exception("Inserire tutti i campi");
-            }
-        }
-    }
-
     @Override
     public HttpHeaders putJwtInHttpHeaders(String jwt) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, BEARER + jwt);
+        headers.add("Authorization", "Bearer: " + jwt);
         return headers;
     }
 }

@@ -107,6 +107,7 @@ public class TuristaBuilder {
      * @return Un'istanza di Turista a cui viene passato, tramite il costruttore, l'istanza di questa classe.
      */
     public Turista build() {
-        return new Turista(this);
+//        return new Turista(this);
+        return null;
     }
 }

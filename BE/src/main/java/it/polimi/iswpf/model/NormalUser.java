@@ -14,4 +14,10 @@ public class NormalUser extends User {
 
     @Column(name = "cognome", nullable = false, columnDefinition = "VARCHAR(50)")
     private String cognome;
+
+    public NormalUser(String email, String password, String username, Ruolo ruolo, String nome, String cognome) {
+        super(email, password, username, ruolo);
+        this.nome = nome;
+        this.cognome = cognome;
+    }
 }

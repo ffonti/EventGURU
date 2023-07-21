@@ -34,5 +34,8 @@ public class Turista extends NormalUser {
     )
     private List<Evento> iscrizioni;
 
-    public Turista(@NonNull TuristaBuilder builder) {}
+    public Turista(String email, String password, String username, String nome, String cognome) {
+        super(email, password, username, Ruolo.TURISTA, nome, cognome);
+        this.iscrittoNewsletter = false;
+    }
 }

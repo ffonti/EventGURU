@@ -71,6 +71,13 @@ public class User implements UserDetails {
 //        this.iscrittoNewsletter = builder.isIscrittoNewsletter();
     }
 
+    public User(String email, String password, String username, Ruolo ruolo) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.ruolo = ruolo;
+    }
+
     /**
      * In base al ruolo, viene generata una lista delle funzionalità concesse.
      * @return le autorità garantite all'utente.

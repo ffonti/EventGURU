@@ -34,7 +34,5 @@ public interface AuthenticationService {
      */
     LoginResponse login(@NonNull LoginRequest request);
 
-    public void checkUserData(@NonNull List<String> dataList) throws Exception;
-
     HttpHeaders putJwtInHttpHeaders(String jwt);
 }
