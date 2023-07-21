@@ -3,6 +3,8 @@ package it.polimi.iswpf.controller;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
+import it.polimi.iswpf.exception.RuoloNonValidoException;
+import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.service.implementation.AuthenticationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,11 @@ public class AuthenticationController {
      */
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) throws Exception {
-        System.out.println(request);
+
+        if(request.getRuolo().equals(Ruolo.ADMIN)) {
+            throw new RuoloNonValidoException();
+        }
+
         authenticationService.register(request);
         return ResponseEntity.ok("Registrazione completata");
     }

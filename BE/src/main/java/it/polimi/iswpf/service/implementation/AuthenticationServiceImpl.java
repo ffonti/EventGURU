@@ -4,7 +4,6 @@ import it.polimi.iswpf.builder.UserBuilder;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
-import it.polimi.iswpf.exception.ApiRequestException;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
@@ -52,7 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //Controllo se esiste già un utente con questo username sul database.
         Optional<User> userAlreadyRegistered = userRepository.findByUsername(username);
         if(userAlreadyRegistered.isPresent()) {
-            throw new ApiRequestException("Username già registrato");
+            throw new Exception("Username già registrato");
         }
 
         //Controllo che tutti i campi non siano vuoti.
@@ -75,7 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //Controllo se il salvataggio è andato a buon fine.
         Optional<User> userRegistered = userRepository.findByUsername(username);
         if(userRegistered.isEmpty()) {
-            throw new ApiRequestException("Errore nella registrazione");
+            throw new Exception("Errore nella registrazione");
         }
     }
 
@@ -114,7 +113,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void checkUserData(@NonNull List<String> dataList) throws Exception {
         for(String data : dataList) {
             if(data.isEmpty() || data.isBlank()) {
-                throw new ApiRequestException("Inserire tutti i campi");
+                throw new Exception("Inserire tutti i campi");
             }
         }
     }

@@ -1,5 +1,6 @@
 package it.polimi.iswpf.dto.request;
 
+import it.polimi.iswpf.model.Ruolo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,4 +17,6 @@ public class RegisterRequest {
     private String username;
 
     private String password;
+
+    private Ruolo ruolo;
 }
