@@ -43,8 +43,8 @@ public class Recensione {
     private Integer voto;
 
     @ManyToOne
-    @JoinColumn(name = "turista_user_id")
-    private Turista turista;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "evento_id")

@@ -4,20 +4,14 @@ import it.polimi.iswpf.builder.UserBuilder;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
-import it.polimi.iswpf.exception.RuoloInesistenteException;
-import it.polimi.iswpf.exception.RuoloNonValidoException;
+import it.polimi.iswpf.exception.RegistrazioneNonRiuscitaException;
 import it.polimi.iswpf.exception.UsernameRegistratoException;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
-import it.polimi.iswpf.repository.TuristaRepository;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.AuthenticationService;
-import it.polimi.iswpf.strategy.AuthContext;
-import it.polimi.iswpf.strategy.AuthOrganizzatoreStrategy;
-import it.polimi.iswpf.strategy.AuthTuristaStrategy;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,10 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final AuthContext authContext = new AuthContext();
-
     private final UserRepository userRepository;
-    private final TuristaRepository turistaRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtServiceImpl jwtService;
     private final AuthenticationManager authenticationManager;
@@ -60,33 +51,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new UsernameRegistratoException();
         }
 
-        switch(request.getRuolo().name()) {
-            case "TURISTA" -> authContext.setAuthStrategy(new AuthTuristaStrategy(turistaRepository));
-            case "ORGANIZZATORE" -> authContext.setAuthStrategy(new AuthOrganizzatoreStrategy());
-            default -> throw new RuoloInesistenteException();
+        final String nome = request.getNome().trim();
+        final String cognome = request.getCognome().trim();
+        final String email = request.getEmail().trim().toLowerCase();
+        final String username = request.getUsername().trim().toLowerCase();
+        final String password = request.getPassword();
+        final Ruolo ruolo = request.getRuolo();
+
+        //Controllo che tutti i campi non siano vuoti.
+        checkUserData(List.of(nome, cognome, email, username, password, ruolo.name()));
+
+        User user = new UserBuilder()
+                .nome(nome)
+                .cognome(cognome)
+                .email(email)
+                .username(username)
+                .password(password)
+                .ruolo(ruolo)
+                .iscrittoNewsletter(false)
+                .build();
+
+        userRepository.save(user);
+
+        Optional<User> userRegistered = userRepository.findByUsername(username);
+        if(userRegistered.isEmpty()) {
+            throw new RegistrazioneNonRiuscitaException();
         }
-
-        authContext.executeStrategy(request);
-
-        //Creo un'istanza di user, tramite il builder implementato da zero.
-//        User user = new UserBuilder()
-//                .nome(nome)
-//                .cognome(cognome)
-//                .email(email)
-//                .username(username)
-//                .password(passwordEncoder.encode(password))
-//                .ruolo(Ruolo.TURISTA)
-//                .iscrittoNewsletter(false)
-//                .build();
-//
-//        //Salvo l'utente sul database.
-//        userRepository.save(user);
-
-        //Controllo se il salvataggio è andato a buon fine.
-//        Optional<User> userRegistered = userRepository.findByUsername(username);
-//        if(userRegistered.isEmpty()) {
-//            throw new Exception("Errore nella registrazione");
-//        }
     }
 
     /**
@@ -114,6 +104,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String jwt = jwtService.generateToken(user);
 
         return new LoginResponse(jwt);
+    }
+
+    @Override
+    public void checkUserData(@NonNull List<String> dataList) throws Exception {
+        for(String data : dataList) {
+            if(data.isEmpty() || data.isBlank()) {
+                throw new Exception("Inserire tutti i campi");
+            }
+        }
     }
 
     @Override

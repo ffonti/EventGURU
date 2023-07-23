@@ -48,12 +48,6 @@ public class Evento {
     @Column(name = "data_creazione", nullable = false, updatable = false)
     private LocalDateTime dataCreazione;
 
-    @Column(name = "lat", columnDefinition = "VARCHAR(20)", updatable = false)
-    private String lat;
-
-    @Column(name = "lng", columnDefinition = "VARCHAR(20)", updatable = false)
-    private String lng;
-
     @Column(name = "data_inizio", nullable = false, updatable = false)
     private LocalDateTime dataInizio;
 
@@ -64,16 +58,20 @@ public class Evento {
     @JoinTable(
             name = "iscrizione",
             joinColumns = { @JoinColumn(name = "evento_id") },
-            inverseJoinColumns = { @JoinColumn(name = "turista_user_id") }
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
     )
-    private List<Turista> iscritti;
+    private List<User> iscritti;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany(mappedBy = "evento", fetch = FetchType.LAZY)
     private List<Recensione> recensioni;
 
     @ManyToOne
-    @JoinColumn(name = "organizzatore_user_id")
-    private Organizzatore organizzatore;
+    @JoinColumn(name = "user_id")
+    private User organizzatore;
+
+    @ManyToOne
+    @JoinColumn(name = "luogo_id")
+    private Luogo luogo;
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
@@ -85,8 +83,8 @@ public class Evento {
         this.titolo = builder.getTitolo();
         this.descrizione = builder.getDescrizione();
         this.dataCreazione = builder.getDataCreazione();
-        this.lat = builder.getLat();
-        this.lng = builder.getLng();
+//        this.lat = builder.getLat();
+//        this.lng = builder.getLng();
         this.dataInizio = builder.getDataInizio();
         this.dataFine = builder.getDataFine();
     }

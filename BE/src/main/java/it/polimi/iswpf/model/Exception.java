@@ -8,6 +8,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public class Exception {
 
-    private final String message;
-    private final HttpStatus status;
+    private String message;
+    private HttpStatus status;
 }

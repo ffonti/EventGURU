@@ -16,7 +16,6 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity(name = "_user")
 @Table(
         name = "_user",
@@ -42,6 +41,12 @@ public class User implements UserDetails {
     @Column(name = "user_id", updatable = false, nullable = false)
     private Long userId;
 
+    @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")
+    private String nome;
+
+    @Column(name = "cognome", nullable = false, columnDefinition = "VARCHAR(50)")
+    private String cognome;
+
     @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(100)")
     private String email;
 
@@ -55,27 +60,45 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
 
+    @Column(name = "iscritto_newsletter", nullable = false, columnDefinition = "boolean")
+    private boolean iscrittoNewsletter;
+
+    @OneToMany(mappedBy = "organizzatore", fetch = FetchType.LAZY)
+    private List<Evento> eventi;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Recensione> recensioni;
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "segue",
+            joinColumns = { @JoinColumn(name = "seguace_user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "seguito_user_id") }
+    )
+    private List<User> seguiti;
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "iscrizione",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "evento_id") }
+    )
+    private List<Evento> iscrizioni;
+
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
      * settati con il builder (viene eseguito alla chiamata del metodo build() di {@link UserBuilder}).
      * @param builder dati appena settati tramite il pattern.
      */
     public User(@NonNull UserBuilder builder) {
-//        this.userId = builder.getUserId();
-//        this.nome = builder.getNome();
-//        this.cognome = builder.getCognome();
-//        this.email = builder.getEmail();
-//        this.username = builder.getUsername();
-//        this.password = builder.getPassword();
-//        this.ruolo = builder.getRuolo();
-//        this.iscrittoNewsletter = builder.isIscrittoNewsletter();
-    }
-
-    public User(String email, String password, String username, Ruolo ruolo) {
-        this.email = email;
-        this.password = password;
-        this.username = username;
-        this.ruolo = ruolo;
+        this.userId = builder.getUserId();
+        this.nome = builder.getNome();
+        this.cognome = builder.getCognome();
+        this.email = builder.getEmail();
+        this.username = builder.getUsername();
+        this.password = builder.getPassword();
+        this.ruolo = builder.getRuolo();
+        this.iscrittoNewsletter = builder.isIscrittoNewsletter();
     }
 
     /**
