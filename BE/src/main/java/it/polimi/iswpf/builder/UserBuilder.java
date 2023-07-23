@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserBuilder {
 
+    //Attributi del model User
     private Long userId;
     private String nome;
     private String cognome;
@@ -24,7 +25,7 @@ public class UserBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param id Valore dell'id univoco.
+     * @param userId Valore dell'id univoco.
      * @return Un'istanza della classe stessa.
      */
     public UserBuilder userId(Long userId) {

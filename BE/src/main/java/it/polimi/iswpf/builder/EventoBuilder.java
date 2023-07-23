@@ -14,18 +14,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class EventoBuilder {
 
+    //Attributi del model User
     private Long eventoId;
     private String titolo;
     private String descrizione;
     private LocalDateTime dataCreazione;
-    private String lat;
-    private String lng;
     private LocalDateTime dataInizio;
     private LocalDateTime dataFine;
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param id Valore dell'id univoco.
+     * @param eventoId Valore dell'id univoco.
      * @return Un'istanza della classe stessa.
      */
     public EventoBuilder eventoId(Long eventoId) {
@@ -60,26 +59,6 @@ public class EventoBuilder {
      */
     public EventoBuilder dataCreazione(LocalDateTime dataCreazione) {
         this.dataCreazione = dataCreazione;
-        return this;
-    }
-
-    /**
-     * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param lat Stringa con la latitudine del marker settata.
-     * @return Un'istanza della classe stessa.
-     */
-    public EventoBuilder lat(String lat) {
-        this.lat = lat;
-        return this;
-    }
-
-    /**
-     * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param lng Stringa con la longitudine del marker settata.
-     * @return Un'istanza della classe stessa.
-     */
-    public EventoBuilder lng(String lng) {
-        this.lng = lng;
         return this;
     }
 

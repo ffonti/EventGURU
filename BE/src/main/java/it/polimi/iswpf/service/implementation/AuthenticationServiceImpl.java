@@ -4,7 +4,9 @@ import it.polimi.iswpf.builder.UserBuilder;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
+import it.polimi.iswpf.exception.CampoVuotoException;
 import it.polimi.iswpf.exception.RegistrazioneNonRiuscitaException;
+import it.polimi.iswpf.exception.RuoloNonValidoException;
 import it.polimi.iswpf.exception.UsernameRegistratoException;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
@@ -43,7 +45,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @throws Exception eccezione generale causata dal client.
      */
     @Override
-    public void register(@NonNull RegisterRequest request) throws Exception {
+    public void register(@NonNull RegisterRequest request) throws RuntimeException {
+
+        //Controllo se è stata richiesta la registrazione di un admin, la quale non è permessa.
+        if(request.getRuolo().equals(Ruolo.ADMIN)) {
+            throw new RuoloNonValidoException();
+        }
 
         //Controllo se esiste già un utente con questo username sul database.
         Optional<User> userAlreadyRegistered = userRepository.findByUsername(request.getUsername());
@@ -51,6 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new UsernameRegistratoException();
         }
 
+        //Assegno a delle variabili i dati della richiesta.
         final String nome = request.getNome().trim();
         final String cognome = request.getCognome().trim();
         final String email = request.getEmail().trim().toLowerCase();
@@ -61,18 +69,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //Controllo che tutti i campi non siano vuoti.
         checkUserData(List.of(nome, cognome, email, username, password, ruolo.name()));
 
+        //Costruisco l'oggetto utente con il design pattern builder
         User user = new UserBuilder()
                 .nome(nome)
                 .cognome(cognome)
                 .email(email)
                 .username(username)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .ruolo(ruolo)
                 .iscrittoNewsletter(false)
                 .build();
 
-        userRepository.save(user);
+        userRepository.save(user); //Salvo l'utente sul database
 
+        //Controllo se l'utente è presente sul database, se sì la registrazione è andata a buon fine.
         Optional<User> userRegistered = userRepository.findByUsername(username);
         if(userRegistered.isEmpty()) {
             throw new RegistrazioneNonRiuscitaException();
@@ -87,7 +97,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return DTO con la stringa jwt -> {@link LoginResponse }.
      */
     @Override
-    public LoginResponse login(@NonNull LoginRequest request) {
+    public String login(@NonNull LoginRequest request) {
         //Chiamo l'authenticationManager che si occuperà del login e delle eccezioni.
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -103,16 +113,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //Codifico i dati dell'utente nel jwt.
         String jwt = jwtService.generateToken(user);
 
-        return new LoginResponse(jwt);
-    }
-
-    @Override
-    public void checkUserData(@NonNull List<String> dataList) throws Exception {
-        for(String data : dataList) {
-            if(data.isEmpty() || data.isBlank()) {
-                throw new Exception("Inserire tutti i campi");
-            }
-        }
+        return jwt;
     }
 
     @Override
@@ -120,5 +121,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer: " + jwt);
         return headers;
+    }
+
+    @Override
+    public void checkUserData(@NonNull List<String> dataList) throws CampoVuotoException {
+        for(String data : dataList) {
+            if(data.isEmpty() || data.isBlank()) {
+                throw new CampoVuotoException();
+            }
+        }
     }
 }

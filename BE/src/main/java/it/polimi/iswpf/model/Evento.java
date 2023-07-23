@@ -60,18 +60,18 @@ public class Evento {
             joinColumns = { @JoinColumn(name = "evento_id") },
             inverseJoinColumns = { @JoinColumn(name = "user_id") }
     )
-    private List<User> iscritti;
+    private List<User> iscritti; //Utenti iscritti all'evento.
 
     @OneToMany(mappedBy = "evento", fetch = FetchType.LAZY)
-    private List<Recensione> recensioni;
+    private List<Recensione> recensioni; //Recensioni lasciate all'evento.
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User organizzatore;
+    private User organizzatore; //Organizzatore dell'evento.
 
     @ManyToOne
     @JoinColumn(name = "luogo_id")
-    private Luogo luogo;
+    private Luogo luogo; //Luogo dell'evento.
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
@@ -83,8 +83,6 @@ public class Evento {
         this.titolo = builder.getTitolo();
         this.descrizione = builder.getDescrizione();
         this.dataCreazione = builder.getDataCreazione();
-//        this.lat = builder.getLat();
-//        this.lng = builder.getLng();
         this.dataInizio = builder.getDataInizio();
         this.dataFine = builder.getDataFine();
     }

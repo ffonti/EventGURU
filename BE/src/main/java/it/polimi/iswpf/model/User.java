@@ -56,7 +56,7 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(100)")
     private String password;
 
-    @Column(name = "ruolo", nullable = false, updatable = false, columnDefinition = "VARCHAR(5)")
+    @Column(name = "ruolo", nullable = false, updatable = false, columnDefinition = "VARCHAR(20)")
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
 
@@ -64,10 +64,10 @@ public class User implements UserDetails {
     private boolean iscrittoNewsletter;
 
     @OneToMany(mappedBy = "organizzatore", fetch = FetchType.LAZY)
-    private List<Evento> eventi;
+    private List<Evento> eventi; //Lista di eventi organizzati dall'utente.
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Recensione> recensioni;
+    private List<Recensione> recensioni; //Lista di recensioni lasciate dall'utente.
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -75,7 +75,7 @@ public class User implements UserDetails {
             joinColumns = { @JoinColumn(name = "seguace_user_id") },
             inverseJoinColumns = { @JoinColumn(name = "seguito_user_id") }
     )
-    private List<User> seguiti;
+    private List<User> seguiti; //Altri utenti seguiti dall'utente stesso.
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -83,7 +83,7 @@ public class User implements UserDetails {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "evento_id") }
     )
-    private List<Evento> iscrizioni;
+    private List<Evento> iscrizioni; //Eventi a cui l'utente si è iscritto.
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori

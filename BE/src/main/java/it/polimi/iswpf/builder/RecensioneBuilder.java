@@ -18,7 +18,7 @@ public class RecensioneBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param id Valore dell'id univoco.
+     * @param recensioneId Valore dell'id univoco.
      * @return Un'istanza della classe stessa.
      */
     public RecensioneBuilder recensioneId(Long recensioneId) {

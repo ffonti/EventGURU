@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Model che rappresenta il luogo sul db.
+ */
 @Data
 @NoArgsConstructor
 @Entity(name = "luogo")
@@ -37,5 +40,5 @@ public class Luogo {
     private String lng;
 
     @OneToMany(mappedBy = "luogo", fetch = FetchType.LAZY)
-    private List<Evento> eventi;
+    private List<Evento> eventi; //Eventi di un dato luogo.
 }

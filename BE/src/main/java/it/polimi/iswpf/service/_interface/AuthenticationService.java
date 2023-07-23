@@ -23,7 +23,7 @@ public interface AuthenticationService {
      * @param request DTO con i dati per la registrazione -> {@link RegisterRequest }.
      * @throws Exception eccezione generale causata dal client.
      */
-    void register(@NonNull RegisterRequest request) throws Exception; //TODO custom exceptions
+    void register(@NonNull RegisterRequest request) throws RuntimeException;
 
     /**
      * Metodo per il login. Viene chiamato l'authenticationManager a cui vengono passate
@@ -32,9 +32,9 @@ public interface AuthenticationService {
      * @param request DTO con i dati per il login -> {@link LoginRequest }.
      * @return DTO con la stringa jwt -> {@link LoginResponse }.
      */
-    LoginResponse login(@NonNull LoginRequest request);
+    String login(@NonNull LoginRequest request);
 
     HttpHeaders putJwtInHttpHeaders(String jwt);
 
-    void checkUserData(@NonNull List<String> dataList) throws Exception;
+    void checkUserData(@NonNull List<String> dataList) throws RuntimeException;
 }

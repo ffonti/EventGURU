@@ -44,11 +44,11 @@ public class Recensione {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user; //Utente che recensisce.
 
     @ManyToOne
     @JoinColumn(name = "evento_id")
-    private Evento evento;
+    private Evento evento; //Evento recensito.
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
