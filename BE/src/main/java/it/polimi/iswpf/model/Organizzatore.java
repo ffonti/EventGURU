@@ -1,12 +1,15 @@
 package it.polimi.iswpf.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Data
 @NoArgsConstructor
-@Entity(name = "Organizzatore")
+//@DiscriminatorValue(value = "organizzatore")
+@Entity(name = "organizzatore")
 @Table(name = "organizzatore")
 public class Organizzatore extends NormalUser {
 
@@ -21,6 +24,6 @@ public class Organizzatore extends NormalUser {
     )
     private List<Turista> seguaci;
 
-    @OneToMany(mappedBy = "organizzatore")
+    @OneToMany(mappedBy = "organizzatore", fetch = FetchType.LAZY)
     private List<Evento> eventi;
 }

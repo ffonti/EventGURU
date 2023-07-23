@@ -2,20 +2,25 @@ package it.polimi.iswpf.model;
 
 import it.polimi.iswpf.builder.TuristaBuilder;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
 
+@Data
 @NoArgsConstructor
-@Entity(name = "Turista")
+@AllArgsConstructor
+//@DiscriminatorValue(value = "turista")
+@Entity(name = "turista")
 @Table(name = "turista")
 public class Turista extends NormalUser {
 
-    @Column(name = "iscritto_newsletter", nullable = false)
+    @Column(name = "iscritto_newsletter", nullable = false, columnDefinition = "boolean")
     private boolean iscrittoNewsletter;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "turista", fetch = FetchType.LAZY)
     private List<Recensione> recensioni;
 
     @ManyToMany(cascade = { CascadeType.ALL })

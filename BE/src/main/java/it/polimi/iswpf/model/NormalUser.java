@@ -1,12 +1,15 @@
 package it.polimi.iswpf.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Entity(name = "NormalUser")
+@Entity(name = "normal_user")
 @Table(name = "normal_user")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public class NormalUser extends User {
 
     @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")

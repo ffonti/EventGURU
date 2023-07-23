@@ -16,8 +16,8 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
-@Entity(name = "User")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Entity(name = "_user")
 @Table(
         name = "_user",
         uniqueConstraints = @UniqueConstraint(

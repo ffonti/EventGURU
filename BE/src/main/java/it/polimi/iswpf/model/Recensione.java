@@ -44,7 +44,7 @@ public class Recensione {
 
     @ManyToOne
     @JoinColumn(name = "turista_user_id")
-    private User user;
+    private Turista turista;
 
     @ManyToOne
     @JoinColumn(name = "evento_id")
