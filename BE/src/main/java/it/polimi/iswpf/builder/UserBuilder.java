@@ -1,9 +1,13 @@
 package it.polimi.iswpf.builder;
 
+import it.polimi.iswpf.model.Evento;
+import it.polimi.iswpf.model.Recensione;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * Design pattern builder. Classe Builder dove vengono riportati esattamente tutti
@@ -22,6 +26,10 @@ public class UserBuilder {
     private String password;
     private Ruolo ruolo;
     private boolean iscrittoNewsletter;
+    private List<Evento> eventi;
+    private List<Recensione> recensioni;
+    private List<User> seguiti;
+    private List<Evento> iscrizioni;
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
@@ -95,11 +103,51 @@ public class UserBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param iscritto Booleano che indica se è iscritto o meno alla newsletter.
+     * @param iscrittoNewsletter Booleano che indica se è iscritto o meno alla newsletter.
      * @return Un'istanza della classe stessa.
      */
     public UserBuilder iscrittoNewsletter(boolean iscrittoNewsletter) {
         this.iscrittoNewsletter = iscrittoNewsletter;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param eventi Lista di eventi organizzati.
+     * @return Un'istanza della classe stessa.
+     */
+    public UserBuilder eventi(List<Evento> eventi) {
+        this.eventi = eventi;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param recensioni Lista di recensioni lasciate dall'utente.
+     * @return Un'istanza della classe stessa.
+     */
+    public UserBuilder recensioni(List<Recensione> recensioni) {
+        this.recensioni = recensioni;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param seguiti Altri utenti seguiti dall'utente stesso.
+     * @return Un'istanza della classe stessa.
+     */
+    public UserBuilder seguiti(List<User> seguiti) {
+        this.seguiti = seguiti;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param iscrizioni Eventi a cui l'utente si è iscritto.
+     * @return Un'istanza della classe stessa.
+     */
+    public UserBuilder iscrizioni(List<Evento> iscrizioni) {
+        this.iscrizioni = iscrizioni;
         return this;
     }
 

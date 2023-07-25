@@ -1,10 +1,14 @@
 package it.polimi.iswpf.builder;
 
 import it.polimi.iswpf.model.Evento;
+import it.polimi.iswpf.model.Luogo;
+import it.polimi.iswpf.model.Recensione;
+import it.polimi.iswpf.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Design pattern builder. Classe Builder dove vengono riportati esattamente tutti
@@ -21,6 +25,10 @@ public class EventoBuilder {
     private LocalDateTime dataCreazione;
     private LocalDateTime dataInizio;
     private LocalDateTime dataFine;
+    private List<User> iscritti;
+    private List<Recensione> recensioni;
+    private User organizzatore;
+    private Luogo luogo;
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
@@ -79,6 +87,46 @@ public class EventoBuilder {
      */
     public EventoBuilder dataFine(LocalDateTime dataFine) {
         this.dataFine = dataFine;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param iscritti Lista di utenti iscritti all'evento.
+     * @return Un'istanza della classe stessa.
+     */
+    public EventoBuilder iscritti(List<User> iscritti) {
+        this.iscritti = iscritti;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param recensioni Lista di stringhe con le recensioni dell'evento.
+     * @return Un'istanza della classe stessa.
+     */
+    public EventoBuilder recensioni(List<Recensione> recensioni) {
+        this.recensioni = recensioni;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param organizzatore User organizzatore dell'evento.
+     * @return Un'istanza della classe stessa.
+     */
+    public EventoBuilder organizzatore(User organizzatore) {
+        this.organizzatore = organizzatore;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param luogo Luogo dell'evento.
+     * @return Un'istanza della classe stessa.
+     */
+    public EventoBuilder luogo(Luogo luogo) {
+        this.luogo = luogo;
         return this;
     }
 

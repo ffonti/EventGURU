@@ -3,6 +3,7 @@ package it.polimi.iswpf.service._interface;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
+import it.polimi.iswpf.exception.CampoVuotoException;
 import it.polimi.iswpf.service.implementation.AuthenticationServiceImpl;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +35,17 @@ public interface AuthenticationService {
      */
     String login(@NonNull LoginRequest request);
 
+    /**
+     * Crea un oggetto {@link HttpHeaders} e aggiunge il token, così da mandarlo al client, come da prassi.
+     * @param jwt Stringa con il token.
+     * @return L'oggetto {@link HttpHeaders} con il token al suo interno.
+     */
     HttpHeaders putJwtInHttpHeaders(String jwt);
 
+    /**
+     * Controlla se tutti i campi sono stati compilati.
+     * @param dataList Lista di stringhe da controllare.
+     * @throws CampoVuotoException Eccezione causata da un campo vuoto.
+     */
     void checkUserData(@NonNull List<String> dataList) throws RuntimeException;
 }

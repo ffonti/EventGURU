@@ -111,18 +111,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow();
 
         //Codifico i dati dell'utente nel jwt.
-        String jwt = jwtService.generateToken(user);
-
-        return jwt;
+        return jwtService.generateToken(user);
     }
 
+    /**
+     * Crea un oggetto {@link HttpHeaders} e aggiunge il token, così da mandarlo al client, come da prassi.
+     * @param jwt Stringa con il token.
+     * @return L'oggetto {@link HttpHeaders} con il token al suo interno.
+     */
     @Override
     public HttpHeaders putJwtInHttpHeaders(String jwt) {
         HttpHeaders headers = new HttpHeaders();
+
+        /* Come da prassi, l'header viene chiamato "Authorization" e
+        prima del jwt è presente la scritta "Bearer: " (tipo di token) */
         headers.add("Authorization", "Bearer: " + jwt);
+
         return headers;
     }
 
+    /**
+     * Controlla se tutti i campi sono stati compilati.
+     * @param dataList Lista di stringhe da controllare.
+     * @throws CampoVuotoException Eccezione causata da un campo vuoto.
+     */
     @Override
     public void checkUserData(@NonNull List<String> dataList) throws CampoVuotoException {
         for(String data : dataList) {

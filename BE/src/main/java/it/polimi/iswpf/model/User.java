@@ -99,6 +99,10 @@ public class User implements UserDetails {
         this.password = builder.getPassword();
         this.ruolo = builder.getRuolo();
         this.iscrittoNewsletter = builder.isIscrittoNewsletter();
+        this.eventi = builder.getEventi();
+        this.recensioni = builder.getRecensioni();
+        this.seguiti = builder.getSeguiti();
+        this.iscrizioni = builder.getIscrizioni();
     }
 
     /**

@@ -85,5 +85,9 @@ public class Evento {
         this.dataCreazione = builder.getDataCreazione();
         this.dataInizio = builder.getDataInizio();
         this.dataFine = builder.getDataFine();
+        this.iscritti = builder.getIscritti();
+        this.recensioni = builder.getRecensioni();
+        this.organizzatore = builder.getOrganizzatore();
+        this.luogo = builder.getLuogo();
     }
 }
