@@ -5,9 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LoginResponse {
+public class RegisterResponse {
 
     private String message;
-
-    private String jwt;
 }

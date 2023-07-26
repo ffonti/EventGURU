@@ -7,6 +7,7 @@ import it.polimi.iswpf.exception.CampoVuotoException;
 import it.polimi.iswpf.service.implementation.AuthenticationServiceImpl;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.List;
 

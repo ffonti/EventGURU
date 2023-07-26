@@ -18,5 +18,5 @@ public class RegisterRequest {
 
     private String password;
 
-    private Ruolo ruolo;
+    private String ruolo;
 }

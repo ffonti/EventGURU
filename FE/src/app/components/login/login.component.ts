@@ -36,13 +36,13 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(username, this.password).subscribe({
       next: (res: any) => {
-        this.toastr.success('Accesso eseguito!');
-        localStorage.setItem('token', res.body.token);
+        this.toastr.success(res.body.message);
+        localStorage.setItem('token', res.body.jwt);
         this.router.navigateByUrl('homepage');
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
-        this.toastr.error(err.error);
+        this.toastr.error("Errore nel login");
       },
     });
   }

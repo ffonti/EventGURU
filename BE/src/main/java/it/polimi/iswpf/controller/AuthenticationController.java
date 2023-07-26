@@ -3,16 +3,13 @@ package it.polimi.iswpf.controller;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
-import it.polimi.iswpf.exception.RuoloNonValidoException;
-import it.polimi.iswpf.model.Ruolo;
+import it.polimi.iswpf.dto.response.RegisterResponse;
 import it.polimi.iswpf.service._interface.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller per l'autenticazione.
@@ -32,13 +29,13 @@ public class AuthenticationController {
      * @throws RuntimeException insieme di eccezioni customizzate che estendono RuntimeException
      */
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) throws RuntimeException {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
 
         authenticationService.register(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body("Registrazione completata!");
+                .body(new RegisterResponse("Registrazione completata!"));
     }
 
     /**
@@ -47,12 +44,12 @@ public class AuthenticationController {
      * @return Risposta al client
      */
     @PostMapping("/login")
-    public ResponseEntity<String> authenticate(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest request) {
         final String jwt = authenticationService.login(request);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .headers(authenticationService.putJwtInHttpHeaders(jwt))
-                .body("Accesso eseguito!");
+                .body(new LoginResponse("Accesso eseguito!", jwt));
     }
 }

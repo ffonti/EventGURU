@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { Ruolo } from 'src/app/types/Ruolo';
 
 @Component({
   selector: 'app-register',
@@ -40,15 +41,17 @@ export class RegisterComponent implements OnInit {
     const email: string = this.registerForm.controls['email'].value;
     const username: string = this.registerForm.controls['username'].value;
     const password: string = this.registerForm.controls['password'].value;
+    const ruolo: Ruolo = Ruolo.TURISTA;
 
-    this.authService.register(nome, cognome, email, username, password).subscribe({
-      next: (res: HttpResponse<any>) => {
-        this.toastr.success('Registrazione completata!');
+    this.authService.register(nome, cognome, email, username, password, ruolo).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.toastr.success(res.body.message);
         this.router.navigateByUrl('/login');
       },
-      error: (err: HttpErrorResponse) => {
+      error: (err: any) => {
         console.log(err);
-        this.toastr.error(err.error);
+        this.toastr.error(err.message);
       },
     });
   }

@@ -50,12 +50,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String username;
 
         //Se c'è un errore con l'authorization header, continuo con la catena di filtri ed esco dal metodo.
-        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if(authHeader == null || !authHeader.startsWith("Bearer: ")) {
             filterChain.doFilter(request, response); //Passo request e response al prossimo filtro.
             return;
         }
 
-        jwt = authHeader.substring("Bearer ".length()); //Estraggo l'effettivo jwt dall'header.
+        jwt = authHeader.substring("Bearer: ".length()); //Estraggo l'effettivo jwt dall'header.
         username = jwtService.extractUsername(jwt); //Estraggo l'username codificato nel jwt.
 
         /* Se l'attributo univoco esiste e l'utente non è autenticato, controllo

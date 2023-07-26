@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void register(@NonNull RegisterRequest request) throws RuntimeException {
 
         //Controllo se è stata richiesta la registrazione di un admin, la quale non è permessa.
-        if(request.getRuolo().equals(Ruolo.ADMIN)) {
+        if(request.getRuolo().equals("ADMIN")) {
             throw new RuoloNonValidoException();
         }
 
@@ -64,7 +65,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final String email = request.getEmail().trim().toLowerCase();
         final String username = request.getUsername().trim().toLowerCase();
         final String password = request.getPassword();
-        final Ruolo ruolo = request.getRuolo();
+        Ruolo ruolo = Ruolo.TURISTA;
+
+        if(request.getRuolo().equals("ORGANIZZATORE")) {
+            ruolo = Ruolo.ORGANIZZATORE;
+        }
 
         //Controllo che tutti i campi non siano vuoti.
         checkUserData(List.of(nome, cognome, email, username, password, ruolo.name()));
