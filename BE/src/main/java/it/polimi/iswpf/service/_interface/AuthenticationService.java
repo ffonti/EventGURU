@@ -34,7 +34,7 @@ public interface AuthenticationService {
      * @param request DTO con i dati per il login -> {@link LoginRequest }.
      * @return DTO con la stringa jwt -> {@link LoginResponse }.
      */
-    String login(@NonNull LoginRequest request);
+    LoginResponse login(@NonNull LoginRequest request);
 
     /**
      * Crea un oggetto {@link HttpHeaders} e aggiunge il token, così da mandarlo al client, come da prassi.

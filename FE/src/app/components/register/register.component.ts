@@ -30,6 +30,7 @@ export class RegisterComponent implements OnInit {
       username: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
       ripeti_password: new FormControl('', [Validators.required]),
+      ruolo: new FormControl('', [Validators.required])
     });
   }
 
@@ -41,7 +42,7 @@ export class RegisterComponent implements OnInit {
     const email: string = this.registerForm.controls['email'].value;
     const username: string = this.registerForm.controls['username'].value;
     const password: string = this.registerForm.controls['password'].value;
-    const ruolo: Ruolo = Ruolo.TURISTA;
+    const ruolo: Ruolo = this.registerForm.controls['ruolo'].value == "TURISTA" ? Ruolo.TURISTA : Ruolo.ORGANIZZATORE;
 
     this.authService.register(nome, cognome, email, username, password, ruolo).subscribe({
       next: (res: any) => {

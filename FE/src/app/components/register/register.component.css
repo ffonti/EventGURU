@@ -15,5 +15,5 @@
 }
 
 .modal {
-    @apply flex flex-col justify-center items-center px-6 py-12 lg:px-8 ring-2 ring-inset ring-indigo-500 rounded-lg h-[60%] w-[40%] shadow bg-white;
+    @apply flex flex-col justify-center items-center px-6 py-12 lg:px-8 ring-2 ring-inset ring-indigo-500 rounded-lg h-[65%] w-[40%] shadow bg-white;
 }

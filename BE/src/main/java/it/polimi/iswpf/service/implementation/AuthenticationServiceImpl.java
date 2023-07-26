@@ -102,7 +102,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return DTO con la stringa jwt -> {@link LoginResponse }.
      */
     @Override
-    public String login(@NonNull LoginRequest request) {
+    public LoginResponse login(@NonNull LoginRequest request) {
         //Chiamo l'authenticationManager che si occuperà del login e delle eccezioni.
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -116,7 +116,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow();
 
         //Codifico i dati dell'utente nel jwt.
-        return jwtService.generateToken(user);
+//        return jwtService.generateToken(user);
+        return new LoginResponse(user, "Accesso eseguito!", jwtService.generateToken(user));
     }
 
     /**

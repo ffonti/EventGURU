@@ -7,7 +7,6 @@ import it.polimi.iswpf.dto.response.RegisterResponse;
 import it.polimi.iswpf.service._interface.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,11 +44,11 @@ public class AuthenticationController {
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest request) {
-        final String jwt = authenticationService.login(request);
+        final LoginResponse response = authenticationService.login(request);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .headers(authenticationService.putJwtInHttpHeaders(jwt))
-                .body(new LoginResponse("Accesso eseguito!", jwt));
+                .headers(authenticationService.putJwtInHttpHeaders(response.getJwt()))
+                .body(response);
     }
 }

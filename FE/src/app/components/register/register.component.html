@@ -77,6 +77,18 @@
           </div>
 
           <div class="space-y-3 w-full flex-center flex-col">
+            <div class="w-[45%] flex-center gap-2">
+              <label for="isOrganizzatore" class="label-form">Sei un oganizzatore?</label>
+              <div class="flex-center gap-1">
+                <input type="radio" value="ORGANIZZATORE" name="ruolo" formControlName="ruolo">
+                <label for="Sì" class="label-form">Sì</label>
+              </div>
+              <div class="flex-center gap-1">
+                <input type="radio" value="TURISTA" name="ruolo" formControlName="ruolo">
+                <label for="No" class="label-form">No</label>
+              </div>
+            </div>
+
             <div class="w-[45%]">
               <button type="submit"
                 [ngClass]="registerForm.valid ? 'btn-submit cursor-pointer' : 'btn-submit opacity-50 cursor-default'">Registrati</button>

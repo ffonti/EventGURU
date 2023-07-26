@@ -24,7 +24,7 @@ export class UserService {
 
   private getHeader(): HttpHeaders {
     return new HttpHeaders({
-      'x-access-token': localStorage.getItem('token') ? `${localStorage.getItem('token')}` : '',
+      'token': localStorage.getItem('token') ? `${localStorage.getItem('token')}` : '',
       id: localStorage.getItem('id') ? `${localStorage.getItem('id')}` : '',
       username: localStorage.getItem('username') ? `${localStorage.getItem('username')}` : '',
       ruolo: localStorage.getItem('ruolo') ? `${localStorage.getItem('ruolo')}` : '',

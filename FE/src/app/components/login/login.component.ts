@@ -36,8 +36,17 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(username, this.password).subscribe({
       next: (res: any) => {
+        console.log(res);
+
         this.toastr.success(res.body.message);
         localStorage.setItem('token', res.body.jwt);
+        localStorage.setItem('id', res.body.user.userId);
+        localStorage.setItem('nome', res.body.user.nome);
+        localStorage.setItem('cognome', res.body.user.cognome);
+        localStorage.setItem('username', res.body.user.username);
+        localStorage.setItem('ruolo', res.body.user.ruolo);
+        localStorage.setItem('email', res.body.user.email);
+        localStorage.setItem('iscrittoNewsletter', res.body.user.iscrittoNewsletter);
         this.router.navigateByUrl('homepage');
       },
       error: (err: HttpErrorResponse) => {
