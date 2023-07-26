@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { LoginRequest } from 'src/app/dto/request/LoginRequest';
 
 @Component({
   selector: 'app-login',
@@ -34,10 +35,10 @@ export class LoginComponent implements OnInit {
     const username: string = this.loginForm.controls['username'].value;
     this.password = this.loginForm.controls['password'].value;
 
-    this.authService.login(username, this.password).subscribe({
-      next: (res: any) => {
-        console.log(res);
+    const request: LoginRequest = new LoginRequest(username, this.password);
 
+    this.authService.login(request).subscribe({
+      next: (res: any) => {
         this.toastr.success(res.body.message);
         localStorage.setItem('token', res.body.jwt);
         localStorage.setItem('id', res.body.user.userId);

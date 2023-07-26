@@ -5,6 +5,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Ruolo } from 'src/app/types/Ruolo';
+import { RegisterRequest } from 'src/app/dto/request/RegisterRequest';
 
 @Component({
   selector: 'app-register',
@@ -44,7 +45,9 @@ export class RegisterComponent implements OnInit {
     const password: string = this.registerForm.controls['password'].value;
     const ruolo: Ruolo = this.registerForm.controls['ruolo'].value == "TURISTA" ? Ruolo.TURISTA : Ruolo.ORGANIZZATORE;
 
-    this.authService.register(nome, cognome, email, username, password, ruolo).subscribe({
+    const request: RegisterRequest = new RegisterRequest(nome, cognome, email, username, password, ruolo);
+
+    this.authService.register(request).subscribe({
       next: (res: any) => {
         console.log(res);
         this.toastr.success(res.body.message);

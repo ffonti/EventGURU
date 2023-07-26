@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Ruolo } from '../types/Ruolo';
+import { LoginRequest } from '../dto/request/LoginRequest';
+import { RegisterRequest } from '../dto/request/RegisterRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -11,18 +13,18 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(username: string, password: string): Observable<any> {
+  login(request: LoginRequest): Observable<any> {
     return this.http.post(
       this.backendUrl + 'api/v1/auth/login',
-      { username, password },
+      request,
       { observe: 'response' });
   }
 
-  register(nome: string, cognome: string, email: string, username: string, password: string, ruolo: Ruolo): Observable<any> {
+  register(request: RegisterRequest): Observable<any> {
     // const data = { nome, cognome, email, username, password, ruolo };
     return this.http.post(
       this.backendUrl + 'api/v1/auth/register',
-      { nome, cognome, email, username, password, ruolo },
+      request,
       { observe: 'response' });
   }
 
