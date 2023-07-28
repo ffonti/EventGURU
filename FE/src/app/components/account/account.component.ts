@@ -17,6 +17,7 @@ export class AccountComponent implements OnInit {
     password: '',
     email: '',
     vecchia_password: '',
+    iscrittoNewsletter: false
   };
   ripeti_password: string = '';
 
@@ -36,6 +37,7 @@ export class AccountComponent implements OnInit {
         this.userData.cognome = res.cognome;
         this.userData.email = res.email;
         this.userData.username = res.username;
+        this.userData.iscrittoNewsletter = res.iscrittoNewsletter;
         console.log(this.userData);
 
 

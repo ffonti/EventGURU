@@ -2,7 +2,7 @@
 
   <section class="flex-center flex-col">
 
-    <div class="modal mt-44">
+    <div class="modal mt-[5%]">
 
       <div class="flex-center w-full">
         <div class="space-y-6 flex-center flex-col w-full">
@@ -33,7 +33,7 @@
               </div>
             </div>
 
-            <div class="flex-center flex-col w-full space-y-2">
+            <div class="flex-center flex-col w-full space-y-2 -mt-[2.1%]">
               <div class=" w-full">
                 <label for="vecchia_password" class="label-form">Vecchia password</label>
                 <div class="flex-center flex-col relative">
@@ -67,6 +67,28 @@
                     class="material-icons right-2 absolute text-xl text-gray-900 cursor-pointer">
                     {{!showRepeatPassword ? 'visibility_off' : 'visibility'}}
                   </span>
+                </div>
+                <ng-container
+                  *ngIf="ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== '')">
+                  <p class="text-xs text-red-600 absolute">
+                    {{ripetiPasswordNotOk() ? 'Le due password non corrispondono!' : 'Vecchia e nuova password uguali!'}}
+                  </p>
+                </ng-container>
+              </div>
+
+              <div class="w-full">
+                <label for="iscritto-newsletter" class="label-form">Iscritto alla newsletter</label>
+                <div class="flex justify-center gap-3 ml-[1%]">
+                  <div class="flex-center gap-1">
+                    <input [checked]="userData.iscrittoNewsletter" type="radio" value="ORGANIZZATORE" name="ruolo"
+                      formControlName="ruolo">
+                    <label for="Sì" class="label-form">Sì</label>
+                  </div>
+                  <div class="flex-center gap-1">
+                    <input [checked]="!userData.iscrittoNewsletter" type="radio" value="TURISTA" name="ruolo"
+                      formControlName="ruolo">
+                    <label for="No" class="label-form">No</label>
+                  </div>
                 </div>
                 <ng-container
                   *ngIf="ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== '')">

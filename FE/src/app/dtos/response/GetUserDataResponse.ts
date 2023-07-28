@@ -8,4 +8,5 @@ export interface GetUserDataResponse {
     username: string;
     password: string;
     ruolo: Ruolo;
+    iscrittoNewsletter: boolean;
 }
