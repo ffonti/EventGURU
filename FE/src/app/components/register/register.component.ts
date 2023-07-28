@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Ruolo } from 'src/app/types/Ruolo';
-import { RegisterRequest } from 'src/app/dto/request/RegisterRequest';
+import { RegisterRequest } from 'src/app/dtos/request/RegisterRequest';
+import { RegisterResponse } from 'src/app/dtos/response/RegisterResponse';
 
 @Component({
   selector: 'app-register',
@@ -45,12 +45,11 @@ export class RegisterComponent implements OnInit {
     const password: string = this.registerForm.controls['password'].value;
     const ruolo: Ruolo = this.registerForm.controls['ruolo'].value == "TURISTA" ? Ruolo.TURISTA : Ruolo.ORGANIZZATORE;
 
-    const request: RegisterRequest = new RegisterRequest(nome, cognome, email, username, password, ruolo);
+    const request: RegisterRequest = { nome, cognome, email, username, password, ruolo };
 
     this.authService.register(request).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        this.toastr.success(res.body.message);
+      next: (res: RegisterResponse) => {
+        this.toastr.success(res.message);
         this.router.navigateByUrl('/login');
       },
       error: (err: any) => {

@@ -4,7 +4,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { LoginRequest } from 'src/app/dto/request/LoginRequest';
+import { LoginRequest } from 'src/app/dtos/request/LoginRequest';
+import { LoginResponse } from 'src/app/dtos/response/LoginResponse';
 
 @Component({
   selector: 'app-login',
@@ -34,20 +35,21 @@ export class LoginComponent implements OnInit {
 
     const username: string = this.loginForm.controls['username'].value;
     this.password = this.loginForm.controls['password'].value;
+    const password: string = this.password;
 
-    const request: LoginRequest = new LoginRequest(username, this.password);
+    const request: LoginRequest = { username, password };
 
     this.authService.login(request).subscribe({
-      next: (res: any) => {
-        this.toastr.success(res.body.message);
-        localStorage.setItem('token', res.body.jwt);
-        localStorage.setItem('id', res.body.user.userId);
-        localStorage.setItem('nome', res.body.user.nome);
-        localStorage.setItem('cognome', res.body.user.cognome);
-        localStorage.setItem('username', res.body.user.username);
-        localStorage.setItem('ruolo', res.body.user.ruolo);
-        localStorage.setItem('email', res.body.user.email);
-        localStorage.setItem('iscrittoNewsletter', res.body.user.iscrittoNewsletter);
+      next: (res: LoginResponse) => {
+        this.toastr.success(res.message);
+        localStorage.setItem('token', res.jwt);
+        localStorage.setItem('id', res.user.userId.toString());
+        localStorage.setItem('nome', res.user.nome);
+        localStorage.setItem('cognome', res.user.cognome);
+        localStorage.setItem('username', res.user.username);
+        localStorage.setItem('ruolo', res.user.ruolo);
+        localStorage.setItem('email', res.user.email);
+        localStorage.setItem('iscrittoNewsletter', res.user.iscrittoNewsletter.toString());
         this.router.navigateByUrl('homepage');
       },
       error: (err: HttpErrorResponse) => {
