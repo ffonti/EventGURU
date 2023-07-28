@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(request).subscribe({
       next: (res: LoginResponse) => {
         this.toastr.success(res.message);
-        localStorage.setItem('token', res.jwt);
+        localStorage.setItem('token', "Bearer " + res.jwt);
         localStorage.setItem('id', res.user.userId.toString());
         localStorage.setItem('nome', res.user.nome);
         localStorage.setItem('cognome', res.user.cognome);

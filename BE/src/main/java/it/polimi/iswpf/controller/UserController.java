@@ -1,12 +1,29 @@
 package it.polimi.iswpf.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.service._interface.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller per l'user.
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
 public class UserController {
+
+    private final UserService userService;
+
+    @GetMapping("/getUserData/{userId}")
+    public ResponseEntity<User> getUserData(@PathVariable String userId) {
+
+        final User response = userService.getUserData(Long.parseLong(userId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
 }

@@ -77,4 +77,20 @@ public class ExceptionHandlerController {
 
         return new ResponseEntity<>(customException, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = UtenteNonTrovatoException.class)
+    public ResponseEntity<Object> handleUtenteNonTrovatoException(UtenteNonTrovatoException e) {
+
+        Exception customException = new Exception(e.getMessage(), HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(customException, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = IdNonValidoException.class)
+    public ResponseEntity<Object> handleIdNonValidoException(IdNonValidoException e) {
+
+        Exception customException = new Exception(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(customException, HttpStatus.BAD_REQUEST);
+    }
 }

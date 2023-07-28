@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { GetUserDataResponse } from 'src/app/dtos/response/GetUserDataResponse';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -28,11 +29,16 @@ export class AccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.getUserData().subscribe({
-      next: (res: any) => {
-        this.userData.nome = res.body.nome;
-        this.userData.cognome = res.body.cognome;
-        this.userData.email = res.body.email;
-        this.userData.username = res.body.username;
+      next: (res: GetUserDataResponse) => {
+        console.log(res);
+
+        this.userData.nome = res.nome;
+        this.userData.cognome = res.cognome;
+        this.userData.email = res.email;
+        this.userData.username = res.username;
+        console.log(this.userData);
+
+
       },
       error: (err: any) => {
         console.log(err);

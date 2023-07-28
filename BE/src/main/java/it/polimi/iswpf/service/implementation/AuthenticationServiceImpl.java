@@ -116,7 +116,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow();
 
         //Codifico i dati dell'utente nel jwt.
-//        return jwtService.generateToken(user);
         return new LoginResponse(user, "Accesso eseguito!", jwtService.generateToken(user));
     }
 
