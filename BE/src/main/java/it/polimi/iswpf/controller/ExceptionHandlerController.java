@@ -93,4 +93,20 @@ public class ExceptionHandlerController {
 
         return new ResponseEntity<>(customException, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = PasswordUgualiException.class)
+    public ResponseEntity<Object> handlePasswordUgualiException(PasswordUgualiException e) {
+
+        Exception customException = new Exception(e.getMessage(), HttpStatus.CONFLICT);
+
+        return new ResponseEntity<>(customException, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = PasswordErrataException.class)
+    public ResponseEntity<Object> handlePasswordErrataException(PasswordErrataException e) {
+
+        Exception customException = new Exception(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(customException, HttpStatus.BAD_REQUEST);
+    }
 }

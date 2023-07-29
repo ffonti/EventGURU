@@ -37,7 +37,7 @@
               <div class=" w-full">
                 <label for="vecchia_password" class="label-form">Vecchia password</label>
                 <div class="flex-center flex-col relative">
-                  <input [(ngModel)]="userData.vecchia_password" name="password"
+                  <input [(ngModel)]="userData.vecchiaPassword" name="password"
                     [type]="!showVecchiaPassword ? 'password' : 'text'" class='input-form' required>
                   <span (click)="toggleShowPassword('vecchia')"
                     class="material-icons right-2 absolute text-xl text-gray-900 cursor-pointer">
@@ -49,8 +49,8 @@
               <div class="w-full">
                 <label for="password" class="label-form">Nuova password</label>
                 <div class="flex-center flex-col relative">
-                  <input [(ngModel)]="userData.password" name="password" [type]="!showPassword ? 'password' : 'text'"
-                    class='input-form' required>
+                  <input [(ngModel)]="userData.nuovaPassword" name="password"
+                    [type]="!showPassword ? 'password' : 'text'" class='input-form' required>
                   <span (click)="toggleShowPassword('no-repeat')"
                     class="material-icons right-2 absolute text-xl text-gray-900 cursor-pointer">
                     {{!showPassword ? 'visibility_off' : 'visibility'}}
@@ -68,34 +68,22 @@
                     {{!showRepeatPassword ? 'visibility_off' : 'visibility'}}
                   </span>
                 </div>
-                <ng-container
-                  *ngIf="ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== '')">
-                  <p class="text-xs text-red-600 absolute">
-                    {{ripetiPasswordNotOk() ? 'Le due password non corrispondono!' : 'Vecchia e nuova password uguali!'}}
-                  </p>
-                </ng-container>
               </div>
 
               <div class="w-full">
                 <label for="iscritto-newsletter" class="label-form">Iscritto alla newsletter</label>
                 <div class="flex justify-center gap-3 ml-[1%]">
                   <div class="flex-center gap-1">
-                    <input [checked]="userData.iscrittoNewsletter" type="radio" value="ORGANIZZATORE" name="ruolo"
-                      formControlName="ruolo">
+                    <input [checked]="userData.iscrittoNewsletter" type="radio" [value]=true
+                      [(ngModel)]="userData.iscrittoNewsletter">
                     <label for="Sì" class="label-form">Sì</label>
                   </div>
                   <div class="flex-center gap-1">
-                    <input [checked]="!userData.iscrittoNewsletter" type="radio" value="TURISTA" name="ruolo"
-                      formControlName="ruolo">
+                    <input [checked]="!userData.iscrittoNewsletter" type="radio" [value]=false
+                      [(ngModel)]="userData.iscrittoNewsletter">
                     <label for="No" class="label-form">No</label>
                   </div>
                 </div>
-                <ng-container
-                  *ngIf="ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== '')">
-                  <p class="text-xs text-red-600 absolute">
-                    {{ripetiPasswordNotOk() ? 'Le due password non corrispondono!' : 'Vecchia e nuova password uguali!'}}
-                  </p>
-                </ng-container>
               </div>
             </div>
           </div>
@@ -107,8 +95,14 @@
           </div>
         </div>
       </div>
-    </div>
 
+      <ng-container
+        *ngIf="ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== '')">
+        <p class="text-xs text-red-600 mt-[2%]">
+          {{ripetiPasswordNotOk() ? 'Le due password non corrispondono!' : 'Vecchia e nuova password uguali!'}}
+        </p>
+      </ng-container>
+    </div>
   </section>
 
 </main>

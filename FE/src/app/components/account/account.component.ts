@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { UpdateUserDataRequest } from 'src/app/dtos/request/UpdateUserDataRequest';
 import { GetUserDataResponse } from 'src/app/dtos/response/GetUserDataResponse';
 import { UserService } from 'src/app/services/user.service';
 
@@ -14,9 +15,9 @@ export class AccountComponent implements OnInit {
     username: '',
     nome: '',
     cognome: '',
-    password: '',
+    nuovaPassword: '',
     email: '',
-    vecchia_password: '',
+    vecchiaPassword: '',
     iscrittoNewsletter: false
   };
   ripeti_password: string = '';
@@ -31,16 +32,11 @@ export class AccountComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getUserData().subscribe({
       next: (res: GetUserDataResponse) => {
-        console.log(res);
-
         this.userData.nome = res.nome;
         this.userData.cognome = res.cognome;
         this.userData.email = res.email;
         this.userData.username = res.username;
         this.userData.iscrittoNewsletter = res.iscrittoNewsletter;
-        console.log(this.userData);
-
-
       },
       error: (err: any) => {
         console.log(err);
@@ -63,14 +59,22 @@ export class AccountComponent implements OnInit {
   }
 
   ripetiPasswordNotOk(): boolean {
-    return (this.userData.password !== this.ripeti_password);
+    return (this.userData.nuovaPassword !== this.ripeti_password);
   }
 
   updateUserData(): void {
-    this.userService.updateUserData(this.userData);
+    this.userService.updateUserData(this.userData.nome, this.userData.cognome, this.userData.email, this.userData.username, this.userData.vecchiaPassword, this.userData.nuovaPassword, this.userData.iscrittoNewsletter).subscribe({
+      next: (res: GetUserDataResponse) => {
+        this.toastr.success("Dati modificati con successo");
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
+      }
+    })
   }
 
   vecchiaENuovaPasswordUguali(): boolean {
-    return (this.userData.vecchia_password === this.userData.password);
+    return (this.userData.vecchiaPassword === this.userData.nuovaPassword && this.userData.vecchiaPassword !== '');
   }
 }

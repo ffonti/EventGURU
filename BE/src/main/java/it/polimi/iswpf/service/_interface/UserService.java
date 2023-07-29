@@ -1,5 +1,6 @@
 package it.polimi.iswpf.service._interface;
 
+import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service.implementation.UserServiceImpl;
 
@@ -12,4 +13,6 @@ import java.util.Optional;
 public interface UserService {
 
     User getUserData(Long userId);
+
+    User updateUserData(Long userId, UpdateUserDataRequest request);
 }
