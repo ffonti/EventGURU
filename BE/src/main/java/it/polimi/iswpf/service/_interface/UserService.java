@@ -3,7 +3,9 @@ package it.polimi.iswpf.service._interface;
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service.implementation.UserServiceImpl;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,4 +28,11 @@ public interface UserService {
      * @return L'oggetto utente con i dati aggiornati.
      */
     User updateUserData(Long userId, UpdateUserDataRequest request);
+
+    /**
+     * Dato un ruolo ritorna una lista di utenti con quel ruolo.
+     * @param ruolo Ruolo preso dall'endpoint.
+     * @return Lista di utenti presa dal db.
+     */
+    List<User> getAll(String ruolo);
 }

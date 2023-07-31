@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Controller per l'user.
  */
@@ -45,6 +47,21 @@ public class UserController {
             @PathVariable String userId) {
 
         final User response = userService.updateUserData(Long.parseLong(userId), request);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    /**
+     * Metodo che ritorna tutti gli utenti di uno specifico ruolo.
+     * @param ruolo Ruolo passato in modo dinamico con l'endpoint.
+     * @return Lista di utenti con quel ruolo.
+     */
+    @GetMapping("/getAll/{ruolo}")
+    public ResponseEntity<List<User>> getAll(@PathVariable String ruolo) {
+
+        final List<User> response = userService.getAll(ruolo);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

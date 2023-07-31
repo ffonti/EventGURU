@@ -12,12 +12,14 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
+  //chiamo il backend che mi ritornerà un dto con i dati dell'utente dato un id
   getUserData(): Observable<GetUserDataResponse> {
     const header = this.getHeader();
 
     return this.http.get<GetUserDataResponse>(this.backendUrl + 'getUserData/' + localStorage.getItem('id')?.toString(), { headers: header });
   }
 
+  //chiamo il backend passandogli i nuovi dati per aggiornare l'utente, mi ritornerà l'oggetto utente aggiornato
   updateUserData(nome: string, cognome: string, email: string, username: string, vecchiaPassword: string, nuovaPassword: string, iscrittoNewsletter: boolean): Observable<GetUserDataResponse> {
     const header = this.getHeader();
     const request: UpdateUserDataRequest = { nome, cognome, email, username, vecchiaPassword, nuovaPassword, iscrittoNewsletter };
@@ -26,6 +28,7 @@ export class UserService {
     return this.http.put<GetUserDataResponse>(this.backendUrl + 'updateUserData/' + localStorage.getItem('id')?.toString(), request, { headers: header });
   }
 
+  //creo l'header con il token da mandare al backend
   private getHeader(): HttpHeaders {
     return new HttpHeaders({
       'Authorization': localStorage.getItem('token') ? `${localStorage.getItem('token')}` : '',

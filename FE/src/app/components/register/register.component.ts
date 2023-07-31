@@ -23,7 +23,9 @@ export class RegisterComponent implements OnInit {
 
   constructor(private authService: AuthService, private toastr: ToastrService, private router: Router) { }
 
+  //Metodo eseguito all'avvio del componente
   ngOnInit(): void {
+    //Inizializzo il form, nello specifico tutti i campi sono vincolati dal required
     this.registerForm = new FormGroup({
       nome: new FormControl('', [Validators.required]),
       cognome: new FormControl('', [Validators.required]),
@@ -36,8 +38,13 @@ export class RegisterComponent implements OnInit {
   }
 
   register(): void {
-    if (!this.checkForm(this.registerForm)) return;
+    //Se il form non è valido lancio un messaggio di errore
+    if (!this.checkForm(this.registerForm)) {
+      this.toastr.error("Compilare tutti i campi");
+      return;
+    }
 
+    //Assegno i valori del form a delle variabili
     const nome: string = this.registerForm.controls['nome'].value;
     const cognome: string = this.registerForm.controls['cognome'].value;
     const email: string = this.registerForm.controls['email'].value;
@@ -45,38 +52,49 @@ export class RegisterComponent implements OnInit {
     const password: string = this.registerForm.controls['password'].value;
     const ruolo: Ruolo = this.registerForm.controls['ruolo'].value == "TURISTA" ? Ruolo.TURISTA : Ruolo.ORGANIZZATORE;
 
+    //Creo il DTO per mandare la richiesta al server
     const request: RegisterRequest = { nome, cognome, email, username, password, ruolo };
 
+    //Tramite il service mando la richiesta al server
     this.authService.register(request).subscribe({
       next: (res: RegisterResponse) => {
+        //In caso di successo mando l'utente al login
         this.toastr.success(res.message);
         this.router.navigateByUrl('/login');
       },
       error: (err: any) => {
+        //In caso di errore visualizzo un messaggio
         console.log(err);
-        this.toastr.error(err.message);
+        this.toastr.error(err.error.message);
       },
     });
   }
 
+  //controlla se c'è almeno un campo vuoto, null o undefined e in quel caso torna false
   checkForm(form: FormGroup): boolean {
-    return true;
+    let isOk: boolean = true;
+
+    Object.keys(form.controls).forEach(key => {
+      if (form.controls[key].value === '' || form.controls[key].value === null || form.controls[key].value === undefined) {
+        isOk = false;
+      }
+    });
+
+    return isOk;
   }
 
+  //Sceglie quale icona visualizzare nel form
   toggleShowPassword(type: string): void {
-    if (type === 'repeat') {
-      this.showRepeatPassword = !this.showRepeatPassword;
-      return;
-    } else if (type === 'no-repeat') {
-      this.showPassword = !this.showPassword;
-      return;
-    }
+    type === 'repeat' ? this.showRepeatPassword = !this.showRepeatPassword : this.showPassword = !this.showPassword;
   }
 
+  //true se il campo è vuoto ed è stato toccato (si circonda di rosso per far capire che bisogna compilarlo)
   emptyAndTouched(campo: string): boolean {
     return (this.registerForm.controls[campo].value === '' && this.registerForm.controls[campo].touched);
   }
 
+  /* true se password e ripeti password sono diversi e il campo è stato toccato 
+  (si circonda di rosso per far capire che bisogna compilarlo e dev'essere uguale a password) */
   ripetiPasswordNotOk(): boolean {
     return (this.password !== this.ripeti_password && this.registerForm.controls['ripeti_password'].touched);
   }

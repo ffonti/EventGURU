@@ -2,6 +2,7 @@ package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.exception.*;
+import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.UserService;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -132,5 +134,34 @@ public class UserServiceImpl implements UserService {
             //Ritorno l'utente come risposta al client.
             return user;
         }
+    }
+
+    /**
+     * Dato un ruolo ritorna una lista di utenti con quel ruolo.
+     * @param ruolo Ruolo preso dall'endpoint.
+     * @return Lista di utenti presa dal db.
+     */
+    @Override
+    public List<User> getAll(String ruolo) {
+
+        Optional<List<User>> utenti;
+
+        //Chiamo la repository passando nella query il ruolo richiesto.
+        if(ruolo.equals("TURISTA")) {
+            utenti = userRepository.findAllByRuolo(Ruolo.TURISTA);
+        } else if(ruolo.equals("ORGANIZZATORE")) {
+            utenti = userRepository.findAllByRuolo(Ruolo.ORGANIZZATORE);
+        } else {
+            //Qualsiasi altro ruolo non è valido.
+            throw new BadRequestException("Ruolo non valido");
+        }
+
+        //Se non è presente nessun utente lancio un'eccezione.
+        if(utenti.isEmpty())  {
+            throw new NotFoundException("Utenti non trovati");
+        }
+
+        //Ritorno la lista di utenti con quel ruolo.
+        return utenti.get();
     }
 }

@@ -11,6 +11,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./account.component.css']
 })
 export class AccountComponent implements OnInit {
+  //creo un nuovo tipo con i dati dell'utente
   userData: any = {
     username: '',
     nome: '',
@@ -22,7 +23,7 @@ export class AccountComponent implements OnInit {
   };
   ripeti_password: string = '';
 
-
+  //per gestire le icone
   protected showPassword: boolean = false;
   protected showVecchiaPassword: boolean = false;
   protected showRepeatPassword: boolean = false;
@@ -30,8 +31,10 @@ export class AccountComponent implements OnInit {
   constructor(private userService: UserService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
+    //chiamo il server per chiedere i dati dell'utente
     this.userService.getUserData().subscribe({
       next: (res: GetUserDataResponse) => {
+        //in caso di successo assegno i dati al tipo
         this.userData.nome = res.nome;
         this.userData.cognome = res.cognome;
         this.userData.email = res.email;
@@ -39,6 +42,7 @@ export class AccountComponent implements OnInit {
         this.userData.iscrittoNewsletter = res.iscrittoNewsletter;
       },
       error: (err: any) => {
+        //in caso di errore mando l'utente al login
         console.log(err);
         this.toastr.error('Eseguire nuovamente il login');
         this.router.navigateByUrl('login');
@@ -46,6 +50,7 @@ export class AccountComponent implements OnInit {
     })
   }
 
+  //per gestire l'icona
   toggleShowPassword(type: string): void {
     if (type === 'repeat') {
       this.showRepeatPassword = !this.showRepeatPassword;
@@ -63,6 +68,7 @@ export class AccountComponent implements OnInit {
   }
 
   updateUserData(): void {
+    //chiamo il server per aggiornare i dati dell'utente
     this.userService.updateUserData(this.userData.nome, this.userData.cognome, this.userData.email, this.userData.username, this.userData.vecchiaPassword, this.userData.nuovaPassword, this.userData.iscrittoNewsletter).subscribe({
       next: (res: GetUserDataResponse) => {
         this.toastr.success("Dati modificati con successo");
