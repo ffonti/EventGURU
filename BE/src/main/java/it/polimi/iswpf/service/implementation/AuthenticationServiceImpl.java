@@ -14,13 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
 
 /**
  * Service per gestire tutti i metodi inerenti all'autenticazione.
@@ -39,8 +37,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * esiste già un utente registrato con quell'username, poi viene controllato che ogni
      * campo non sia vuoto, poi viene salvato l'utente sul database e infine viene chiamato
      * di nuovo il database per controllare se l'utente è stato salvato correttamente.
-     * @param request DTO con i dati per la registrazione -> {@link RegisterRequest }.
-     * @throws Exception eccezione generale causata dal client.
+     * @param request DTO con i dati per la registrazione -> {@link RegisterRequest}.
+     * @throws RuntimeException insieme di eccezioni causate dal client.
      */
     @Override
     public void register(@NonNull RegisterRequest request) throws RuntimeException {
@@ -62,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final String email = request.getEmail().trim().toLowerCase();
         final String username = request.getUsername().trim().toLowerCase();
         final String password = request.getPassword();
-        Ruolo ruolo = Ruolo.TURISTA;
+        Ruolo ruolo = Ruolo.TURISTA; //TODO migliorare sta porcata
 
         if(request.getRuolo().equals("ORGANIZZATORE")) {
             ruolo = Ruolo.ORGANIZZATORE;
@@ -95,11 +93,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * Metodo per il login. Viene chiamato l'authenticationManager a cui vengono passate
      * le credenziali per eseguire il login e gestirà anche le eccezioni. Successivamente
      * viene preso l'utente dal database con quell'username così da codificare i dati nel jwt.
-     * @param request DTO con i dati per il login -> {@link LoginRequest }.
-     * @return DTO con la stringa jwt -> {@link LoginResponse }.
+     * @param request DTO con i dati per il login -> {@link LoginRequest}.
+     * @return DTO con l'oggetto utente. -> {@link LoginResponse}.
      */
     @Override
     public LoginResponse login(@NonNull LoginRequest request) {
+
         //Chiamo l'authenticationManager che si occuperà del login e delle eccezioni.
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -123,6 +122,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public HttpHeaders putJwtInHttpHeaders(String jwt) {
+
         HttpHeaders headers = new HttpHeaders();
 
         /* Come da prassi, l'header viene chiamato "Authorization" e
@@ -139,6 +139,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public void checkUserData(@NonNull List<String> dataList) throws RuntimeException {
+
         for(String data : dataList) {
             if(data.isEmpty() || data.isBlank()) {
                 throw new BadRequestException("Compilare tutti i campi");

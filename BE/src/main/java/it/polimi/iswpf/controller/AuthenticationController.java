@@ -24,8 +24,7 @@ public class AuthenticationController {
      * Metodo per la registrazione. Chiama il service che chiamerà
      * la repository col fine di registrare l'utente sul database.
      * @param request DTO con i dati per la registrazione -> {@link RegisterRequest}.
-     * @return Risposta al client.
-     * @throws RuntimeException insieme di eccezioni customizzate che estendono RuntimeException
+     * @return Messaggio di avvenuta registrazione.
      */
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
@@ -40,14 +39,17 @@ public class AuthenticationController {
     /**
      * Metodo per il login. Chiama il service che chiamerà la repository col fine di autenticare l'utente.
      * @param request DTO con i dati per il login -> {@link LoginRequest}.
-     * @return Risposta al client
+     * @return {@link LoginResponse} DTO con l'utente autenticato e un messaggio di avvenuta registrazione.
+     * Nell'header la stringa jwt.
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest request) {
+
         final LoginResponse response = authenticationService.login(request);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
+                //Come da prassi, la stringa jwt va inserita nell'header della chiamata.
                 .headers(authenticationService.putJwtInHttpHeaders(response.getJwt()))
                 .body(response);
     }

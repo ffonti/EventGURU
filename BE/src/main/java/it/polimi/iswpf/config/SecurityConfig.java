@@ -28,7 +28,7 @@ public class SecurityConfig {
      * Configurazione della catena di filtri per la sicurezza http.
      * @param http contiene tutte le configurazioni per la sicurezza.
      * @return l'oggetto HttpSecurity configurato.
-     * @throws Exception eccezione generale a cui si può andare incontro.
+     * @throws Exception eccezione generale causata dalla catena di filtri.
      */
     @Bean
     public SecurityFilterChain securityFilterChain(@NonNull HttpSecurity http) throws Exception {

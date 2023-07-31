@@ -18,6 +18,11 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * Metodo che ritorna i dati di uno specifico utente.
+     * @param userId Id dell'utente, passato in modo dinamico con l'endpoint.
+     * @return Model {@link User} con tutti i dati.
+     */
     @GetMapping("/getUserData/{userId}")
     public ResponseEntity<User> getUserData(@PathVariable String userId) {
 
@@ -28,6 +33,12 @@ public class UserController {
                 .body(response);
     }
 
+    /**
+     * Metodo che modifica i dati di uno specifico utente.
+     * @param request DTO con tutti i nuovi dati da sovrascrivere -> {@link UpdateUserDataRequest}.
+     * @param userId Id dell'utente, passato in modo dinamico con l'endpoint.
+     * @return Model {@link User} con i dati modificati.
+     */
     @PutMapping("/updateUserData/{userId}")
     public ResponseEntity<User> updateUserData(
             @RequestBody UpdateUserDataRequest request,

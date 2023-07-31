@@ -103,7 +103,7 @@ public class UserBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param iscrittoNewsletter Booleano che indica se è iscritto o meno alla newsletter.
+     * @param iscrittoNewsletter Booleano che indica se l'utente è iscritto o meno alla newsletter.
      * @return Un'istanza della classe stessa.
      */
     public UserBuilder iscrittoNewsletter(boolean iscrittoNewsletter) {
