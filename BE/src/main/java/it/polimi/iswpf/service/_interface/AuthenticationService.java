@@ -3,11 +3,9 @@ package it.polimi.iswpf.service._interface;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
-import it.polimi.iswpf.exception.CampoVuotoException;
 import it.polimi.iswpf.service.implementation.AuthenticationServiceImpl;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.AuthenticationException;
 
 import java.util.List;
 
@@ -46,7 +44,7 @@ public interface AuthenticationService {
     /**
      * Controlla se tutti i campi sono stati compilati.
      * @param dataList Lista di stringhe da controllare.
-     * @throws CampoVuotoException Eccezione causata da un campo vuoto.
+     * @throws RuntimeException Eccezione causata da un campo vuoto.
      */
     void checkUserData(@NonNull List<String> dataList) throws RuntimeException;
 }

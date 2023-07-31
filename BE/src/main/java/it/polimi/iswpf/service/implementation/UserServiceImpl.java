@@ -24,13 +24,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserData(Long userId) {
         if(userId < 1) {
-            throw new IdNonValidoException();
+            throw new BadRequestException("Id non valido");
         }
 
         Optional<User> userExists = userRepository.findByUserId(userId);
 
         if(userExists.isEmpty()) {
-            throw new UtenteNonTrovatoException();
+            throw new NotFoundException("Utente non trovato");
         }
 
         return userExists.get();
@@ -39,13 +39,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUserData(Long userId, UpdateUserDataRequest request) {
         if(userId < 1) {
-            throw new IdNonValidoException();
+            throw new BadRequestException("Id non valido");
         }
 
         Optional<User> userExists = userRepository.findByUserId(userId);
 
         if(userExists.isEmpty()) {
-            throw new UtenteNonTrovatoException();
+            throw new NotFoundException("Utente non trovato");
         } else {
             User user = userExists.get();
 
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
                 Optional<User> userWithUsername = userRepository.findByUsername(request.getUsername());
 
                 if(userWithUsername.isPresent()) {
-                    throw new UsernameRegistratoException();
+                    throw new ConflictException("Username già registrato");
                 } else {
                     user.setUsername(request.getUsername());
                 }
@@ -79,11 +79,11 @@ public class UserServiceImpl implements UserService {
                 !request.getVecchiaPassword().isBlank()) {
 
                 if(!passwordEncoder.matches(request.getVecchiaPassword(), user.getPassword())) {
-                    throw new PasswordErrataException();
+                    throw new BadRequestException("Password errata");
                 }
 
                 if(request.getVecchiaPassword().equals(request.getNuovaPassword())) {
-                    throw new PasswordUgualiException();
+                    throw new ConflictException("Le password sono uguali");
                 }
 
                 user.setPassword(passwordEncoder.encode(request.getNuovaPassword()));

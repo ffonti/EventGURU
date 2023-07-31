@@ -4,10 +4,7 @@ import it.polimi.iswpf.builder.UserBuilder;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
-import it.polimi.iswpf.exception.CampoVuotoException;
-import it.polimi.iswpf.exception.RegistrazioneNonRiuscitaException;
-import it.polimi.iswpf.exception.RuoloNonValidoException;
-import it.polimi.iswpf.exception.UsernameRegistratoException;
+import it.polimi.iswpf.exception.*;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
@@ -50,13 +47,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         //Controllo se è stata richiesta la registrazione di un admin, la quale non è permessa.
         if(request.getRuolo().equals("ADMIN")) {
-            throw new RuoloNonValidoException();
+            throw new BadRequestException("Ruolo non valido");
         }
 
         //Controllo se esiste già un utente con questo username sul database.
         Optional<User> userAlreadyRegistered = userRepository.findByUsername(request.getUsername());
         if(userAlreadyRegistered.isPresent()) {
-            throw new UsernameRegistratoException();
+            throw new ConflictException("Username già registrato");
         }
 
         //Assegno a delle variabili i dati della richiesta.
@@ -90,7 +87,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //Controllo se l'utente è presente sul database, se sì la registrazione è andata a buon fine.
         Optional<User> userRegistered = userRepository.findByUsername(username);
         if(userRegistered.isEmpty()) {
-            throw new RegistrazioneNonRiuscitaException();
+            throw new InternalServerErrorException("Registrazione non riuscita");
         }
     }
 
@@ -138,13 +135,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     /**
      * Controlla se tutti i campi sono stati compilati.
      * @param dataList Lista di stringhe da controllare.
-     * @throws CampoVuotoException Eccezione causata da un campo vuoto.
+     * @throws RuntimeException Eccezione causata da un campo vuoto.
      */
     @Override
-    public void checkUserData(@NonNull List<String> dataList) throws CampoVuotoException {
+    public void checkUserData(@NonNull List<String> dataList) throws RuntimeException {
         for(String data : dataList) {
             if(data.isEmpty() || data.isBlank()) {
-                throw new CampoVuotoException();
+                throw new BadRequestException("Compilare tutti i campi");
             }
         }
     }
