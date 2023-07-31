@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
@@ -8,9 +8,10 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   urlPath: string = '';
   showLogoutModal: boolean = false;
+  ruolo?: string = '';
 
   constructor(private router: Router, private authService: AuthService, private toastr: ToastrService) {
     router.events.subscribe((val) => {
@@ -18,6 +19,10 @@ export class NavbarComponent {
         this.pathName();
       }
     })
+  }
+
+  ngOnInit(): void {
+    this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
   }
 
   pathName(): void {

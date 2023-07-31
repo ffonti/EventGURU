@@ -14,6 +14,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { EventsComponent } from './components/events/events.component';
 import { AccountComponent } from './components/account/account.component';
 import { EsploraComponent } from './components/esplora/esplora.component';
+import { AdminPageComponent } from './components/admin-page/admin-page.component';
+import { CreaEventoComponent } from './components/crea-evento/crea-evento.component';
+import { OrganizzatoriComponent } from './components/organizzatori/organizzatori.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import { EsploraComponent } from './components/esplora/esplora.component';
     NavbarComponent,
     EventsComponent,
     AccountComponent,
-    EsploraComponent
+    EsploraComponent,
+    AdminPageComponent,
+    CreaEventoComponent,
+    OrganizzatoriComponent
   ],
   imports: [
     FormsModule,

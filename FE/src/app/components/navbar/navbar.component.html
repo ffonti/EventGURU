@@ -5,6 +5,22 @@
     </div>
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
       <ul class="ul-navbar">
+        <ng-container [ngSwitch]="ruolo">
+          <li *ngSwitchCase="'TURISTA'">
+            <button routerLink="/homepage/organizzatori"
+              [ngClass]="(urlPath.includes('organizzatori') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">Organizzatori</button>
+          </li>
+          <li *ngSwitchCase="'ORGANIZZATORE'">
+            <button routerLink="/homepage/creaEvento"
+              [ngClass]="(urlPath.includes('creaEvento') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">Crea
+              evento</button>
+          </li>
+          <li *ngSwitchCase="'ADMIN'">
+            <button routerLink="/homepage/admin"
+              [ngClass]="(urlPath.includes('admin') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">Admin
+              Page</button>
+          </li>
+        </ng-container>
         <li>
           <button routerLink="/homepage/esplora"
             [ngClass]="(urlPath.includes('esplora') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">Esplora</button>
