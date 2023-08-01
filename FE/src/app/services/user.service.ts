@@ -35,6 +35,18 @@ export class UserService {
     return this.http.delete<DeleteUserResponse>(this.backendUrl + 'delete/' + localStorage.getItem('id')?.toString(), { headers: header });
   }
 
+  getAdminUserData(username: string): Observable<GetUserDataResponse> {
+    const header = this.getHeader();
+
+    return this.http.get<GetUserDataResponse>(this.backendUrl + 'getAdminUserData/' + username, { headers: header });
+  }
+
+  adminEliminaUser(username: string): Observable<DeleteUserResponse> {
+    const header = this.getHeader();
+
+    return this.http.delete<DeleteUserResponse>(this.backendUrl + 'adminDelete/' + username, { headers: header });
+  }
+
   //creo l'header con il token da mandare al backend
   private getHeader(): HttpHeaders {
     return new HttpHeaders({

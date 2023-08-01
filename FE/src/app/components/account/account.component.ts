@@ -25,6 +25,8 @@ export class AccountComponent implements OnInit {
   };
   ripeti_password: string = '';
 
+  username: string = '';
+
   //per gestire le icone
   protected showPassword: boolean = false;
   protected showVecchiaPassword: boolean = false;
@@ -35,15 +37,20 @@ export class AccountComponent implements OnInit {
   constructor(private userService: UserService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
+    this.username = '';
+    this.username = this.router.url.split('/homepage/account/')[1];
+    console.log(this.username);
+
+    if (this.username !== null && this.username !== undefined && this.username !== '') {
+      this.getAdminUserData(this.username);
+      return;
+    }
+
     //chiamo il server per chiedere i dati dell'utente
     this.userService.getUserData().subscribe({
       next: (res: GetUserDataResponse) => {
         //in caso di successo assegno i dati al tipo
-        this.userData.nome = res.nome;
-        this.userData.cognome = res.cognome;
-        this.userData.email = res.email;
-        this.userData.username = res.username;
-        this.userData.iscrittoNewsletter = res.iscrittoNewsletter;
+        this.compilaCampi(res);
       },
       error: (err: any) => {
         //in caso di errore mando l'utente al login
@@ -93,6 +100,12 @@ export class AccountComponent implements OnInit {
   }
 
   eliminaAccount(): void {
+    this.username = this.router.url.split('/homepage/account/')[1];
+    if (this.username !== null && this.username !== undefined && this.username !== '') {
+      this.adminEliminaUser(this.username);
+      return;
+    }
+
     this.userService.eliminaAccount().subscribe({
       next: (res: DeleteUserResponse) => {
         this.toastr.success(res.message);
@@ -101,6 +114,38 @@ export class AccountComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.log(err);
         this.toastr.error("Errore durante l'eliminazione dell'account");
+      }
+    })
+  }
+
+  getAdminUserData(username: string): void {
+    this.userService.getAdminUserData(username).subscribe({
+      next: (res: GetUserDataResponse) => {
+        this.compilaCampi(res);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+      }
+    })
+  }
+
+  compilaCampi(res: GetUserDataResponse): void {
+    this.userData.nome = res.nome;
+    this.userData.cognome = res.cognome;
+    this.userData.email = res.email;
+    this.userData.username = res.username;
+    this.userData.iscrittoNewsletter = res.iscrittoNewsletter;
+  }
+
+  adminEliminaUser(username: string): void {
+    this.userService.adminEliminaUser(username).subscribe({
+      next: (res: DeleteUserResponse) => {
+        this.toastr.success(res.message);
+        this.router.navigateByUrl('homepage/admin');
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toastr.error("Errore nell'eliminazione dell'account");
+        this.router.navigateByUrl('homepage/admin');
       }
     })
   }

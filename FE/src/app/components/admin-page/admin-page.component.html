@@ -1,2 +1,20 @@
 <button (click)="getAllTuristi()">get all turisti</button>
 <button (click)="getAllOrganizzatori()">get all organizzatori</button>
+
+<ng-container *ngIf="showUsersList">
+  <div
+    class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+    <div class="relative mx-auto w-[40%] h-[30%]">
+      <div
+        class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
+        <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
+          <button (click)="toggleModalUsersList()" class="font-extrabold text-2xl text-red-600">x</button>
+          <ng-container *ngFor="let userName of usernameList">
+            <p class="cursor-pointer" (click)="goToAccountPage(userName)">{{userName}}</p>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+</ng-container>

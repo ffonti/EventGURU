@@ -1,8 +1,10 @@
 package it.polimi.iswpf.service._interface;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
+import it.polimi.iswpf.dto.response.DeleteUserResponse;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service.implementation.UserServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
@@ -41,4 +43,17 @@ public interface UserService {
      * @param userId Id dell'utente da eliminare.
      */
     void deleteAccount(Long userId);
+
+    /**
+     * Dato un username, ed eseguiti diversi controlli, ritorno l'utente con quell'username.
+     * @param username Username dell'utente richiesto.
+     * @return Istanza di {@link User} richiesta.
+     */
+    User getAdminUserData(String username);
+
+    /**
+     * Dato un username, viene eliminato l'account.
+     * @param username Username dell'account da eliminare.
+     */
+    void adminDeleteAccount(String username);
 }

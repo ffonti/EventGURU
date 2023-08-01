@@ -22,7 +22,11 @@ const routes: Routes = [
       { path: 'admin', component: AdminPageComponent },
       { path: 'creaEvento', component: CreaEventoComponent },
       { path: 'organizzatori', component: OrganizzatoriComponent },
-      { path: 'account', component: AccountComponent }
+      {
+        path: 'account', component: AccountComponent, children: [
+          { path: ':username', component: AccountComponent }
+        ]
+      }
     ]
   }
 ];

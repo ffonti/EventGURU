@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -80,6 +81,38 @@ public class UserController {
     public ResponseEntity<DeleteUserResponse> deleteAccount(@PathVariable String userId) {
 
         userService.deleteAccount(Long.parseLong(userId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new DeleteUserResponse("Account eliminato con successo"));
+    }
+
+    /**
+     * Dato un username in modo dinamico tramite l'endpoint, viene restituito al client l'utente con quell'username.
+     * @param username Username dell'utente di cui si vogliono i dati.
+     * @return Istanza di {@link User} con i dati richiesti.
+     */
+    @GetMapping("getAdminUserData/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> getAdminUserData(@PathVariable String username) {
+
+        final User response = userService.getAdminUserData(username);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    /**
+     * Dato un username dinamico con l'endpoint, l'admin può eliminare altri account.
+     * @param username Username dell'account da eliminare.
+     * @return Messaggio di risposta al client.
+     */
+    @DeleteMapping("adminDelete/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<DeleteUserResponse> adminDeleteAccount(@PathVariable String username) {
+
+        userService.adminDeleteAccount(username);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

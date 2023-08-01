@@ -196,4 +196,61 @@ public class UserServiceImpl implements UserService {
             throw new InternalServerErrorException("Errore nell'eliminazione dell'utente");
         }
     }
+
+    /**
+     * Dato un username, ed eseguiti diversi controlli, ritorno l'utente con quell'username.
+     * @param username Username dell'utente richiesto.
+     * @return Istanza di {@link User} richiesta.
+     */
+    @Override
+    public User getAdminUserData(String username) {
+
+        //L'username dev'essere valido.
+        if(username.isBlank() || username.isEmpty()) {
+            throw new BadRequestException("Username non valido");
+        }
+
+        //Prendo l'utente dal db con quell'username.
+        Optional<User> userExists = userRepository.findByUsername(username);
+
+        //Se non esiste un utente con quell'username, lancio un'eccezione.
+        if(userExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        //Ritorno l'utente richiesto
+        return userExists.get();
+    }
+
+    /**
+     * Dato un username, viene eliminato l'account.
+     * @param username Username dell'account da eliminare.
+     */
+    @Override
+    public void adminDeleteAccount(String username) {
+
+        //L'username dev'essere valido.
+        if(username.isBlank() || username.isEmpty()) {
+            throw new BadRequestException("Username non valido");
+        }
+
+        //Prendo l'utente dal db con quell'username.
+        Optional<User> userExists = userRepository.findByUsername(username);
+
+        //Se non esiste un utente con quell'username, lancio un'eccezione.
+        if(userExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        //Elimino l'utente dal database.
+        userRepository.delete(userExists.get());
+
+        //Controllo se esiste ancora l'utente con quell'id
+        Optional<User> userDeleted = userRepository.findByUsername(username);
+
+        //Se non è stato eliminato, lancio un'eccezione.
+        if(userDeleted.isPresent()) {
+            throw new InternalServerErrorException("Errore nell'eliminazione dell'utente");
+        }
+    }
 }
