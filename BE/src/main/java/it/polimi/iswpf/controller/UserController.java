@@ -1,11 +1,13 @@
 package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
+import it.polimi.iswpf.dto.response.DeleteUserResponse;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service._interface.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,11 +56,12 @@ public class UserController {
     }
 
     /**
-     * Metodo che ritorna tutti gli utenti di uno specifico ruolo.
+     * Metodo che ritorna tutti gli utenti di uno specifico ruolo. Solo l'admin può accederci.
      * @param ruolo Ruolo passato in modo dinamico con l'endpoint.
      * @return Lista di utenti con quel ruolo.
      */
     @GetMapping("/getAll/{ruolo}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> getAll(@PathVariable String ruolo) {
 
         final List<User> response = userService.getAll(ruolo);
@@ -66,5 +69,20 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
+    }
+
+    /**
+     * Metodo per eliminare un utente dal database.
+     * @param userId Id dell'utente, passato in modo dinamico tramite l'endpoint.
+     * @return Messaggio di risposta al client.
+     */
+    @DeleteMapping("delete/{userId}")
+    public ResponseEntity<DeleteUserResponse> deleteAccount(@PathVariable String userId) {
+
+        userService.deleteAccount(Long.parseLong(userId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new DeleteUserResponse("Account eliminato con successo"));
     }
 }

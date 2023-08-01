@@ -1,7 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UpdateUserDataRequest } from 'src/app/dtos/request/UpdateUserDataRequest';
+import { DeleteUserResponse } from 'src/app/dtos/response/DeleteUserResponse';
 import { GetUserDataResponse } from 'src/app/dtos/response/GetUserDataResponse';
 import { UserService } from 'src/app/services/user.service';
 
@@ -27,6 +29,8 @@ export class AccountComponent implements OnInit {
   protected showPassword: boolean = false;
   protected showVecchiaPassword: boolean = false;
   protected showRepeatPassword: boolean = false;
+
+  protected showModalEliminaAccount: boolean = false;
 
   constructor(private userService: UserService, private toastr: ToastrService, private router: Router) { }
 
@@ -82,5 +86,22 @@ export class AccountComponent implements OnInit {
 
   vecchiaENuovaPasswordUguali(): boolean {
     return (this.userData.vecchiaPassword === this.userData.nuovaPassword && this.userData.vecchiaPassword !== '');
+  }
+
+  toggleModalEliminaAccount(): void {
+    this.showModalEliminaAccount = !this.showModalEliminaAccount;
+  }
+
+  eliminaAccount(): void {
+    this.userService.eliminaAccount().subscribe({
+      next: (res: DeleteUserResponse) => {
+        this.toastr.success(res.message);
+        this.router.navigateByUrl('login');
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error("Errore durante l'eliminazione dell'account");
+      }
+    })
   }
 }

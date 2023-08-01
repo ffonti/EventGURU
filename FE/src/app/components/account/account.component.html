@@ -87,11 +87,14 @@
               </div>
             </div>
           </div>
-          <div class="w-full">
+          <div class="w-full flex flex-col space-y-4">
             <button type="submit"
               [ngClass]="(ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== '')) ? 'btn-submit cursor-pointer opacity-50' : 'btn-submit cursor-pointer'"
               [disabled]="(ripetiPasswordNotOk() || (vecchiaENuovaPasswordUguali() && userData.vecchia_password !== ''))"
               (click)="updateUserData()">Modifica</button>
+            <button type="submit" class="btn-red-submit cursor-pointer" (click)="toggleModalEliminaAccount()">
+              Elimina account
+            </button>
           </div>
         </div>
       </div>
@@ -104,5 +107,22 @@
       </ng-container>
     </div>
   </section>
+
+  <ng-container *ngIf="showModalEliminaAccount">
+    <div
+      class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+      <div class="relative mx-auto w-[40%] h-[30%]">
+        <div
+          class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
+          <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
+            <p>Sicuro di voler effettuare il logout?</p>
+            <button class="btn btn-white-default w-40" (click)="toggleModalEliminaAccount()">ANNULLA</button>
+            <button class="btn btn-white-default w-40" (click)="eliminaAccount()">ELIMINA ACCOUNT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+  </ng-container>
 
 </main>

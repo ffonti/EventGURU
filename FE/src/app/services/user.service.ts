@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetUserDataResponse } from '../dtos/response/GetUserDataResponse';
 import { UpdateUserDataRequest } from '../dtos/request/UpdateUserDataRequest';
+import { DeleteUserResponse } from '../dtos/response/DeleteUserResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,12 @@ export class UserService {
     console.log(request);
 
     return this.http.put<GetUserDataResponse>(this.backendUrl + 'updateUserData/' + localStorage.getItem('id')?.toString(), request, { headers: header });
+  }
+
+  eliminaAccount(): Observable<DeleteUserResponse> {
+    const header = this.getHeader();
+
+    return this.http.delete<DeleteUserResponse>(this.backendUrl + 'delete/' + localStorage.getItem('id')?.toString(), { headers: header });
   }
 
   //creo l'header con il token da mandare al backend

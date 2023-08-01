@@ -35,4 +35,10 @@ public interface UserService {
      * @return Lista di utenti presa dal db.
      */
     List<User> getAll(String ruolo);
+
+    /**
+     * Elimina l'utente dal database dopo aver fatto diversi controlli.
+     * @param userId Id dell'utente da eliminare.
+     */
+    void deleteAccount(Long userId);
 }

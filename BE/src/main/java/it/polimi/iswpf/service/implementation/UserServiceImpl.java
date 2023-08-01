@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         //Prendo l'utente dal db con quell'id.
         Optional<User> userExists = userRepository.findByUserId(userId);
 
-        //Se non esiste un utente con quell'id, lanco un'eccezione.
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
         if(userExists.isEmpty()) {
             throw new NotFoundException("Utente non trovato");
 
@@ -163,5 +163,37 @@ public class UserServiceImpl implements UserService {
 
         //Ritorno la lista di utenti con quel ruolo.
         return utenti.get();
+    }
+
+    /**
+     * Elimina l'utente dal database dopo aver fatto diversi controlli.
+     * @param userId Id dell'utente da eliminare.
+     */
+    @Override
+    public void deleteAccount(Long userId) {
+
+        //L'id autoincrement parte da 1.
+        if(userId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'utente dal db con quell'id.
+        Optional<User> userExists = userRepository.findByUserId(userId);
+
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
+        if(userExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        //Elimino l'utente dal database.
+        userRepository.delete(userExists.get());
+
+        //Controllo se esiste ancora l'utente con quell'id
+        Optional<User> userDeleted = userRepository.findByUserId(userId);
+
+        //Se non è stato eliminato, lancio un'eccezione.
+        if(userDeleted.isPresent()) {
+            throw new InternalServerErrorException("Errore nell'eliminazione dell'utente");
+        }
     }
 }
