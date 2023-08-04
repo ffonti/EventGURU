@@ -1,17 +1,142 @@
-<button (click)="getAllTuristi()">get all turisti</button>
-<button (click)="getAllOrganizzatori()">get all organizzatori</button>
+<div class="flex-center flex-col mt-[2%] space-y-4">
+  <h1 class="mb-2 text-3xl font-bold text-gray-900">Admin page</h1>
 
+  <div class="w-[50%]">
+    <h3 class="text-center">
+      Negli elenchi sottostanti è possibile visualizzare tutti gli utenti.
+      È presente un bottone per ognuno di loro che porterà alla
+      pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
+    </h3>
+  </div>
+</div>
+
+<div class="flex-center gap-20 mt-[5%]">
+  <!-- Modale per get all turisti -->
+  <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+    <h5 class="mb-2 text-2xl font-bold text-gray-900">Turisti</h5>
+
+    <p class="mb-3 font-normal text-gray-700">
+      Elenco di tutti i turisti registrati nella piattaforma.
+      È presente un bottone per ognuno di loro che porterà alla
+      pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
+    </p>
+
+    <div class="w-full">
+      <label for="nome">Cerca per nome</label>
+      <input type="text" placeholder="Cerca" class="h-10 w-full rounded border-fields shadow-fields px-2" />
+      <span class="material-icons absolute right-[54.5%] top-[68.7%] cursor-pointer">
+        search
+      </span>
+    </div>
+
+    <a (click)="getAllTuristi()"
+      class="mt-[2%] w-full justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300  -700 -800">
+      Visualizza
+    </a>
+  </div>
+
+  <!-- Modale per get all organizzatori -->
+  <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+    <a href="#">
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Noteworthy technology
+        acquisitions
+        2021</h5>
+    </a>
+    <p class="mb-3 font-normal text-gray-700">Here are the biggest enterprise technology acquisitions
+      of 2021 so far, in reverse chronological order.</p>
+    <a (click)="getAllOrganizzatori()"
+      class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+      Read more
+      <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M1 5h12m0 0L9 1m4 4L9 9" />
+      </svg>
+    </a>
+  </div>
+</div>
+
+
+<!-- Modale con la lista di utenti -->
 <ng-container *ngIf="showUsersList">
   <div
     class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
-    <div class="relative mx-auto w-[40%] h-[30%]">
+    <button (click)="toggleModalUsersList()">
+      <span class="font-extrabold text-3xl text-red-600 absolute right-[23%] top-[19%] material-icons">
+        close
+      </span>
+    </button>
+    <div class="relative mx-auto w-[50%] h-[60%]">
       <div
         class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
         <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
-          <button (click)="toggleModalUsersList()" class="font-extrabold text-2xl text-red-600">x</button>
-          <ng-container *ngFor="let userName of usernameList">
-            <p class="cursor-pointer" (click)="goToAccountPage(userName)">{{userName}}</p>
-          </ng-container>
+
+          <table class="table-fixed w-full">
+            <thead class="bg-white table-dark sticky top-0">
+              <tr class="divide-x-2 uppercase">
+                <th class="w-28" scope="col"></th>
+                <th class="w-20" scope="col">
+                  <p class="font-bold">ID</p>
+                </th>
+                <th class="w-36" scope="col">
+                  <p class="font-bold">Nome</p>
+                </th>
+                <th class="w-36" scope="col">
+                  <p class="font-bold">Cognome</p>
+                </th>
+                <th class="w-36" scope="col">
+                  <p class="font-bold">Username</p>
+                </th>
+                <th class="w-60" scope="col">
+                  <p class="font-bold">Email</p>
+                </th>
+                <th class="w-36" scope="col">
+                  <p class="font-bold">Iscritto alla newsletter</p>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Riga con dati dinamici -->
+              <ng-container *ngFor="let user of usersList; let i = index">
+                <tr class="odd:bg-table even:bg-transparent h-10 divide-x-2 text-center">
+                  <td>
+                    <p class="cursor-pointer" (click)="goToAccountPage(user.username)">Modifica</p>
+                  </td>
+                  <td>
+                    <div class="flex justify-center items-center">
+                      <p>{{ user.userId }}<p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex justify-center items-center">
+                      <p>{{ user.nome }}</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex justify-center items-center">
+                      <p>{{ user.cognome }}</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex justify-center items-center">
+                      <p>{{ user.username }}<p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex justify-center items-center">
+                      <p>{{ user.email }}</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex justify-center items-center">
+                      <p>{{ user.iscrittoNewsletter ? "Sì" : "No" }}</p>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+
         </div>
       </div>
     </div>

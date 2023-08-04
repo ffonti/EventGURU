@@ -2,7 +2,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { UpdateUserDataRequest } from 'src/app/dtos/request/UpdateUserDataRequest';
 import { DeleteUserResponse } from 'src/app/dtos/response/DeleteUserResponse';
 import { GetUserDataResponse } from 'src/app/dtos/response/GetUserDataResponse';
 import { UserService } from 'src/app/services/user.service';

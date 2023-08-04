@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { GetAllResponse } from 'src/app/dtos/response/GetAllResponse';
 import { OrganizzatoreService } from 'src/app/services/organizzatore.service';
 import { TuristaService } from 'src/app/services/turista.service';
@@ -10,11 +11,24 @@ import { TuristaService } from 'src/app/services/turista.service';
   templateUrl: './admin-page.component.html',
   styleUrls: ['./admin-page.component.css']
 })
-export class AdminPageComponent {
-  protected usernameList: string[] = [];
+export class AdminPageComponent implements OnInit {
+  protected usersList: GetAllResponse[] = [];
   protected showUsersList: boolean = false;
+  protected allCheckboxesSelected: boolean = false;
 
-  constructor(private turistaService: TuristaService, private organizzatoreService: OrganizzatoreService, private router: Router) { }
+  constructor(
+    private turistaService: TuristaService,
+    private organizzatoreService: OrganizzatoreService,
+    private router: Router,
+    private toastr: ToastrService) { }
+
+  ngOnInit(): void {
+    if (localStorage.getItem('ruolo')?.toString().trim().toUpperCase() !== 'ADMIN') {
+      this.router.navigateByUrl("login");
+      localStorage.clear();
+      this.toastr.error("Utente non autorizzato");
+    }
+  }
 
   getAllTuristi(): void {
     //chiamo il backend per prendere tutti gli utenti con ruolo turista
@@ -25,6 +39,7 @@ export class AdminPageComponent {
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
+        this.toastr.error("Errore nel caricamento dei turisti");
       }
     })
   }
@@ -38,6 +53,7 @@ export class AdminPageComponent {
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
+        this.toastr.error("Errore nel caricamento degli organizzatori");
       }
     })
   }
@@ -47,13 +63,15 @@ export class AdminPageComponent {
   }
 
   compilaUsersList(res: GetAllResponse[]): void {
-    this.usernameList = [];
+    this.usersList = [];
     for (const user of res) {
-      this.usernameList.push(user.username);
+      this.usersList.push(user);
     }
   }
 
   goToAccountPage(username: string): void {
     this.router.navigateByUrl('homepage/account/' + username);
   }
+
+  triggerCheckboxes(): void { }
 }
