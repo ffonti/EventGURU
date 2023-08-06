@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { GetAllResponse } from 'src/app/dtos/response/GetAllResponse';
 import { OrganizzatoreService } from 'src/app/services/organizzatore.service';
 import { TuristaService } from 'src/app/services/turista.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-admin-page',
@@ -15,6 +16,8 @@ export class AdminPageComponent implements OnInit {
   protected usersList: GetAllResponse[] = [];
   protected showUsersList: boolean = false;
   protected allCheckboxesSelected: boolean = false;
+  protected usernameTurista: string = '';
+  protected usernameOrganizzatore: string = '';
 
   constructor(
     private turistaService: TuristaService,
@@ -73,5 +76,20 @@ export class AdminPageComponent implements OnInit {
     this.router.navigateByUrl('homepage/account/' + username);
   }
 
-  triggerCheckboxes(): void { }
+  cercaPerUsername(ruolo: string): void {
+    if (ruolo === 'TURISTA') {
+      if (this.usernameTurista === '' || this.usernameTurista === null || this.usernameTurista === undefined) {
+        this.toastr.warning("Il campo non può essere vuoto");
+      } else {
+        this.goToAccountPage(this.usernameTurista);
+      }
+
+    } else if (ruolo === 'ORGANIZZATORE') {
+      if (this.usernameOrganizzatore === '' || this.usernameOrganizzatore === null || this.usernameOrganizzatore === undefined) {
+        this.toastr.warning("Il campo non può essere vuoto");
+      } else {
+        this.goToAccountPage(this.usernameOrganizzatore);
+      }
+    }
+  }
 }

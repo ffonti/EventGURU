@@ -124,6 +124,8 @@ export class AccountComponent implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
+        this.toastr.error("Utente non trovato");
+        this.router.navigateByUrl("homepage/admin");
       }
     })
   }
