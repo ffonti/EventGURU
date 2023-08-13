@@ -21,6 +21,7 @@ export class RegisterComponent implements OnInit {
   protected showPassword: boolean = false;
   protected showRepeatPassword: boolean = false;
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private authService: AuthService, private toastr: ToastrService, private router: Router) { }
 
   //Metodo eseguito all'avvio del componente
@@ -37,6 +38,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  //per la registrazione
   register(): void {
     //Se il form non è valido lancio un messaggio di errore
     if (!this.checkForm(this.registerForm)) {

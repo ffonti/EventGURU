@@ -18,8 +18,10 @@ export class LoginComponent implements OnInit {
   protected password: string = '';
   protected showPassword: boolean = false;
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private authService: AuthService, private toastr: ToastrService, private router: Router) { }
 
+  //metodo eseguito appena viene caricato il componente
   ngOnInit(): void {
     //pulisco il localstorage da precedenti dati
     localStorage.clear();
@@ -31,6 +33,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  //per eseguire il login
   login(): void {
     //Se il form non è valido lancio un messaggio di errore
     if (!this.checkForm(this.loginForm)) {

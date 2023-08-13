@@ -11,6 +11,7 @@ import { DeleteUserResponse } from '../dtos/response/DeleteUserResponse';
 export class UserService {
   private backendUrl: string = 'http://localhost:8080/api/v1/user/';
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
 
   //chiamo il backend che mi ritornerà un dto con i dati dell'utente dato un id
@@ -29,18 +30,21 @@ export class UserService {
     return this.http.put<GetUserDataResponse>(this.backendUrl + 'updateUserData/' + localStorage.getItem('id')?.toString(), request, { headers: header });
   }
 
+  //chiamo il backend per eliminare l'account
   eliminaAccount(): Observable<DeleteUserResponse> {
     const header = this.getHeader();
 
     return this.http.delete<DeleteUserResponse>(this.backendUrl + 'delete/' + localStorage.getItem('id')?.toString(), { headers: header });
   }
 
+  //chiamo il backend per prendere i dati di un utente dato un username
   getAdminUserData(username: string): Observable<GetUserDataResponse> {
     const header = this.getHeader();
 
     return this.http.get<GetUserDataResponse>(this.backendUrl + 'getAdminUserData/' + username, { headers: header });
   }
 
+  //chiamo il backend per eliminare i dati di un altro utente (solo se si è admin)
   adminEliminaUser(username: string): Observable<DeleteUserResponse> {
     const header = this.getHeader();
 

@@ -9,10 +9,11 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  urlPath: string = '';
-  showLogoutModal: boolean = false;
-  ruolo?: string = '';
+  protected urlPath: string = '';
+  protected showLogoutModal: boolean = false;
+  protected ruolo?: string = '';
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private router: Router, private authService: AuthService, private toastr: ToastrService) {
     router.events.subscribe((val) => {
       //ogni volta che cambia il path del sito, viene salvato in una variabile
@@ -22,23 +23,24 @@ export class NavbarComponent implements OnInit {
     })
   }
 
+  //metodo eseguito appena viene caricato il componente
   ngOnInit(): void {
     //prendo il ruolo dell'utente per visualizzare la navbar custom
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
   }
 
+  //assegno il path del sito ad una variabile
   pathName(): void {
-    //assegno il path del sito ad una variabile
     this.urlPath = this.router.url;
   }
 
+  //cambio la visualizzazione della modale
   toggleLogoutModal(): void {
-    //cambio la visualizzazione della modale
     this.showLogoutModal = !this.showLogoutModal;
   }
 
+  //pulisco il localstorage e mando l'utente al login
   logout(): void {
-    //pulisco il localstorage e mando l'utente al login
     this.authService.logout();
     this.toastr.success('Logout effettuato');
     this.router.navigateByUrl('login');

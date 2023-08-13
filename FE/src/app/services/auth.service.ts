@@ -12,6 +12,7 @@ import { RegisterResponse } from '../dtos/response/RegisterResponse';
 export class AuthService {
   private backendUrl: string = 'http://localhost:8080/api/v1/auth/';
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
 
   //chiamo il backend per il login, gli mando un dto con i dati per la request e riceverò un dto con l'utente e il token

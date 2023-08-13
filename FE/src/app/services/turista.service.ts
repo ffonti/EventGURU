@@ -10,6 +10,7 @@ export class TuristaService {
 
   private backendUrl: string = 'http://localhost:8080/api/v1/user/';
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
 
   //chiamo il backend che mi ritornerà un dto con tutti gli utenti di ruolo turista

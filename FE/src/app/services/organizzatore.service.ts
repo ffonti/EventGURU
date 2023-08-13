@@ -10,6 +10,7 @@ export class OrganizzatoreService {
 
   private backendUrl: string = 'http://localhost:8080/api/v1/user/';
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
 
   //chiamo il backend che mi ritornerà il dto con tutti i dati degli utenti di ruolo organizzatore
