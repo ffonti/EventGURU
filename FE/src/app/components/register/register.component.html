@@ -6,9 +6,9 @@
 
       <!-- Logo -->
       <div>
-        <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+        <img class="mx-auto h-10 w-auto" src="../../../assets/images/logo_small.png"
           alt="EventGURU">
-        <h2 class="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Registrazione
         </h2>
       </div>
@@ -19,19 +19,19 @@
           <div class="flex justify-center items-center gap-3 w-full">
             <div class="flex-center flex-col w-full space-y-2">
               <div class="w-full">
-                <label for="nome" class="label-form">Nome</label>
+                <label for="nome" class="label-form"><p class="font-semibold">Nome</p></label>
                 <input [ngClass]="emptyAndTouched('nome') ? 'input-form-red' : 'input-form'" formControlName="nome"
                   name="nome" type="text" class="input-form" required />
               </div>
 
               <div class="w-full">
-                <label for="cognome" class="label-form">Cognome</label>
+                <label for="cognome" class="label-form"><p class="font-semibold">Cognome</p></label>
                 <input [ngClass]="emptyAndTouched('cognome') ? 'input-form-red' : 'input-form'"
                   formControlName="cognome" name="cognome" type="text" class="input-form" required />
               </div>
 
               <div class="w-full">
-                <label for="email" class="label-form">Email</label>
+                <label for="email" class="label-form"><p class="font-semibold">Email</p></label>
                 <input [ngClass]="emptyAndTouched('email') ? 'input-form-red' : 'input-form'" formControlName="email"
                   name="email" type="email" class="input-form" required />
               </div>
@@ -39,13 +39,13 @@
 
             <div class="flex-center flex-col w-full space-y-2">
               <div class="w-full">
-                <label for="username" class="label-form">Username</label>
+                <label for="username" class="label-form"><p class="font-semibold">Username</p></label>
                 <input [ngClass]="emptyAndTouched('username') ? 'input-form-red' : 'input-form'"
                   formControlName="username" name="username" type="text" class="input-form" required />
               </div>
 
               <div class="w-full">
-                <label for="password" class="label-form">Password</label>
+                <label for="password" class="label-form"><p class="font-semibold">Password</p></label>
                 <div class="flex-center flex-col relative">
                   <input [(ngModel)]="password" formControlName="password" name="password"
                     [type]="!showPassword ? 'password' : 'text'"
@@ -58,7 +58,7 @@
               </div>
 
               <div class="w-full">
-                <label for="ripeti_password" class="label-form">Ripeti password</label>
+                <label for="ripeti_password" class="label-form"><p class="font-semibold">Ripeti password</p></label>
                 <div class="flex-center flex-col relative">
                   <input [(ngModel)]="ripeti_password" formControlName="ripeti_password" name="ripeti_password"
                     [type]="!showRepeatPassword ? 'password' : 'text'"
@@ -98,7 +98,7 @@
             <div>
               <p class="label-form">
                 Hai già un account?
-                <a routerLink="/login" class="font-medium hover:underline text-indigo-600">Accedi</a>
+                <a routerLink="/login" class="font-medium hover:underline text-avrblue">Accedi</a>
               </p>
             </div>
           </div>
