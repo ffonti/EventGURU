@@ -116,11 +116,13 @@
           class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
           <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
             <div class="flex-center flex-col space-y-8 mt-5">
-             <div> <p class="font-bold text-lg">Sicuro di voler eliminare l'account?</p></div>
-            <div class="flex-center gap-4 w-full">
-              <button class="btn-submit cursor-pointer" (click)="toggleModalEliminaAccount()">ANNULLA</button>
-            <button class="btn-red-submit cursor-pointer" (click)="eliminaAccount()">ELIMINA</button>
-            </div>
+              <div>
+                <p class="font-medium text-lg">Sicuro di voler eliminare l'account?</p>
+              </div>
+              <div class="flex-center gap-4 w-full">
+                <button class="btn-submit cursor-pointer" (click)="toggleModalEliminaAccount()">ANNULLA</button>
+                <button class="btn-red-submit cursor-pointer" (click)="eliminaAccount()">ELIMINA</button>
+              </div>
             </div>
           </div>
         </div>
