@@ -6,7 +6,7 @@
 
       <div class="flex-center w-full">
         <div class="space-y-6 flex-center flex-col w-full">
-          <h1 class="text-lg font-bold">Modifica i tuoi dati</h1>
+          <h1 class="text-xl font-bold">Modifica i dati</h1>
           <div class="flex justify-center items-center gap-3 w-full">
             <div class="flex-center flex-col w-full space-y-2">
               <div class="w-full">
@@ -109,15 +109,19 @@
   </section>
 
   <ng-container *ngIf="showModalEliminaAccount">
-    <div
+    <div (click)="toggleModalEliminaAccount()"
       class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
-      <div class="relative mx-auto w-[40%] h-[30%]">
+      <div class="relative mx-auto w-[30%] h-[30%]">
         <div
           class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
           <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
-            <p>Sicuro di voler effettuare il logout?</p>
-            <button class="btn btn-white-default w-40" (click)="toggleModalEliminaAccount()">ANNULLA</button>
-            <button class="btn btn-white-default w-40" (click)="eliminaAccount()">ELIMINA ACCOUNT</button>
+            <div class="flex-center flex-col space-y-8 mt-5">
+             <div> <p class="font-bold text-lg">Sicuro di voler eliminare l'account?</p></div>
+            <div class="flex-center gap-4 w-full">
+              <button class="btn-submit cursor-pointer" (click)="toggleModalEliminaAccount()">ANNULLA</button>
+            <button class="btn-red-submit cursor-pointer" (click)="eliminaAccount()">ELIMINA</button>
+            </div>
+            </div>
           </div>
         </div>
       </div>
