@@ -1,10 +1,11 @@
 package it.polimi.iswpf.builder;
 
 import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.Recensione;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model.Luogo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * Design pattern builder. Classe Builder dove vengono riportati esattamente tutti
@@ -12,70 +13,70 @@ import lombok.NoArgsConstructor;
  */
 @Getter
 @NoArgsConstructor
-public class RecensioneBuilder {
+public class LuogoBuilder {
 
-    //Attributi del model Recensione
-    private Long recensioneId;
-    private String testo;
-    private Integer voto;
-    private User user;
-    private Evento evento;
+    //Attributi del model Luogo
+    private Long luogoId;
+    private String nome;
+    private String lat;
+    private String lng;
+    private List<Evento> eventi;
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param recensioneId Valore dell'id univoco.
+     * @param luogoId Valore dell'id univoco.
      * @return Un'istanza della classe stessa.
      */
-    public RecensioneBuilder recensioneId(Long recensioneId) {
-        this.recensioneId = recensioneId;
+    public LuogoBuilder luogoId(Long luogoId) {
+        this.luogoId = luogoId;
         return this;
     }
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param testo Stringa con il testo settato.
+     * @param nome Stringa con il nome settato.
      * @return Un'istanza della classe stessa.
      */
-    public RecensioneBuilder testo(String testo) {
-        this.testo = testo;
+    public LuogoBuilder nome(String nome) {
+        this.nome = nome;
         return this;
     }
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param voto Valore del voto settato.
+     * @param lat Valore della latitudine settato.
      * @return Un'istanza della classe stessa.
      */
-    public RecensioneBuilder voto(Integer voto) {
-        this.voto = voto;
+    public LuogoBuilder lat(String lat) {
+        this.lat = lat;
         return this;
     }
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param user Turista che recensisce.
+     * @param lng Valore della longitudine settato.
      * @return Un'istanza della classe stessa.
      */
-    public RecensioneBuilder user(User user) {
-        this.user = user;
+    public LuogoBuilder lng(String lng) {
+        this.lng = lng;
         return this;
     }
 
     /**
      * Chiamato prima del meotodo build(), per settare l'attributo.
-     * @param evento Evento recensito.
+     * @param eventi Lista di eventi svolti in quel luogo.
      * @return Un'istanza della classe stessa.
      */
-    public RecensioneBuilder evento(Evento evento) {
-        this.evento = evento;
+    public LuogoBuilder eventi(List<Evento> eventi) {
+        this.eventi = eventi;
         return this;
     }
 
     /**
-     * Metodo che costruisce l'oggetto {@link Recensione} con tutti i dati settati in precedenza.
+     * Metodo che costruisce l'oggetto {@link Luogo} con tutti i dati settati in precedenza.
      * @return Un'istanza di Recensione a cui viene passato, tramite il costruttore, l'istanza di questa classe.
      */
-    public Recensione build() {
-        return new Recensione(this);
+    public Luogo build() {
+        return new Luogo(this);
     }
 }

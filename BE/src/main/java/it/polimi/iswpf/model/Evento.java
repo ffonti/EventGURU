@@ -15,13 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity(name = "Evento")
-@Table(
-        name = "evento",
-        uniqueConstraints = @UniqueConstraint(
-                name = "titolo_unique",
-                columnNames = "titolo"
-        )
-)
+@Table(name = "evento")
 public class Evento {
 
     /* @SequenceGenerator e @GeneratedValue servono per
@@ -39,7 +33,7 @@ public class Evento {
     @Column(name = "evento_id", updatable = false, nullable = false)
     private Long eventoId;
 
-    @Column(name = "titolo", nullable = false, columnDefinition = "VARCHAR(100)", unique = true)
+    @Column(name = "titolo", nullable = false, columnDefinition = "VARCHAR(100)")
     private String titolo;
 
     @Column(name = "descrizione", nullable = false, columnDefinition = "VARCHAR(1000)")
@@ -65,6 +59,9 @@ public class Evento {
     @OneToMany(mappedBy = "evento", fetch = FetchType.LAZY)
     private List<Recensione> recensioni; //Recensioni lasciate all'evento.
 
+    @OneToMany(mappedBy = "evento", fetch = FetchType.LAZY)
+    private List<Messaggio> messaggi; //Messaggi lasciati all'evento.
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User organizzatore; //Organizzatore dell'evento.
@@ -87,6 +84,7 @@ public class Evento {
         this.dataFine = builder.getDataFine();
         this.iscritti = builder.getIscritti();
         this.recensioni = builder.getRecensioni();
+        this.messaggi = builder.getMessaggi();
         this.organizzatore = builder.getOrganizzatore();
         this.luogo = builder.getLuogo();
     }

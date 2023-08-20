@@ -1,9 +1,6 @@
 package it.polimi.iswpf.builder;
 
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.Recensione;
-import it.polimi.iswpf.model.Ruolo;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +25,7 @@ public class UserBuilder {
     private boolean iscrittoNewsletter;
     private List<Evento> eventi;
     private List<Recensione> recensioni;
+    private List<Messaggio> messaggi;
     private List<User> seguiti;
     private List<Evento> iscrizioni;
 
@@ -113,7 +111,7 @@ public class UserBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param eventi Lista di eventi organizzati.
+     * @param eventi Lista di eventi gestiti dall'organizzatore.
      * @return Un'istanza della classe stessa.
      */
     public UserBuilder eventi(List<Evento> eventi) {
@@ -123,7 +121,7 @@ public class UserBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param recensioni Lista di recensioni lasciate dall'utente.
+     * @param recensioni Lista di recensioni lasciate dal turista.
      * @return Un'istanza della classe stessa.
      */
     public UserBuilder recensioni(List<Recensione> recensioni) {
@@ -133,7 +131,17 @@ public class UserBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param seguiti Altri utenti seguiti dall'utente stesso.
+     * @param messaggi Messaggi inviati dall'utente.
+     * @return Un'istanza della classe stessa.
+     */
+    public UserBuilder messaggi(List<Messaggio> messaggi) {
+        this.messaggi = messaggi;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param seguiti Organizzatori seguiti dal turista.
      * @return Un'istanza della classe stessa.
      */
     public UserBuilder seguiti(List<User> seguiti) {
@@ -143,7 +151,7 @@ public class UserBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param iscrizioni Eventi a cui l'utente si è iscritto.
+     * @param iscrizioni Eventi a cui il turista si è iscritto.
      * @return Un'istanza della classe stessa.
      */
     public UserBuilder iscrizioni(List<Evento> iscrizioni) {

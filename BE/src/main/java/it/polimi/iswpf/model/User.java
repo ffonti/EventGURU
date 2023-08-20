@@ -11,14 +11,14 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @- Model che rappresenta l'utente sul db.
- * @- Implementa UserDetails, un'interfaccia di Spring Security che espone una serie di metodi utili per la sicurezza.
+ * Model che rappresenta l'utente sul db. Implementa UserDetails, un'interfaccia
+ * di Spring Security che espone una serie di metodi utili per la sicurezza.
  */
 @Data
 @NoArgsConstructor
-@Entity(name = "_user")
+@Entity(name = "User")
 @Table(
-        name = "_user",
+        name = "_user", //"user" è una parola riservata in PostgreSQL
         uniqueConstraints = @UniqueConstraint(
                 name = "username_unique",
                 columnNames = "username"
@@ -38,7 +38,7 @@ public class User implements UserDetails {
             generator = "user_sequence",
             strategy = GenerationType.SEQUENCE
     )
-    @Column(name = "user_id", updatable = false, nullable = false)
+    @Column(name = "user_id", nullable = false, updatable = false)
     private Long userId;
 
     @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")
@@ -50,7 +50,7 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(100)")
     private String email;
 
-    @Column(name = "username", nullable = false, columnDefinition = "VARCHAR(50)", unique = true)
+    @Column(name = "username", nullable = false, unique = true, columnDefinition = "VARCHAR(50)")
     private String username;
 
     @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(100)")
@@ -64,18 +64,21 @@ public class User implements UserDetails {
     private boolean iscrittoNewsletter;
 
     @OneToMany(mappedBy = "organizzatore", fetch = FetchType.LAZY)
-    private List<Evento> eventi; //Lista di eventi organizzati dall'utente.
+    private List<Evento> eventi; //Lista di eventi gestiti dall'organizzatore.
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Recensione> recensioni; //Lista di recensioni lasciate dall'utente.
+    private List<Recensione> recensioni; //Lista di recensioni lasciate dal turista.
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Messaggio> messaggi; //Lista di messaggi lasciati dall'utente.
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "segue",
-            joinColumns = { @JoinColumn(name = "seguace_user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "seguito_user_id") }
+            joinColumns = { @JoinColumn(name = "turista_user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "organizzatore_user_id") }
     )
-    private List<User> seguiti; //Altri utenti seguiti dall'utente stesso.
+    private List<User> seguiti; //Organizzatori seguiti dal turista
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -88,7 +91,7 @@ public class User implements UserDetails {
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
      * settati con il builder (viene eseguito alla chiamata del metodo build() di {@link UserBuilder}).
-     * @param builder dati appena settati tramite il pattern.
+     * @param builder Dati appena settati tramite il pattern.
      */
     public User(@NonNull UserBuilder builder) {
         this.userId = builder.getUserId();
@@ -101,6 +104,7 @@ public class User implements UserDetails {
         this.iscrittoNewsletter = builder.isIscrittoNewsletter();
         this.eventi = builder.getEventi();
         this.recensioni = builder.getRecensioni();
+        this.messaggi = builder.getMessaggi();
         this.seguiti = builder.getSeguiti();
         this.iscrizioni = builder.getIscrizioni();
     }

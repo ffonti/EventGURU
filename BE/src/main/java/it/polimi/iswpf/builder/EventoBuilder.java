@@ -1,9 +1,6 @@
 package it.polimi.iswpf.builder;
 
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.Luogo;
-import it.polimi.iswpf.model.Recensione;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class EventoBuilder {
 
-    //Attributi del model User
+    //Attributi del model Evento
     private Long eventoId;
     private String titolo;
     private String descrizione;
@@ -27,6 +24,7 @@ public class EventoBuilder {
     private LocalDateTime dataFine;
     private List<User> iscritti;
     private List<Recensione> recensioni;
+    private List<Messaggio> messaggi;
     private User organizzatore;
     private Luogo luogo;
 
@@ -107,6 +105,16 @@ public class EventoBuilder {
      */
     public EventoBuilder recensioni(List<Recensione> recensioni) {
         this.recensioni = recensioni;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param messaggi Messaggi inviati nella chat dell'evento.
+     * @return Un'istanza della classe stessa.
+     */
+    public EventoBuilder messaggi(List<Messaggio> messaggi) {
+        this.messaggi = messaggi;
         return this;
     }
 

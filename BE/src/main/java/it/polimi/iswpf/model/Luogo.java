@@ -1,8 +1,10 @@
 package it.polimi.iswpf.model;
 
+import it.polimi.iswpf.builder.LuogoBuilder;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@Entity(name = "luogo")
+@Entity(name = "Luogo")
 @Table(name = "luogo")
 public class Luogo {
 
@@ -33,12 +35,25 @@ public class Luogo {
     @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")
     private String nome;
 
-    @Column(name = "lat", columnDefinition = "VARCHAR(20)", updatable = false)
+    @Column(name = "lat", columnDefinition = "VARCHAR(20)", updatable = false, nullable = false)
     private String lat;
 
-    @Column(name = "lng", columnDefinition = "VARCHAR(20)", updatable = false)
+    @Column(name = "lng", columnDefinition = "VARCHAR(20)", updatable = false, nullable = false)
     private String lng;
 
     @OneToMany(mappedBy = "luogo", fetch = FetchType.LAZY)
     private List<Evento> eventi; //Eventi di un dato luogo.
+
+    /**
+     * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
+     * settati con il builder (viene eseguito alla chiamata del metodo build() di {@link LuogoBuilder}).
+     * @param builder Dati appena settati tramite il pattern.
+     */
+    public Luogo(@NonNull LuogoBuilder builder) {
+        this.luogoId = builder.getLuogoId();
+        this.nome = builder.getNome();
+        this.lat = builder.getLat();
+        this.lng = builder.getLng();
+        this.eventi = builder.getEventi();
+    }
 }
