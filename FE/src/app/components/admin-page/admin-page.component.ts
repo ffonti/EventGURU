@@ -17,6 +17,12 @@ export class AdminPageComponent implements OnInit {
   protected usernameTurista: string = '';
   protected usernameOrganizzatore: string = '';
   protected nomeEvento: string = '';
+  protected isIdArrowUp: boolean = false;
+  protected isNomeArrowUp: boolean = false;
+  protected isCognomeArrowUp: boolean = false;
+  protected isUsernameArrowUp: boolean = false;
+  protected isEmailArrowUp: boolean = false;
+  protected isNewsletterArrowUp: boolean = false;
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(
@@ -132,6 +138,66 @@ export class AdminPageComponent implements OnInit {
       this.router.navigateByUrl("login");
       localStorage.clear();
       this.toastr.error("Utente non autorizzato");
+    }
+  }
+
+  toggleId(ordine: string): void {
+    this.isIdArrowUp = !this.isIdArrowUp;
+
+    if (ordine === 'DECRESCENTE') {
+      console.log('ora in ordine decrescente');
+    } else if (ordine === 'CRESCENTE') {
+      console.log('ora in ordine crescente');
+    }
+  }
+
+  toggleNome(ordine: string): void {
+    this.isNomeArrowUp = !this.isNomeArrowUp;
+
+    if (ordine === 'DECRESCENTE') {
+      console.log('ora in ordine decrescente');
+    } else if (ordine === 'CRESCENTE') {
+      console.log('ora in ordine crescente');
+    }
+  }
+
+  toggleCognome(ordine: string): void {
+    this.isCognomeArrowUp = !this.isCognomeArrowUp;
+
+    if (ordine === 'DECRESCENTE') {
+      console.log('ora in ordine decrescente');
+    } else if (ordine === 'CRESCENTE') {
+      console.log('ora in ordine crescente');
+    }
+  }
+
+  toggleUsername(ordine: string): void {
+    this.isUsernameArrowUp = !this.isUsernameArrowUp;
+
+    if (ordine === 'DECRESCENTE') {
+      console.log('ora in ordine decrescente');
+    } else if (ordine === 'CRESCENTE') {
+      console.log('ora in ordine crescente');
+    }
+  }
+
+  toggleEmail(ordine: string): void {
+    this.isEmailArrowUp = !this.isEmailArrowUp;
+
+    if (ordine === 'DECRESCENTE') {
+      console.log('ora in ordine decrescente');
+    } else if (ordine === 'CRESCENTE') {
+      console.log('ora in ordine crescente');
+    }
+  }
+
+  toggleNewsletter(ordine: string): void {
+    this.isNewsletterArrowUp = !this.isNewsletterArrowUp;
+
+    if (ordine === 'DECRESCENTE') {
+      console.log('ora in ordine decrescente');
+    } else if (ordine === 'CRESCENTE') {
+      console.log('ora in ordine crescente');
     }
   }
 }

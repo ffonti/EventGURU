@@ -117,7 +117,6 @@
   </div>
 </div>
 
-
 <!-- Modale con la lista di utenti -->
 <ng-container *ngIf="showUsersList">
   <div
@@ -137,22 +136,106 @@
               <tr class="divide-x-2 uppercase">
                 <th class="w-28" scope="col"></th>
                 <th class="w-20" scope="col">
-                  <p class="font-bold">ID</p>
+                  <div class=" flex-center">
+                    <p class="font-bold">ID</p>
+                    <div class="flex-center">
+                      <ng-container *ngIf="isIdArrowUp; else isIdArrowDown">
+                        <span class="material-icons cursor-pointer" (click)="toggleId('DECRESCENTE')">
+                          arrow_drop_up
+                        </span>
+                      </ng-container>
+                      <ng-template #isIdArrowDown>
+                        <span class="material-icons cursor-pointer" (click)="toggleId('CRESCENTE')">
+                          arrow_drop_down
+                        </span>
+                      </ng-template>
+                    </div>
+                  </div>
                 </th>
                 <th class="w-36" scope="col">
-                  <p class="font-bold">Nome</p>
+                  <div class=" flex-center">
+                    <p class="font-bold">Nome</p>
+                    <div class="flex-center">
+                      <ng-container *ngIf="isNomeArrowUp; else isNomeArrowDown">
+                        <span class="material-icons cursor-pointer" (click)="toggleNome('DECRESCENTE')">
+                          arrow_drop_up
+                        </span>
+                      </ng-container>
+                      <ng-template #isNomeArrowDown>
+                        <span class="material-icons cursor-pointer" (click)="toggleNome('CRESCENTE')">
+                          arrow_drop_down
+                        </span>
+                      </ng-template>
+                    </div>
+                  </div>
                 </th>
                 <th class="w-36" scope="col">
-                  <p class="font-bold">Cognome</p>
+                  <div class=" flex-center">
+                    <p class="font-bold">Cognome</p>
+                    <div class="flex-center">
+                      <ng-container *ngIf="isCognomeArrowUp; else isCognomeArrowDown">
+                        <span class="material-icons cursor-pointer" (click)="toggleCognome('DECRESCENTE')">
+                          arrow_drop_up
+                        </span>
+                      </ng-container>
+                      <ng-template #isCognomeArrowDown>
+                        <span class="material-icons cursor-pointer" (click)="toggleCognome('CRESCENTE')">
+                          arrow_drop_down
+                        </span>
+                      </ng-template>
+                    </div>
+                  </div>
                 </th>
                 <th class="w-36" scope="col">
-                  <p class="font-bold">Username</p>
+                  <div class=" flex-center">
+                    <p class="font-bold">Username</p>
+                    <div class="flex-center">
+                      <ng-container *ngIf="isUsernameArrowUp; else isUsernameArrowDown">
+                        <span class="material-icons cursor-pointer" (click)="toggleUsername('DECRESCENTE')">
+                          arrow_drop_up
+                        </span>
+                      </ng-container>
+                      <ng-template #isUsernameArrowDown>
+                        <span class="material-icons cursor-pointer" (click)="toggleUsername('CRESCENTE')">
+                          arrow_drop_down
+                        </span>
+                      </ng-template>
+                    </div>
+                  </div>
                 </th>
                 <th class="w-60" scope="col">
-                  <p class="font-bold">Email</p>
+                  <div class=" flex-center">
+                    <p class="font-bold">Email</p>
+                    <div class="flex-center">
+                      <ng-container *ngIf="isEmailArrowUp; else isEmailArrowDown">
+                        <span class="material-icons cursor-pointer" (click)="toggleEmail('DECRESCENTE')">
+                          arrow_drop_up
+                        </span>
+                      </ng-container>
+                      <ng-template #isEmailArrowDown>
+                        <span class="material-icons cursor-pointer" (click)="toggleEmail('CRESCENTE')">
+                          arrow_drop_down
+                        </span>
+                      </ng-template>
+                    </div>
+                  </div>
                 </th>
                 <th class="w-36" scope="col">
-                  <p class="font-bold">Iscritto alla newsletter</p>
+                  <div class=" flex-center">
+                    <p class="font-bold">Iscritto alla newsletter</p>
+                    <div class="flex-center">
+                      <ng-container *ngIf="isNewsletterArrowUp; else isNewsletterArrowDown">
+                        <span class="material-icons cursor-pointer" (click)="toggleNewsletter('DECRESCENTE')">
+                          arrow_drop_up
+                        </span>
+                      </ng-container>
+                      <ng-template #isNewsletterArrowDown>
+                        <span class="material-icons cursor-pointer" (click)="toggleNewsletter('CRESCENTE')">
+                          arrow_drop_down
+                        </span>
+                      </ng-template>
+                    </div>
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -161,7 +244,7 @@
               <ng-container *ngFor="let user of usersList; let i = index">
                 <tr class="odd:bg-table even:bg-transparent h-10 divide-x-2 text-center">
                   <td>
-                    <p class="cursor-pointer" (click)="goToAccountPage(user.username)">Modifica</p>
+                    <p class="cursor-pointer btn-submit" (click)="goToAccountPage(user.username)">Modifica</p>
                   </td>
                   <td>
                     <div class="flex justify-center items-center">
