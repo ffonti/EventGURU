@@ -14,7 +14,7 @@
 <!-- Body -->
 <div class="flex-center gap-10 mt-[4%]">
   <!-- Modale per turisti -->
-  <div class="modal w-[30%] h-[50%]">
+  <div class="modal w-[30%] h-80">
 
     <!-- Logo -->
     <div>
@@ -35,7 +35,7 @@
       <div class="w-full relative">
         <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameTurista"
           class="h-10 w-full rounded border-fields shadow-fields px-2" />
-        <span (click)="cercaPerUsername('TURISTA')" class="material-icons absolute cursor-pointer">
+        <span (click)="cercaPerUsername('TURISTA')" class="material-icons absolute cursor-pointer top-[19%] right-[1%]">
           search
         </span>
       </div>
@@ -48,7 +48,7 @@
   </div>
 
   <!-- Modale per organizzatori -->
-  <div class="modal w-[30%] h-[50%]">
+  <div class="modal w-[30%] h-80">
 
     <!-- Logo -->
     <div>
@@ -69,7 +69,8 @@
       <div class="w-full relative">
         <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameOrganizzatore"
           class="h-10 w-full rounded border-fields shadow-fields px-2" />
-        <span (click)="cercaPerUsername('ORGANIZZATORE')" class="material-icons absolute cursor-pointer">
+        <span (click)="cercaPerUsername('ORGANIZZATORE')"
+          class="material-icons absolute cursor-pointer top-[19%] right-[1%]">
           search
         </span>
       </div>
@@ -82,7 +83,7 @@
   </div>
 
   <!-- Modale per eventi -->
-  <div class="modal w-[30%] h-[50%]">
+  <div class="modal w-[30%] h-80">
 
     <!-- Logo -->
     <div>
@@ -101,14 +102,14 @@
       </p>
 
       <div class="w-full relative">
-        <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameOrganizzatore"
+        <input type="text" placeholder="Cerca per nome" [(ngModel)]="nomeEvento"
           class="h-10 w-full rounded border-fields shadow-fields px-2" />
-        <span (click)="cercaPerUsername('ORGANIZZATORE')" class="material-icons absolute cursor-pointer">
+        <span (click)="cercaEventoPerNome()" class="material-icons absolute cursor-pointer top-[19%] right-[1%]">
           search
         </span>
       </div>
 
-      <a (click)="getAllOrganizzatori()"
+      <a (click)="goToEsploraPage()"
         class="mt-[2%] w-full justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer">
         Visualizza
       </a>

@@ -16,6 +16,7 @@ export class AdminPageComponent implements OnInit {
   protected showUsersList: boolean = false;
   protected usernameTurista: string = '';
   protected usernameOrganizzatore: string = '';
+  protected nomeEvento: string = '';
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(
@@ -85,6 +86,24 @@ export class AdminPageComponent implements OnInit {
     this.isAdmin(); //controllo il ruolo
 
     this.router.navigateByUrl('homepage/account/' + username);
+  }
+
+  //per andare alla pagina dove è possibile visualizzare tutti gli eventi
+  goToEsploraPage(): void {
+    this.isAdmin();
+
+    this.router.navigateByUrl('homepage/esplora');
+  }
+
+  //per cercare un evento e visualizzarne i dati per poterli modificare
+  cercaEventoPerNome(): void {
+    this.isAdmin(); //controllo il ruolo
+
+    if (this.nomeEvento === '' || this.nomeEvento === null || this.nomeEvento === undefined) {
+      this.toastr.warning("Il campo non può essere vuoto");
+    } else {
+      //TODO Event page con modale evento aperta per modifica
+    }
   }
 
   //per andare alla pagina dove è possibile modificare i dati di un utente, divisi per organizzatore o turista
