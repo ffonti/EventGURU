@@ -1,4 +1,5 @@
-<div class="flex-center flex-col mt-[2%] space-y-4">
+<!-- Header -->
+<div class="flex-center flex-col mt-[4%] space-y-4">
   <h1 class="mb-2 text-3xl font-bold text-gray-900">Admin page</h1>
 
   <div class="w-[50%]">
@@ -10,57 +11,109 @@
   </div>
 </div>
 
-<div class="flex-center gap-20 mt-[5%]">
-  <!-- Modale per get all turisti -->
-  <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
-    <h5 class="mb-2 text-2xl font-bold text-gray-900">Turisti</h5>
+<!-- Body -->
+<div class="flex-center gap-10 mt-[4%]">
+  <!-- Modale per turisti -->
+  <div class="modal w-[30%] h-[50%]">
 
-    <p class="mb-3 font-normal text-gray-700">
-      Elenco di tutti i turisti registrati nella piattaforma.
-      È presente un bottone per ognuno di loro che porterà alla
-      pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
-    </p>
-
-    <div class="w-full">
-      <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameTurista"
-        class="h-10 w-full rounded border-fields shadow-fields px-2" />
-      <span (click)="cercaPerUsername('TURISTA')"
-        class="material-icons absolute right-[54.5%] top-[65.5%] cursor-pointer">
-        search
-      </span>
+    <!-- Logo -->
+    <div>
+      <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        Turisti
+      </h2>
     </div>
 
-    <a (click)="getAllTuristi()"
-      class="mt-[2%] w-full justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer">
-      Visualizza
-    </a>
+    <!-- Card centerata -->
+    <div class="mt-5 flex-center flex-col w-full">
+
+      <p class="mb-3 font-normal text-gray-700">
+        Elenco di tutti i turisti registrati nella piattaforma.
+        È presente un bottone per ognuno di loro che porterà alla
+        pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
+      </p>
+
+      <div class="w-full relative">
+        <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameTurista"
+          class="h-10 w-full rounded border-fields shadow-fields px-2" />
+        <span (click)="cercaPerUsername('TURISTA')" class="material-icons absolute cursor-pointer">
+          search
+        </span>
+      </div>
+
+      <a (click)="getAllTuristi()"
+        class="mt-[2%] w-full justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer">
+        Visualizza
+      </a>
+    </div>
   </div>
 
-  <!-- Modale per get all organizzatori -->
-  <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
-    <h5 class="mb-2 text-2xl font-bold text-gray-900">Organizzatori</h5>
+  <!-- Modale per organizzatori -->
+  <div class="modal w-[30%] h-[50%]">
 
-    <p class="mb-3 font-normal text-gray-700">
-      Elenco di tutti i turisti registrati nella piattaforma.
-      È presente un bottone per ognuno di loro che porterà alla
-      pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
-    </p>
-
-    <div class="w-full">
-      <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameOrganizzatore"
-        class="h-10 w-full rounded border-fields shadow-fields px-2" />
-      <span (click)="cercaPerUsername('ORGANIZZATORE')"
-        class="material-icons absolute right-[24.2%] top-[65.5%] cursor-pointer">
-        search
-      </span>
+    <!-- Logo -->
+    <div>
+      <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        Organizzatori
+      </h2>
     </div>
 
-    <a (click)="getAllOrganizzatori()"
-      class="mt-[2%] w-full justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer">
-      Visualizza
-    </a>
+    <!-- Card centerata -->
+    <div class="mt-5 flex-center flex-col w-full">
+
+      <p class="mb-3 font-normal text-gray-700">
+        Elenco di tutti i turisti registrati nella piattaforma.
+        È presente un bottone per ognuno di loro che porterà alla
+        pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
+      </p>
+
+      <div class="w-full relative">
+        <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameOrganizzatore"
+          class="h-10 w-full rounded border-fields shadow-fields px-2" />
+        <span (click)="cercaPerUsername('ORGANIZZATORE')" class="material-icons absolute cursor-pointer">
+          search
+        </span>
+      </div>
+
+      <a (click)="getAllOrganizzatori()"
+        class="mt-[2%] w-full justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer">
+        Visualizza
+      </a>
+    </div>
   </div>
 
+  <!-- Modale per eventi -->
+  <div class="modal w-[30%] h-[50%]">
+
+    <!-- Logo -->
+    <div>
+      <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        Eventi
+      </h2>
+    </div>
+
+    <!-- Card centerata -->
+    <div class="mt-5 flex-center flex-col w-full">
+
+      <p class="mb-3 font-normal text-gray-700">
+        Elenco di tutti i turisti registrati nella piattaforma.
+        È presente un bottone per ognuno di loro che porterà alla
+        pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
+      </p>
+
+      <div class="w-full relative">
+        <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameOrganizzatore"
+          class="h-10 w-full rounded border-fields shadow-fields px-2" />
+        <span (click)="cercaPerUsername('ORGANIZZATORE')" class="material-icons absolute cursor-pointer">
+          search
+        </span>
+      </div>
+
+      <a (click)="getAllOrganizzatori()"
+        class="mt-[2%] w-full justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer">
+        Visualizza
+      </a>
+    </div>
+  </div>
 </div>
 
 
