@@ -68,71 +68,12 @@ public class UserServiceImpl implements UserService {
         //Se non esiste un utente con quell'id, lancio un'eccezione.
         if(userExists.isEmpty()) {
             throw new NotFoundException("Utente non trovato");
-
         } else {
             //Se l'utente esiste, lo assegno a una variabile.
             User user = userExists.get();
 
-            //Se il client ha compilato il campo "nome" e non è vuoto, aggiorno il nome dell'utente.
-            if(!request.getNome().isEmpty() && !request.getNome().isBlank()) {
-                user.setNome(request.getNome());
-            }
-
-            //Se il client ha compilato il campo "cognome" e non è vuoto, aggiorno il cognome dell'utente.
-            if(!request.getCognome().isEmpty() && !request.getCognome().isBlank()) {
-                user.setCognome(request.getCognome());
-            }
-
-            //Se il client ha compilato il campo "email" e non è vuoto, aggiorno l'email dell'utente.
-            if(!request.getEmail().isEmpty() && !request.getEmail().isBlank()) {
-                user.setEmail(request.getEmail());
-            }
-
-            //Se il client ha compilato il campo "username", non è vuoto e non è uguale a quello attuale,
-            if(!request.getUsername().isEmpty() &&
-                !request.getUsername().isBlank() &&
-                !request.getUsername().equals(user.getUsername())) {
-
-                //Controllo se esiste già un utente con il nuovo username.
-                Optional<User> userWithUsername = userRepository.findByUsername(request.getUsername());
-
-                //Se esiste, lancio un'eccezione.
-                if(userWithUsername.isPresent()) {
-                    throw new ConflictException("Username già registrato");
-                } else {
-                    //Se non esiste, assegno all'utente il nuovo username.
-                    user.setUsername(request.getUsername());
-                }
-            }
-
-            //Se il client ha compilato i campi "vecchia password" e "nuova password" e non sono vuoti,
-            if(!request.getNuovaPassword().isEmpty() &&
-                    !request.getNuovaPassword().isBlank() &&
-                    !request.getVecchiaPassword().isEmpty() &&
-                    !request.getVecchiaPassword().isBlank()) {
-
-                //Controllo se la vecchia password è esatta, decodificandola. Se è errata lancio un'eccezione.
-                if(!passwordEncoder.matches(request.getVecchiaPassword(), user.getPassword())) {
-                    throw new BadRequestException("Password errata");
-                }
-
-                //Se vecchia e nuova password sono uguali, lancio un'eccezione.
-                if(request.getVecchiaPassword().equals(request.getNuovaPassword())) {
-                    throw new ConflictException("Le password sono uguali");
-                }
-
-                //Dopo aver passato i controlli, setto la nuova password codificata.
-                user.setPassword(passwordEncoder.encode(request.getNuovaPassword()));
-            }
-
-            //Setto il booleano che indica se l'utente è iscritto alla newsletter.
-            user.setIscrittoNewsletter(request.isIscrittoNewsletter());
-
-            //Chiamo la repository e salvo i dati aggiornati dell'utente.
-            userRepository.save(user);
-
-            //Ritorno l'utente come risposta al client.
-            return user;
+            //Aggiorno i dati dell'utente
+            return updateGeneralUser(user, request);
         }
     }
 
@@ -161,67 +102,79 @@ public class UserServiceImpl implements UserService {
             //Se l'utente esiste, lo assegno a una variabile.
             User user = userExists.get();
 
-            //Se il client ha compilato il campo "nome" e non è vuoto, aggiorno il nome dell'utente.
-            if(!request.getNome().isEmpty() && !request.getNome().isBlank()) {
-                user.setNome(request.getNome());
-            }
+            //Aggiorno i dati dell'utente
+            return updateGeneralUser(user, request);
+        }
+    }
 
-            //Se il client ha compilato il campo "cognome" e non è vuoto, aggiorno il cognome dell'utente.
-            if(!request.getCognome().isEmpty() && !request.getCognome().isBlank()) {
-                user.setCognome(request.getCognome());
-            }
+    /**
+     * Code cleaning. Metodo usato da due endpoint (admin e no) per modificare i dati di un utente.
+     * @param user Utente da modificare.
+     * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
+     * @return L'oggetto utente con i dati aggiornati.
+     */
+    private User updateGeneralUser(User user, UpdateUserDataRequest request) {
 
-            //Se il client ha compilato il campo "email" e non è vuoto, aggiorno l'email dell'utente.
-            if(!request.getEmail().isEmpty() && !request.getEmail().isBlank()) {
-                user.setEmail(request.getEmail());
-            }
+        //Se il client ha compilato il campo "nome" e non è vuoto, aggiorno il nome dell'utente.
+        if(!request.getNome().isEmpty() && !request.getNome().isBlank()) {
+            user.setNome(request.getNome());
+        }
 
-            //Se il client ha compilato il campo "username", non è vuoto e non è uguale a quello attuale,
-            if(!request.getUsername().isEmpty() &&
+        //Se il client ha compilato il campo "cognome" e non è vuoto, aggiorno il cognome dell'utente.
+        if(!request.getCognome().isEmpty() && !request.getCognome().isBlank()) {
+            user.setCognome(request.getCognome());
+        }
+
+        //Se il client ha compilato il campo "email" e non è vuoto, aggiorno l'email dell'utente.
+        if(!request.getEmail().isEmpty() && !request.getEmail().isBlank()) {
+            user.setEmail(request.getEmail());
+        }
+
+        //Se il client ha compilato il campo "username", non è vuoto e non è uguale a quello attuale,
+        if(!request.getUsername().isEmpty() &&
                 !request.getUsername().isBlank() &&
                 !request.getUsername().equals(user.getUsername())) {
 
-                //Controllo se esiste già un utente con il nuovo username.
-                Optional<User> userWithUsername = userRepository.findByUsername(request.getUsername());
+            //Controllo se esiste già un utente con il nuovo username.
+            Optional<User> userWithUsername = userRepository.findByUsername(request.getUsername());
 
-                //Se esiste, lancio un'eccezione.
-                if(userWithUsername.isPresent()) {
-                    throw new ConflictException("Username già registrato");
-                } else {
-                    //Se non esiste, assegno all'utente il nuovo username.
-                    user.setUsername(request.getUsername());
-                }
+            //Se esiste, lancio un'eccezione.
+            if(userWithUsername.isPresent()) {
+                throw new ConflictException("Username già registrato");
+            } else {
+                //Se non esiste, assegno all'utente il nuovo username.
+                user.setUsername(request.getUsername());
             }
-
-            //Se il client ha compilato i campi "vecchia password" e "nuova password" e non sono vuoti,
-            if(!request.getNuovaPassword().isEmpty() &&
-                    !request.getNuovaPassword().isBlank() &&
-                    !request.getVecchiaPassword().isEmpty() &&
-                    !request.getVecchiaPassword().isBlank()) {
-
-                //Controllo se la vecchia password è esatta, decodificandola. Se è errata lancio un'eccezione.
-                if(!passwordEncoder.matches(request.getVecchiaPassword(), user.getPassword())) {
-                    throw new BadRequestException("Password errata");
-                }
-
-                //Se vecchia e nuova password sono uguali, lancio un'eccezione.
-                if(request.getVecchiaPassword().equals(request.getNuovaPassword())) {
-                    throw new ConflictException("Le password sono uguali");
-                }
-
-                //Dopo aver passato i controlli, setto la nuova password codificata.
-                user.setPassword(passwordEncoder.encode(request.getNuovaPassword()));
-            }
-
-            //Setto il booleano che indica se l'utente è iscritto alla newsletter.
-            user.setIscrittoNewsletter(request.isIscrittoNewsletter());
-
-            //Chiamo la repository e salvo i dati aggiornati dell'utente.
-            userRepository.save(user);
-
-            //Ritorno l'utente come risposta al client.
-            return user;
         }
+
+        //Se il client ha compilato i campi "vecchia password" e "nuova password" e non sono vuoti,
+        if(!request.getNuovaPassword().isEmpty() &&
+                !request.getNuovaPassword().isBlank() &&
+                !request.getVecchiaPassword().isEmpty() &&
+                !request.getVecchiaPassword().isBlank()) {
+
+            //Controllo se la vecchia password è esatta, decodificandola. Se è errata lancio un'eccezione.
+            if(!passwordEncoder.matches(request.getVecchiaPassword(), user.getPassword())) {
+                throw new BadRequestException("Password errata");
+            }
+
+            //Se vecchia e nuova password sono uguali, lancio un'eccezione.
+            if(request.getVecchiaPassword().equals(request.getNuovaPassword())) {
+                throw new ConflictException("Le password sono uguali");
+            }
+
+            //Dopo aver passato i controlli, setto la nuova password codificata.
+            user.setPassword(passwordEncoder.encode(request.getNuovaPassword()));
+        }
+
+        //Setto il booleano che indica se l'utente è iscritto alla newsletter.
+        user.setIscrittoNewsletter(request.isIscrittoNewsletter());
+
+        //Chiamo la repository e salvo i dati aggiornati dell'utente.
+        userRepository.save(user);
+
+        //Ritorno l'utente come risposta al client.
+        return user;
     }
 
     /**
