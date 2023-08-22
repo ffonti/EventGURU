@@ -20,6 +20,4 @@ public class UpdateUserDataRequest {
     private String nuovaPassword;
 
     private boolean iscrittoNewsletter;
-
-    private String oldUsername;
 }

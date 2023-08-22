@@ -25,9 +25,16 @@ export class UserService {
   updateUserData(nome: string, cognome: string, email: string, username: string, vecchiaPassword: string, nuovaPassword: string, iscrittoNewsletter: boolean): Observable<GetUserDataResponse> {
     const header = this.getHeader();
     const request: UpdateUserDataRequest = { nome, cognome, email, username, vecchiaPassword, nuovaPassword, iscrittoNewsletter };
-    console.log(request);
 
     return this.http.put<GetUserDataResponse>(this.backendUrl + 'updateUserData/' + localStorage.getItem('id')?.toString(), request, { headers: header });
+  }
+
+  //chiamo il backend passandogli i nuovi dati per aggiornare l'utente scelto dall'admin, mi ritornerà l'oggetto utente aggiornato
+  adminUpdateUserData(nome: string, cognome: string, email: string, username: string, vecchiaPassword: string, nuovaPassword: string, iscrittoNewsletter: boolean, oldUsername: string): Observable<GetUserDataResponse> {
+    const header = this.getHeader();
+    const request: UpdateUserDataRequest = { nome, cognome, email, username, vecchiaPassword, nuovaPassword, iscrittoNewsletter };
+
+    return this.http.put<GetUserDataResponse>(this.backendUrl + 'adminUpdateUserData/' + oldUsername, request, { headers: header });
   }
 
   //chiamo il backend per eliminare l'account

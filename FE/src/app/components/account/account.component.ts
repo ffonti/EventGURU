@@ -41,6 +41,7 @@ export class AccountComponent implements OnInit {
   //metodo eseguito appena viene caricato il componente
   ngOnInit(): void {
     this.username = ''; //inizzializzo l'username
+    this.oldUsername = '';
 
     //se nell'url è presente un username, vuol dire che un admin vuole visualizzare i dati di un altro utente
     this.username = this.router.url.split('/homepage/account/')[1];
@@ -85,18 +86,36 @@ export class AccountComponent implements OnInit {
   }
 
   //per aggiornare i dati dell'utente
-  //per aggiornare i dati dell'utente
   updateUserData(): void {
-    //chiamo il server per aggiornare i dati dell'utente
-    this.userService.updateUserData(this.userData.nome, this.userData.cognome, this.userData.email, this.userData.username, this.userData.vecchiaPassword, this.userData.nuovaPassword, this.userData.iscrittoNewsletter).subscribe({
-      next: (res: GetUserDataResponse) => {
-        this.toastr.success("Dati modificati con successo");
-      },
-      error: (err: any) => {
-        console.log(err);
-        this.toastr.error(err.error.message);
-      }
-    })
+
+    this.oldUsername = this.router.url.split('/homepage/account/')[1];
+
+    //caso in cui un admin modifica i dati di un altro utente
+    if (this.oldUsername !== null && this.oldUsername !== undefined && this.oldUsername !== '') {
+      this.userService.adminUpdateUserData(this.userData.nome, this.userData.cognome, this.userData.email, this.userData.username, this.userData.vecchiaPassword, this.userData.nuovaPassword, this.userData.iscrittoNewsletter, this.oldUsername).subscribe({
+        next: (res: GetUserDataResponse) => {
+          this.toastr.success("Dati modificati con successo");
+        },
+        error: (err: any) => {
+          console.log(err);
+          this.toastr.error(err.error.message);
+        }
+      });
+
+    } else {
+      //chiamo il server per aggiornare i dati dell'utente
+      this.userService.updateUserData(this.userData.nome, this.userData.cognome, this.userData.email, this.userData.username, this.userData.vecchiaPassword, this.userData.nuovaPassword, this.userData.iscrittoNewsletter).subscribe({
+        next: (res: GetUserDataResponse) => {
+          this.router.navigateByUrl('login');
+          this.toastr.success("Dati modificati con successo");
+          this.toastr.info("Eseguire nuovamente il login");
+        },
+        error: (err: any) => {
+          console.log(err);
+          this.toastr.error(err.error.message);
+        }
+      });
+    }
   }
 
   //per visualizzare i messaggi di errore

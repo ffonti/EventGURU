@@ -32,6 +32,14 @@ public interface UserService {
     User updateUserData(Long userId, UpdateUserDataRequest request);
 
     /**
+     * Metodo che permette all'admin di modificare i dati di un utente, dato un username.
+     * @param username Username dell'utente da modificare.
+     * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
+     * @return L'oggetto utente con i dati aggiornati.
+     */
+    User adminUpdateUserData(String username, UpdateUserDataRequest request);
+
+    /**
      * Dato un ruolo ritorna una lista di utenti con quel ruolo.
      * @param ruolo Ruolo preso dall'endpoint.
      * @return Lista di utenti presa dal db.

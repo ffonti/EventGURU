@@ -56,6 +56,25 @@ public class UserController {
     }
 
     /**
+     * Metodo che permette all'admin di modificare i dati di un utente.
+     * @param request DTO con tutti i nuovi dati da sovrascrivere -> {@link UpdateUserDataRequest}.
+     * @param username Username dell'utente da modificare, passato in modo dinamico con l'endpoint.
+     * @return Model {@link User} con i dati modificati.
+     */
+    @PutMapping("/adminUpdateUserData/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> adminUpdateUserData(
+            @RequestBody UpdateUserDataRequest request,
+            @PathVariable String username) {
+
+        final User response = userService.adminUpdateUserData(username, request);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    /**
      * Metodo che ritorna tutti gli utenti di uno specifico ruolo. Solo l'admin può accederci.
      * @param ruolo Ruolo passato in modo dinamico con l'endpoint.
      * @return Lista di utenti con quel ruolo.
