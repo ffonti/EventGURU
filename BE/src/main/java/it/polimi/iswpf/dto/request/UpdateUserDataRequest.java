@@ -21,4 +21,5 @@ public class UpdateUserDataRequest {
 
     private boolean iscrittoNewsletter;
 
+    private String oldUsername;
 }

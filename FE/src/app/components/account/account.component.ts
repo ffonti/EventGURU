@@ -25,6 +25,7 @@ export class AccountComponent implements OnInit {
   protected ripeti_password: string = '';
 
   protected username: string = '';
+  protected oldUsername: string = '';
 
   //per gestire le icone
   protected showPassword: boolean = false;
@@ -83,6 +84,7 @@ export class AccountComponent implements OnInit {
     return (this.userData.nuovaPassword !== this.ripeti_password);
   }
 
+  //per aggiornare i dati dell'utente
   //per aggiornare i dati dell'utente
   updateUserData(): void {
     //chiamo il server per aggiornare i dati dell'utente

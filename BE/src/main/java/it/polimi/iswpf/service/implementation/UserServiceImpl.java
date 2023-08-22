@@ -90,8 +90,8 @@ public class UserServiceImpl implements UserService {
 
             //Se il client ha compilato il campo "username", non è vuoto e non è uguale a quello attuale,
             if(!request.getUsername().isEmpty() &&
-                !request.getUsername().isBlank() &&
-                !request.getUsername().equals(user.getUsername())) {
+                    !request.getUsername().isBlank() &&
+                    !request.getUsername().equals(user.getUsername())) {
 
                 //Controllo se esiste già un utente con il nuovo username.
                 Optional<User> userWithUsername = userRepository.findByUsername(request.getUsername());
@@ -107,9 +107,9 @@ public class UserServiceImpl implements UserService {
 
             //Se il client ha compilato i campi "vecchia password" e "nuova password" e non sono vuoti,
             if(!request.getNuovaPassword().isEmpty() &&
-                !request.getNuovaPassword().isBlank() &&
-                !request.getVecchiaPassword().isEmpty() &&
-                !request.getVecchiaPassword().isBlank()) {
+                    !request.getNuovaPassword().isBlank() &&
+                    !request.getVecchiaPassword().isEmpty() &&
+                    !request.getVecchiaPassword().isBlank()) {
 
                 //Controllo se la vecchia password è esatta, decodificandola. Se è errata lancio un'eccezione.
                 if(!passwordEncoder.matches(request.getVecchiaPassword(), user.getPassword())) {
