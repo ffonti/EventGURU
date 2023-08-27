@@ -1,14 +1,10 @@
 package it.polimi.iswpf.service._interface;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
-import it.polimi.iswpf.dto.response.DeleteUserResponse;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service.implementation.UserServiceImpl;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Interfaccia che contiene le firme dei metodi del service.

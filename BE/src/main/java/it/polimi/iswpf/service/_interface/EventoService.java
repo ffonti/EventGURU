@@ -1,5 +1,6 @@
 package it.polimi.iswpf.service._interface;
 
+import it.polimi.iswpf.dto.request.CreaEventoRequest;
 import it.polimi.iswpf.service.implementation.EventoServiceImpl;
 
 /**
@@ -7,4 +8,6 @@ import it.polimi.iswpf.service.implementation.EventoServiceImpl;
  * Implementazione -> {@link EventoServiceImpl}.
  */
 public interface EventoService {
+
+    void creaEvento(CreaEventoRequest request);
 }
