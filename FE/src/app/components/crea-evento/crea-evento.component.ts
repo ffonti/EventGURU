@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { CreaEventoResponse } from 'src/app/dtos/response/CreaEventoResponse';
 import { EventService } from 'src/app/services/event.service';
 
 @Component({
@@ -28,10 +29,11 @@ export class CreaEventoComponent {
   creaEvento(): void {
     //TODO controllare che tutti i campi siano stati compilati (con bordo rosso)
     this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine).subscribe({
-      next: (res: void) => {
-        console.log(res, 'ok');
+      next: (res: CreaEventoResponse) => {
+        this.toastr.error(res.message);
       },
       error: (err: HttpErrorResponse) => {
+        this.toastr.error(err.error.message);
         console.log(err);
       }
     })
