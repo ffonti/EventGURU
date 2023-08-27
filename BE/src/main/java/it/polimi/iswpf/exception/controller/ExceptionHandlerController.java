@@ -1,7 +1,7 @@
-package it.polimi.iswpf.controller;
+package it.polimi.iswpf.exception.controller;
 
 import it.polimi.iswpf.exception.*;
-import it.polimi.iswpf.model.Exception;
+import it.polimi.iswpf.exception.model.Exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

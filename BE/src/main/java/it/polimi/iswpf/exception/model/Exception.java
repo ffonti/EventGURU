@@ -1,4 +1,4 @@
-package it.polimi.iswpf.model;
+package it.polimi.iswpf.exception.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
