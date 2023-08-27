@@ -7,7 +7,7 @@ import { CreaEventoRequest } from '../dtos/request/CreaEventoRequest';
   providedIn: 'root'
 })
 export class EventService {
-  private backendUrl: string = 'http://localhost:8080/api/v1/event';
+  private backendUrl: string = 'http://localhost:8080/api/v1/evento';
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }

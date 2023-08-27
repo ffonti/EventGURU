@@ -60,11 +60,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final String email = request.getEmail().trim().toLowerCase();
         final String username = request.getUsername().trim().toLowerCase();
         final String password = request.getPassword();
-        Ruolo ruolo = Ruolo.TURISTA; //TODO migliorare sta porcata
 
-        if(request.getRuolo().equals("ORGANIZZATORE")) {
-            ruolo = Ruolo.ORGANIZZATORE;
-        }
+        Ruolo ruolo = switch (request.getRuolo()) {
+            case "TURISTA" -> Ruolo.TURISTA;
+            case "ORGANIZZATORE" -> Ruolo.ORGANIZZATORE;
+            default -> throw new BadRequestException("Operazione non autorizzata");
+        };
 
         //Controllo che tutti i campi non siano vuoti.
         checkUserData(List.of(nome, cognome, email, username, password, ruolo.name()));
