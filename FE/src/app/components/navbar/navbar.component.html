@@ -21,10 +21,12 @@
               Page</button>
           </li>
         </ng-container>
-        <li>
-          <button routerLink="/homepage/esplora"
-            [ngClass]="(urlPath.includes('esplora') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">Esplora</button>
-        </li>
+        <ng-container *ngIf="ruolo != 'ORGANIZZATORE'">
+          <li>
+            <button routerLink="/homepage/esplora"
+              [ngClass]="(urlPath.includes('esplora') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">Esplora</button>
+          </li>
+        </ng-container>
         <ng-container *ngIf="ruolo != 'ADMIN'">
           <li>
             <button routerLink="/homepage/eventi"
