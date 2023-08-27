@@ -17,7 +17,7 @@ export class AdminPageComponent implements OnInit {
   protected usernameTurista: string = '';
   protected usernameOrganizzatore: string = '';
   protected nomeEvento: string = '';
-  protected isIdArrowUp: boolean = false;
+  protected isIdArrowUp: boolean = true;
   protected isNomeArrowUp: boolean = false;
   protected isCognomeArrowUp: boolean = false;
   protected isUsernameArrowUp: boolean = false;
@@ -85,6 +85,16 @@ export class AdminPageComponent implements OnInit {
     for (const user of res) {
       this.usersList.push(user);
     }
+
+    this.usersList.sort((a, b) => {
+      if (a.userId > b.userId) {
+        return 1;
+      } else if (a.userId < b.userId) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
   }
 
   //per andare alla pagina dove è possibile modificare i dati di un utente
@@ -141,63 +151,165 @@ export class AdminPageComponent implements OnInit {
     }
   }
 
+  //Ordina gli utenti per id (crescente o decrescente)
   toggleId(ordine: string): void {
     this.isIdArrowUp = !this.isIdArrowUp;
 
     if (ordine === 'DECRESCENTE') {
-      console.log('ora in ordine decrescente');
+      this.usersList.sort((a, b) => {
+        if (b.userId > a.userId) {
+          return 1;
+        } else if (b.userId < a.userId) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     } else if (ordine === 'CRESCENTE') {
-      console.log('ora in ordine crescente');
+      this.usersList.sort((a, b) => {
+        if (a.userId > b.userId) {
+          return 1;
+        } else if (a.userId < b.userId) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     }
   }
 
+  //Ordina gli utenti per nome (crescente o decrescente)
   toggleNome(ordine: string): void {
     this.isNomeArrowUp = !this.isNomeArrowUp;
 
     if (ordine === 'DECRESCENTE') {
-      console.log('ora in ordine decrescente');
+      this.usersList.sort((a, b) => {
+        if (b.nome > a.nome) {
+          return 1;
+        } else if (b.nome < a.nome) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     } else if (ordine === 'CRESCENTE') {
-      console.log('ora in ordine crescente');
+      this.usersList.sort((a, b) => {
+        if (a.nome > b.nome) {
+          return 1;
+        } else if (a.nome < b.nome) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     }
   }
 
+  //Ordina gli utenti per cognome (crescente o decrescente)
   toggleCognome(ordine: string): void {
     this.isCognomeArrowUp = !this.isCognomeArrowUp;
 
     if (ordine === 'DECRESCENTE') {
-      console.log('ora in ordine decrescente');
+      this.usersList.sort((a, b) => {
+        if (b.cognome > a.cognome) {
+          return 1;
+        } else if (b.cognome < a.cognome) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     } else if (ordine === 'CRESCENTE') {
-      console.log('ora in ordine crescente');
+      this.usersList.sort((a, b) => {
+        if (a.cognome > b.cognome) {
+          return 1;
+        } else if (a.cognome < b.cognome) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     }
   }
 
+  //Ordina gli utenti per username (crescente o decrescente)
   toggleUsername(ordine: string): void {
     this.isUsernameArrowUp = !this.isUsernameArrowUp;
 
     if (ordine === 'DECRESCENTE') {
-      console.log('ora in ordine decrescente');
+      this.usersList.sort((a, b) => {
+        if (b.username > a.username) {
+          return 1;
+        } else if (b.username < a.username) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     } else if (ordine === 'CRESCENTE') {
-      console.log('ora in ordine crescente');
+      this.usersList.sort((a, b) => {
+        if (a.username > b.username) {
+          return 1;
+        } else if (a.username < b.username) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     }
   }
 
+  //Ordina gli utenti per email (crescente o decrescente)
   toggleEmail(ordine: string): void {
     this.isEmailArrowUp = !this.isEmailArrowUp;
 
     if (ordine === 'DECRESCENTE') {
-      console.log('ora in ordine decrescente');
+      this.usersList.sort((a, b) => {
+        if (b.email > a.email) {
+          return 1;
+        } else if (b.email < a.email) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     } else if (ordine === 'CRESCENTE') {
-      console.log('ora in ordine crescente');
+      this.usersList.sort((a, b) => {
+        if (a.email > b.email) {
+          return 1;
+        } else if (a.email < b.email) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     }
   }
 
+  //Ordina gli utenti in base all'iscrizione alla newsletter
   toggleNewsletter(ordine: string): void {
     this.isNewsletterArrowUp = !this.isNewsletterArrowUp;
 
     if (ordine === 'DECRESCENTE') {
-      console.log('ora in ordine decrescente');
+      this.usersList.sort((a, b) => {
+        if (b.iscrittoNewsletter > a.iscrittoNewsletter) {
+          return 1;
+        } else if (b.iscrittoNewsletter < a.iscrittoNewsletter) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     } else if (ordine === 'CRESCENTE') {
-      console.log('ora in ordine crescente');
+      this.usersList.sort((a, b) => {
+        if (a.iscrittoNewsletter > b.iscrittoNewsletter) {
+          return 1;
+        } else if (a.iscrittoNewsletter < b.iscrittoNewsletter) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     }
   }
 }
