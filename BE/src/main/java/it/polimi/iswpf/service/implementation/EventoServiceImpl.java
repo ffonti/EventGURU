@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Service per gestire tutti i metodi inerenti agli eventi.
@@ -50,5 +51,11 @@ public class EventoServiceImpl implements EventoService {
                 .build();
 
         eventoRepository.save(evento);
+    }
+
+    @Override
+    public List<Evento> getAllEventi() {
+
+        return eventoRepository.findAll();
     }
 }

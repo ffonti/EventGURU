@@ -9,6 +9,7 @@ import { EsploraComponent } from './components/esplora/esplora.component';
 import { AdminPageComponent } from './components/admin-page/admin-page.component';
 import { CreaEventoComponent } from './components/crea-evento/crea-evento.component';
 import { OrganizzatoriComponent } from './components/organizzatori/organizzatori.component';
+import { IscrizioneEventiComponent } from './components/iscrizione-eventi/iscrizione-eventi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -18,7 +19,8 @@ const routes: Routes = [
     path: 'homepage', component: HomepageComponent, children: [
       { path: '', redirectTo: '/homepage/esplora', pathMatch: 'full' },
       { path: 'esplora', component: EsploraComponent },
-      { path: 'eventi', component: EventsComponent },
+      { path: 'eventi', component: IscrizioneEventiComponent },
+      { path: 'eventiOrganizzati', component: EventsComponent },
       { path: 'admin', component: AdminPageComponent },
       { path: 'creaEvento', component: CreaEventoComponent },
       { path: 'organizzatori', component: OrganizzatoriComponent },

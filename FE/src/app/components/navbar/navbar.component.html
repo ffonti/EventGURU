@@ -27,10 +27,18 @@
               [ngClass]="(urlPath.includes('esplora') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">Esplora</button>
           </li>
         </ng-container>
-        <ng-container *ngIf="ruolo != 'ADMIN'">
+        <ng-container *ngIf="ruolo == 'TURISTA'">
           <li>
             <button routerLink="/homepage/eventi"
               [ngClass]="(urlPath.includes('eventi') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">
+              I miei eventi
+            </button>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="ruolo == 'ORGANIZZATORE'">
+          <li>
+            <button routerLink="/homepage/eventiOrganizzati"
+              [ngClass]="(urlPath.includes('eventiOrganizzati') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">
               I miei eventi
             </button>
           </li>

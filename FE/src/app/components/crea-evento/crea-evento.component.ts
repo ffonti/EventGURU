@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CreaEventoResponse } from 'src/app/dtos/response/CreaEventoResponse';
 import { EventService } from 'src/app/services/event.service';
@@ -15,7 +16,7 @@ export class CreaEventoComponent {
   protected dataInizio: Date = new Date();
   protected dataFine: Date = new Date();
 
-  constructor(private toastr: ToastrService, private eventService: EventService) { }
+  constructor(private toastr: ToastrService, private eventService: EventService, private router: Router) { }
 
   //Inizializza i campi del form
   resetForm(): void {
@@ -31,6 +32,7 @@ export class CreaEventoComponent {
     this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine).subscribe({
       next: (res: CreaEventoResponse) => {
         this.toastr.success(res.message);
+        this.router.navigateByUrl('homepage/eventiOrganizzati');
       },
       error: (err: HttpErrorResponse) => {
         this.toastr.error(err.error.message);
