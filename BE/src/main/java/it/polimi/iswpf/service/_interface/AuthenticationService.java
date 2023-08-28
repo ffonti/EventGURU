@@ -29,10 +29,13 @@ public interface AuthenticationService {
      * Metodo per il login. Viene chiamato l'authenticationManager a cui vengono passate
      * le credenziali per eseguire il login e gestirà anche le eccezioni. Successivamente
      * viene preso l'utente dal database con quell'username così da codificare i dati nel jwt.
+     * L'utente appena autenticato viene salvato in una sessione gestita con il pattern Singleton.
      * @param request DTO con i dati per il login -> {@link LoginRequest}.
      * @return DTO con l'oggetto utente. -> {@link LoginResponse}.
      */
     LoginResponse login(@NonNull LoginRequest request);
+
+    void logout();
 
     /**
      * Crea un oggetto {@link HttpHeaders} e aggiunge il token, così da mandarlo al client, come da prassi.
@@ -40,11 +43,4 @@ public interface AuthenticationService {
      * @return L'oggetto {@link HttpHeaders} con il token al suo interno.
      */
     HttpHeaders putJwtInHttpHeaders(String jwt);
-
-    /**
-     * Controlla se tutti i campi sono stati compilati.
-     * @param dataList Lista di stringhe da controllare.
-     * @throws RuntimeException Eccezione causata da un campo vuoto.
-     */
-    void checkUserData(@NonNull List<String> dataList) throws RuntimeException;
 }

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -41,8 +42,14 @@ export class NavbarComponent implements OnInit {
 
   //pulisco il localstorage e mando l'utente al login
   logout(): void {
-    this.authService.logout();
-    this.toastr.success('Logout effettuato');
-    this.router.navigateByUrl('login');
+    this.authService.logout().subscribe({
+      next: (res: void) => {
+        this.toastr.success('Logout effettuato');
+        this.router.navigateByUrl('login');
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toastr.error('Errore nel logout');
+      }
+    });
   }
 }

@@ -3,6 +3,7 @@ package it.polimi.iswpf.controller;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
+import it.polimi.iswpf.dto.response.LogoutResponse;
 import it.polimi.iswpf.dto.response.RegisterResponse;
 import it.polimi.iswpf.service._interface.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +53,15 @@ public class AuthenticationController {
                 //Come da prassi, la stringa jwt va inserita nell'header della chiamata.
                 .headers(authenticationService.putJwtInHttpHeaders(response.getJwt()))
                 .body(response);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<LogoutResponse> logout() {
+
+        authenticationService.logout();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new LogoutResponse("Logout effettuato"));
     }
 }

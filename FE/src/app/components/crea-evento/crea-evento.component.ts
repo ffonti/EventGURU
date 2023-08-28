@@ -30,7 +30,7 @@ export class CreaEventoComponent {
     //TODO controllare che tutti i campi siano stati compilati (con bordo rosso)
     this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine).subscribe({
       next: (res: CreaEventoResponse) => {
-        this.toastr.error(res.message);
+        this.toastr.success(res.message);
       },
       error: (err: HttpErrorResponse) => {
         this.toastr.error(err.error.message);

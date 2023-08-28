@@ -9,6 +9,7 @@ import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.AuthenticationService;
+import it.polimi.iswpf.util.SessionManager;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -94,6 +95,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * Metodo per il login. Viene chiamato l'authenticationManager a cui vengono passate
      * le credenziali per eseguire il login e gestirà anche le eccezioni. Successivamente
      * viene preso l'utente dal database con quell'username così da codificare i dati nel jwt.
+     * L'utente appena autenticato viene salvato in una sessione gestita con il pattern Singleton.
      * @param request DTO con i dati per il login -> {@link LoginRequest}.
      * @return DTO con l'oggetto utente. -> {@link LoginResponse}.
      */
@@ -112,8 +114,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
 
+        //Salvo in sessione l'utente appena autenticato.
+        SessionManager.getInstance().loginUser(user);
+
         //Codifico i dati dell'utente nel jwt.
         return new LoginResponse(user, "Accesso eseguito!", jwtService.generateToken(user));
+    }
+
+    @Override
+    public void logout() {
+        SessionManager.getInstance().logoutUser();
     }
 
     /**
@@ -138,8 +148,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param dataList Lista di stringhe da controllare.
      * @throws RuntimeException Eccezione causata da un campo vuoto.
      */
-    @Override
-    public void checkUserData(@NonNull List<String> dataList) throws RuntimeException {
+    private void checkUserData(@NonNull List<String> dataList) throws RuntimeException {
 
         for(String data : dataList) {
             if(data.isEmpty() || data.isBlank()) {

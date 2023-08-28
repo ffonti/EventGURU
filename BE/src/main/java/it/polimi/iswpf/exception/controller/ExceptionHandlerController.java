@@ -26,6 +26,14 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(customException, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = ForbiddenException.class)
+    public ResponseEntity<Object> handleForbiddenException(ForbiddenException e) {
+
+        Exception customException = new Exception(e.getMessage(), HttpStatus.FORBIDDEN);
+
+        return new ResponseEntity<>(customException, HttpStatus.FORBIDDEN);
+    }
+
     /**
      * Handler delle eccezioni con status 404: il server non è in grado di trovare la risorsa richiesta.
      * @param e Messaggio dell'eccezione.
