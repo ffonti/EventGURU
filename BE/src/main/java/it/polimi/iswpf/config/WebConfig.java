@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Configurazione dell'interazione tra client e server. {@link WebMvcConfigurer} è un'interfaccia
  * che viene utilizzata per configurare il framework Spring MVC in un'applicazione web.
  */
-@Configuration
+@Configuration //Indica che verrà eseguito appena verrà avviato il server.
 public class WebConfig implements WebMvcConfigurer {
 
     /**
@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
      * path, devono essere gestite dalle successive regole.
      * allowedMethods("*") imposta tutti i metodi HTTP (GET, POST, PUT, DELETE) come
      * consentiti per le richieste CORS.
-     * @param registry insieme delle regole di configurazione.
+     * @param registry Insieme delle regole di configurazione.
      */
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {

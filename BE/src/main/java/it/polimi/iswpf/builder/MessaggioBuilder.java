@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 /**
  * Design pattern builder. Classe Builder dove vengono riportati esattamente tutti
- * gli attributi del model Recensione e un rispettivo metodo (setter) per ognuno di loro.
+ * gli attributi del model Messaggio e un rispettivo metodo (setter) per ognuno di loro.
  */
 @Getter
 @NoArgsConstructor

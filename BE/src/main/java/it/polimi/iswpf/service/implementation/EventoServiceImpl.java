@@ -31,22 +31,29 @@ public class EventoServiceImpl implements EventoService {
     private final EventoRepository eventoRepository;
     private final UserRepository userRepository;
 
+    /**
+     * Metodo per creare un evento. Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
+     * @param request DTO con i dati dell'evento da creare -> {@link CreaEventoRequest}.
+     */
     @Override
     public void creaEvento(@NonNull CreaEventoRequest request) {
 
-        //Controllo validità di tutti i campi
+        //Controllo validità di tutti i campi.
         if(request.getTitolo().isEmpty() || request.getTitolo().isBlank() ||
             request.getDescrizione().isEmpty() || request.getDescrizione().isBlank() ||
             request.getDataInizio() == null || request.getDataFine() == null) {
             throw new BadRequestException("Compilare tutti i campi");
         }
 
+        //Prendo i dati dell'utente in sessione.
         User organizzatore = SessionManager.getInstance().getLoggedUser();
 
+        //Verifico se l'utente è effettivamente un organizzatore.
         if(!organizzatore.getRuolo().toString().equals("ORGANIZZATORE")) {
             throw new ForbiddenException("L'utente non ha i permessi adatti");
         }
 
+        //Costruisco l'oggetto evento da salvare sul database.
         Evento evento = new EventoBuilder()
                 .titolo(request.getTitolo())
                 .descrizione(request.getDescrizione())
@@ -56,9 +63,15 @@ public class EventoServiceImpl implements EventoService {
                 .organizzatore(organizzatore)
                 .build();
 
+        //Salvo l'oggetto evento sul database.
         eventoRepository.save(evento);
     }
 
+    /**
+     * Metodo per prendere tutti gli eventi di un organizzatore.
+     * @param organizzatoreId Id dell'organizzatore di cui si vogliono prendere gli eventi.
+     * @return Lista di DTO con i dati degli eventi {@link GetAllEventiByOrganizzatoreResponse}.
+     */
     @Override
     public List<GetAllEventiByOrganizzatoreResponse> getAllEventi(Long organizzatoreId) {
 
@@ -75,14 +88,18 @@ public class EventoServiceImpl implements EventoService {
             throw new NotFoundException("Organizzatore non trovato");
         }
 
+        //Chiedo al database se esistono eventi organizzati da uno specifico utente.
         Optional<List<Evento>> eventi = eventoRepository.findAllByOrganizzatore(organizzatoreExists.get());
 
+        //Se non ci sono eventi, ritorno un array vuoto.
         if(eventi.isEmpty()) {
             return new ArrayList<>();
         }
 
+        //Se sono presenti eventi, inizializzo l'array che conterrà gli eventi.
         List<GetAllEventiByOrganizzatoreResponse> response = new ArrayList<>();
 
+        //Per ogni evento presente sul database, salvo tutti i campi nell'array di risposta.
         for(Evento evento: eventi.get()) {
             response.add(new GetAllEventiByOrganizzatoreResponse(
                     evento.getTitolo(),

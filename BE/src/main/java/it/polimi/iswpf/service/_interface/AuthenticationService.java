@@ -7,8 +7,6 @@ import it.polimi.iswpf.service.implementation.AuthenticationServiceImpl;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 
-import java.util.List;
-
 /**
  * Interfaccia che contiene le firme dei metodi del service.
  * Implementazione -> {@link AuthenticationServiceImpl}.
@@ -35,6 +33,9 @@ public interface AuthenticationService {
      */
     LoginResponse login(@NonNull LoginRequest request);
 
+    /**
+     * Metodo per il logout. Chiama il SessionManager che rimuoverà i dati dell'utente salvati in precedenza.
+     */
     void logout();
 
     /**

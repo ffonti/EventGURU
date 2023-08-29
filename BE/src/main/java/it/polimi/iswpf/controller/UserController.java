@@ -26,7 +26,7 @@ public class UserController {
     /**
      * Metodo che ritorna i dati di uno specifico utente.
      * @param userId Id dell'utente, passato in modo dinamico con l'endpoint.
-     * @return Model {@link User} con tutti i dati.
+     * @return DTO con tutti i dati dell'utente richiesto -> {@link UserResponse}.
      */
     @GetMapping("/getUserData/{userId}")
     public ResponseEntity<UserResponse> getUserData(@PathVariable String userId) {
@@ -40,7 +40,7 @@ public class UserController {
      * Metodo che modifica i dati di uno specifico utente.
      * @param request DTO con tutti i nuovi dati da sovrascrivere -> {@link UpdateUserDataRequest}.
      * @param userId Id dell'utente, passato in modo dinamico con l'endpoint.
-     * @return Model {@link User} con i dati modificati.
+     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
      */
     @PutMapping("/updateUserData/{userId}")
     public ResponseEntity<UserResponse> updateUserData(
@@ -56,7 +56,7 @@ public class UserController {
      * Metodo che permette all'admin di modificare i dati di un utente.
      * @param request DTO con tutti i nuovi dati da sovrascrivere -> {@link UpdateUserDataRequest}.
      * @param username Username dell'utente da modificare, passato in modo dinamico con l'endpoint.
-     * @return Model {@link User} con i dati modificati.
+     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
      */
     @PutMapping("/adminUpdateUserData/{username}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -72,7 +72,7 @@ public class UserController {
     /**
      * Metodo che ritorna tutti gli utenti di uno specifico ruolo. Solo l'admin può accederci.
      * @param ruolo Ruolo passato in modo dinamico con l'endpoint.
-     * @return Lista di utenti con quel ruolo.
+     * @return Lista di DTO con i dati degli utenti con quel ruolo -> {@link UserResponse}.
      */
     @GetMapping("/getAll/{ruolo}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -101,7 +101,7 @@ public class UserController {
     /**
      * Dato un username in modo dinamico tramite l'endpoint, viene restituito al client l'utente con quell'username.
      * @param username Username dell'utente di cui si vogliono i dati.
-     * @return Istanza di {@link User} con i dati richiesti.
+     * @return DTO con i dati dell'utente richiesto -> {@link UserResponse}.
      */
     @GetMapping("getAdminUserData/{username}")
     @PreAuthorize("hasRole('ADMIN')")

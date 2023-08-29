@@ -9,9 +9,9 @@ import lombok.NonNull;
 import java.time.LocalDateTime;
 
 /**
- * Model che rappresenta l'associazione N:M tra user ed evento. Gli utenti possono
- * recensire a più eventi e un evento può recensito da più utenti, quindi come da prassi
- * è stata creata una terza tabella con cui collegare 1:N e M:1 gli utenti e gli eventi.
+ * Model che rappresenta l'associazione N:M tra user e altri user. Un utente può inviare
+ * messaggi a più utenti e un utente può ricevere messaggi da più utenti, quindi come da prassi
+ * è stata creata una terza tabella con cui collegare 1:N e M:1 gli utenti.
  */
 @Data
 @NoArgsConstructor

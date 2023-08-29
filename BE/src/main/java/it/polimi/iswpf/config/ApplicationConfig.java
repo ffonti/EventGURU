@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 /**
  * Bean utili per la configurazione generale dell'applicazione.
  */
-@Configuration
+@Configuration //Indica che verrà eseguito appena verrà avviato il server.
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
@@ -24,20 +24,22 @@ public class ApplicationConfig {
 
     /**
      * Dato un username, viene preso l'utente dal database.
-     * @return dati dell'utente in sessione.
+     * @return Dati dell'utente in sessione.
      */
     @Bean
     public UserDetailsService userDetailsService() {
+
         return username -> userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("Utente non trovato"));
     }
 
     /**
      * DAO che si occupa di prendere l'utente dal db, codificare la password, etc.
-     * @return un oggetto con le configurazioni settate.
+     * @return Un oggetto con le configurazioni settate.
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
+
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
         //Specifico il service da utilizzare per prendere i dati dell'utente dal db.
@@ -53,7 +55,7 @@ public class ApplicationConfig {
      * Specifica come gestire l'autenticazione.
      * @param config configurazione dell'authenticationManager.
      * @return Un'istanza dell'authenticationManager.
-     * @throws Exception eccezione generale a cui si può andare incontro.
+     * @throws Exception Eccezione generale che può essere lanciata durante la configurazione.
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

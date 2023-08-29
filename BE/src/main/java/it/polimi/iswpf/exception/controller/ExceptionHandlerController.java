@@ -26,6 +26,11 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(customException, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handler delle eccezioni con status 403: il client non ha i permessi adatti.
+     * @param e Messaggio dell'eccezione.
+     * @return Risposta di errore al client con messaggio e status.
+     */
     @ExceptionHandler(value = ForbiddenException.class)
     public ResponseEntity<Object> handleForbiddenException(ForbiddenException e) {
 

@@ -18,9 +18,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * @- Questa classe viene eseguita ogni volta che arriva una richiesta al server.
+ * Questa classe viene eseguita ogni volta che arriva una richiesta al server.
  * Per configurarla secondo quanto detto, deve estendere la classe OncePerRequestFilter.
- * @- (Un'altra soluzione è quella d'implementare direttamente l'interfaccia Filter).
+ * (Un'altra soluzione è quella d'implementare direttamente l'interfaccia Filter).
  */
 @Component
 @RequiredArgsConstructor

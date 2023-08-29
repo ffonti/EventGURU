@@ -1,10 +1,8 @@
 package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
-import it.polimi.iswpf.dto.response.GetAllEventiByOrganizzatoreResponse;
 import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.exception.*;
-import it.polimi.iswpf.model.Evento;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
@@ -30,7 +28,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Metodo che, dato un id, prende l'utente dal database tramite la repository e lo ritorna al controller.
      * @param userId Id dell'utente.
-     * @return Oggetto {@link User} con tutti i dati dell'utente.
+     * @return DTO con tutti i dati dell'utente richiesto -> {@link UserResponse}.
      */
     @Override
     public UserResponse getUserData(Long userId) {
@@ -65,7 +63,7 @@ public class UserServiceImpl implements UserService {
      * Metodo che, dato un id e un DTO con i nuovi dati, modifica i dati dell'utente con quell'id.
      * @param userId Id dell'utente.
      * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
-     * @return L'oggetto utente con i dati aggiornati.
+     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
      */
     @Override
     public UserResponse updateUserData(Long userId, UpdateUserDataRequest request) {
@@ -94,7 +92,7 @@ public class UserServiceImpl implements UserService {
      * Metodo che permette all'admin di modificare i dati di un utente, dato un username.
      * @param username Username dell'utente da modificare.
      * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
-     * @return L'oggetto utente con i dati aggiornati.
+     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
      */
     @Override
     public UserResponse adminUpdateUserData(String username, UpdateUserDataRequest request) {
@@ -124,7 +122,7 @@ public class UserServiceImpl implements UserService {
      * Code cleaning. Metodo usato da due endpoint (admin e no) per modificare i dati di un utente.
      * @param user Utente da modificare.
      * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
-     * @return L'oggetto utente con i dati aggiornati.
+     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
      */
     private UserResponse updateGeneralUser(User user, UpdateUserDataRequest request) {
 
@@ -186,7 +184,7 @@ public class UserServiceImpl implements UserService {
         //Chiamo la repository e salvo i dati aggiornati dell'utente.
         userRepository.save(user);
 
-        //Ritorno l'utente come risposta al client.
+        //Ritorno il DTO come risposta al client.
         return new UserResponse(
                 user.getUserId(),
                 user.getNome(),
@@ -202,7 +200,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Dato un ruolo ritorna una lista di utenti con quel ruolo.
      * @param ruolo Ruolo preso dall'endpoint.
-     * @return Lista di utenti presa dal db.
+     * @return Lista di DTO con i dati degli utenti con quel ruolo -> {@link UserResponse}.
      */
     @Override
     public List<UserResponse> getAll(String ruolo) {
@@ -224,9 +222,10 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("Utenti non trovati");
         }
 
-        //Ritorno la lista di utenti con quel ruolo.
+        //Se non sono presenti utenti, ritorno un array vuoto.
         List<UserResponse> response = new ArrayList<>();
 
+        //Per ogni utente, aggiungo all'array di risposta i dati dell'utente.
         for(User user: utenti.get()) {
             response.add(new UserResponse(
                     user.getUserId(),
@@ -278,7 +277,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Dato un username, ed eseguiti diversi controlli, ritorno l'utente con quell'username.
      * @param username Username dell'utente richiesto.
-     * @return Istanza di {@link User} richiesta.
+     * @return DTO con i dati dell'utente richiesto -> {@link UserResponse}.
      */
     @Override
     public UserResponse getAdminUserData(String username) {
@@ -296,7 +295,7 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("Utente non trovato");
         }
 
-        //Ritorno l'utente richiesto
+        //Ritorno il DTO con i dati dell'utente richiesto.
         return new UserResponse(
                 userExists.get().getUserId(),
                 userExists.get().getNome(),

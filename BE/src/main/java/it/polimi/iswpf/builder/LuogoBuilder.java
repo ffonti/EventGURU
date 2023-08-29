@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Design pattern builder. Classe Builder dove vengono riportati esattamente tutti
- * gli attributi del model Recensione e un rispettivo metodo (setter) per ognuno di loro.
+ * gli attributi del model Luogo e e un rispettivo metodo (setter) per ognuno di loro.
  */
 @Getter
 @NoArgsConstructor

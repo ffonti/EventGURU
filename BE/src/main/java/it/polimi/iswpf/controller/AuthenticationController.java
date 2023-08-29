@@ -55,6 +55,10 @@ public class AuthenticationController {
                 .body(response);
     }
 
+    /**
+     * Metodo per il logout. Chiama il service col fine di rimuovere i dati dell'utente dalla sessione.
+     * @return Messaggio di avvenuto logout.
+     */
     @GetMapping("/logout")
     public ResponseEntity<LogoutResponse> logout() {
 

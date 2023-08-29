@@ -118,7 +118,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         SessionManager.getInstance().loginUser(user);
 
         //Codifico i dati dell'utente nel jwt.
-//        return new LoginResponse(, "Accesso eseguito!", jwtService.generateToken(user));
         return new LoginResponse(
                 user.getUserId(),
                 user.getNome(),
@@ -132,9 +131,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
     }
 
+    /**
+     * Metodo per il logout. Chiama il SessionManager che rimuoverà i dati dell'utente salvati in precedenza.
+     */
     @Override
     public void logout() {
-//        SessionManager.getInstance().logoutUser();
+        SessionManager.getInstance().logoutUser();
     }
 
     /**

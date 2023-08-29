@@ -27,9 +27,9 @@ export class AuthService {
   }
 
   //per il logout pulisco il localstorage
-  logout(): void {
+  logout(): Observable<void> {
     this.router.navigateByUrl('login');
     localStorage.clear();
-    // return this.http.get<void>(this.backendUrl + 'logout');
+    return this.http.get<void>(this.backendUrl + 'logout');
   }
 }

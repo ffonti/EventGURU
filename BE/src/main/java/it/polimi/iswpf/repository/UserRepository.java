@@ -8,14 +8,17 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @- Interfaccia responsabile della comunicazione col database.
- * @- Estende l'interfaccia generica JpaRepository, a cui daremo il tipo della classe e il tipo dell'id.
+ * Interfaccia responsabile della comunicazione col database.
+ * Estende l'interfaccia generica JpaRepository, a cui daremo il tipo della classe e il tipo dell'id.
  */
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    //Si cercano i dati di un utente dato il solo username.
     Optional<User> findByUsername(String username);
 
+    //Si cercano i dati di un utente dato il solo userId.
     Optional<User> findByUserId(Long userId);
 
+    //Si cercano tutti gli utenti aventi un dato ruolo.
     Optional<List<User>> findAllByRuolo(Ruolo ruolo);
 }
