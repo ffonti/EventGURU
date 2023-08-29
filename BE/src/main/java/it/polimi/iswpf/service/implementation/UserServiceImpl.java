@@ -1,7 +1,10 @@
 package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
+import it.polimi.iswpf.dto.response.GetAllEventiByOrganizzatoreResponse;
+import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.exception.*;
+import it.polimi.iswpf.model.Evento;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
@@ -10,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +33,7 @@ public class UserServiceImpl implements UserService {
      * @return Oggetto {@link User} con tutti i dati dell'utente.
      */
     @Override
-    public User getUserData(Long userId) {
+    public UserResponse getUserData(Long userId) {
 
         //L'id autoincrement parte da 1.
         if(userId < 1) {
@@ -45,7 +49,16 @@ public class UserServiceImpl implements UserService {
         }
 
         //Se esiste, ritorno l'oggetto utente.
-        return userExists.get();
+        return new UserResponse(
+                userExists.get().getUserId(),
+                userExists.get().getNome(),
+                userExists.get().getCognome(),
+                userExists.get().getEmail(),
+                userExists.get().getUsername(),
+                userExists.get().getPassword(),
+                userExists.get().getRuolo(),
+                userExists.get().isIscrittoNewsletter()
+        );
     }
 
     /**
@@ -55,7 +68,7 @@ public class UserServiceImpl implements UserService {
      * @return L'oggetto utente con i dati aggiornati.
      */
     @Override
-    public User updateUserData(Long userId, UpdateUserDataRequest request) {
+    public UserResponse updateUserData(Long userId, UpdateUserDataRequest request) {
 
         //L'id autoincrement parte da 1.
         if(userId < 1) {
@@ -84,7 +97,7 @@ public class UserServiceImpl implements UserService {
      * @return L'oggetto utente con i dati aggiornati.
      */
     @Override
-    public User adminUpdateUserData(String username, UpdateUserDataRequest request) {
+    public UserResponse adminUpdateUserData(String username, UpdateUserDataRequest request) {
 
         //L'username dell'utente da modificare non può essere nullo
         if(username.isBlank() || username.isEmpty()) {
@@ -113,7 +126,7 @@ public class UserServiceImpl implements UserService {
      * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
      * @return L'oggetto utente con i dati aggiornati.
      */
-    private User updateGeneralUser(User user, UpdateUserDataRequest request) {
+    private UserResponse updateGeneralUser(User user, UpdateUserDataRequest request) {
 
         //Se il client ha compilato il campo "nome" e non è vuoto, aggiorno il nome dell'utente.
         if(!request.getNome().isEmpty() && !request.getNome().isBlank()) {
@@ -174,7 +187,16 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         //Ritorno l'utente come risposta al client.
-        return user;
+        return new UserResponse(
+                user.getUserId(),
+                user.getNome(),
+                user.getCognome(),
+                user.getEmail(),
+                user.getUsername(),
+                user.getPassword(),
+                user.getRuolo(),
+                user.isIscrittoNewsletter()
+        );
     }
 
     /**
@@ -183,7 +205,7 @@ public class UserServiceImpl implements UserService {
      * @return Lista di utenti presa dal db.
      */
     @Override
-    public List<User> getAll(String ruolo) {
+    public List<UserResponse> getAll(String ruolo) {
 
         Optional<List<User>> utenti;
 
@@ -203,7 +225,22 @@ public class UserServiceImpl implements UserService {
         }
 
         //Ritorno la lista di utenti con quel ruolo.
-        return utenti.get();
+        List<UserResponse> response = new ArrayList<>();
+
+        for(User user: utenti.get()) {
+            response.add(new UserResponse(
+                    user.getUserId(),
+                    user.getNome(),
+                    user.getCognome(),
+                    user.getEmail(),
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getRuolo(),
+                    user.isIscrittoNewsletter()
+            ));
+        }
+
+        return response;
     }
 
     /**
@@ -244,7 +281,7 @@ public class UserServiceImpl implements UserService {
      * @return Istanza di {@link User} richiesta.
      */
     @Override
-    public User getAdminUserData(String username) {
+    public UserResponse getAdminUserData(String username) {
 
         //L'username dev'essere valido.
         if(username.isBlank() || username.isEmpty()) {
@@ -260,7 +297,16 @@ public class UserServiceImpl implements UserService {
         }
 
         //Ritorno l'utente richiesto
-        return userExists.get();
+        return new UserResponse(
+                userExists.get().getUserId(),
+                userExists.get().getNome(),
+                userExists.get().getCognome(),
+                userExists.get().getEmail(),
+                userExists.get().getUsername(),
+                userExists.get().getPassword(),
+                userExists.get().getRuolo(),
+                userExists.get().isIscrittoNewsletter()
+        );
     }
 
     /**

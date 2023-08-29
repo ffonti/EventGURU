@@ -1,6 +1,7 @@
 package it.polimi.iswpf.service._interface;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
+import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service.implementation.UserServiceImpl;
 
@@ -17,7 +18,7 @@ public interface UserService {
      * @param userId Id dell'utente.
      * @return Oggetto {@link User} con tutti i dati dell'utente.
      */
-    User getUserData(Long userId);
+    UserResponse getUserData(Long userId);
 
     /**
      * Metodo che, dato un id e un DTO con i nuovi dati, modifica i dati dell'utente con quell'id.
@@ -25,7 +26,7 @@ public interface UserService {
      * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
      * @return L'oggetto utente con i dati aggiornati.
      */
-    User updateUserData(Long userId, UpdateUserDataRequest request);
+    UserResponse updateUserData(Long userId, UpdateUserDataRequest request);
 
     /**
      * Metodo che permette all'admin di modificare i dati di un utente, dato un username.
@@ -33,14 +34,14 @@ public interface UserService {
      * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
      * @return L'oggetto utente con i dati aggiornati.
      */
-    User adminUpdateUserData(String username, UpdateUserDataRequest request);
+    UserResponse adminUpdateUserData(String username, UpdateUserDataRequest request);
 
     /**
      * Dato un ruolo ritorna una lista di utenti con quel ruolo.
      * @param ruolo Ruolo preso dall'endpoint.
      * @return Lista di utenti presa dal db.
      */
-    List<User> getAll(String ruolo);
+    List<UserResponse> getAll(String ruolo);
 
     /**
      * Elimina l'utente dal database dopo aver fatto diversi controlli.
@@ -53,7 +54,7 @@ public interface UserService {
      * @param username Username dell'utente richiesto.
      * @return Istanza di {@link User} richiesta.
      */
-    User getAdminUserData(String username);
+    UserResponse getAdminUserData(String username);
 
     /**
      * Dato un username, viene eliminato l'account.

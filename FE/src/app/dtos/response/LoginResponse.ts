@@ -1,7 +1,11 @@
-import { User } from "src/app/models/User";
-
 export interface LoginResponse {
-    user: User;
+    userId: number;
+    nome: string;
+    cognome: string;
+    username: string;
+    ruolo: string;
+    email: string;
+    iscrittoNewsletter: boolean;
     message: string;
     jwt: string;
 }

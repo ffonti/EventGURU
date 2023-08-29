@@ -34,13 +34,13 @@ public final class SessionManager {
         }
     }
 
-    public void logoutUser() {
-        this.loggedUser = null;
-
-        System.out.println("---------------------------------------------------------");
-        System.out.println("LOGOUT. NOW NO USER LOGGED");
-        System.out.println("---------------------------------------------------------");
-    }
+//    public void logoutUser() {
+//        this.loggedUser = null;
+//
+//        System.out.println("---------------------------------------------------------");
+//        System.out.println("LOGOUT. NOW NO USER LOGGED");
+//        System.out.println("---------------------------------------------------------");
+//    }
 
     public User getLoggedUser() {
         return this.loggedUser;

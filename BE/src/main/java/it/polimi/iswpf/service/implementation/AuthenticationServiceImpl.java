@@ -118,12 +118,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         SessionManager.getInstance().loginUser(user);
 
         //Codifico i dati dell'utente nel jwt.
-        return new LoginResponse(user, "Accesso eseguito!", jwtService.generateToken(user));
+//        return new LoginResponse(, "Accesso eseguito!", jwtService.generateToken(user));
+        return new LoginResponse(
+                user.getUserId(),
+                user.getNome(),
+                user.getCognome(),
+                user.getUsername(),
+                user.getRuolo(),
+                user.getEmail(),
+                user.isIscrittoNewsletter(),
+                "Accesso eseguito!",
+                jwtService.generateToken(user)
+        );
     }
 
     @Override
     public void logout() {
-        SessionManager.getInstance().logoutUser();
+//        SessionManager.getInstance().logoutUser();
     }
 
     /**

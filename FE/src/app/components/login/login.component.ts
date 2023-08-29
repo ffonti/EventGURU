@@ -55,13 +55,13 @@ export class LoginComponent implements OnInit {
         //In caso di successo, salvo i dati nel localstorage
         this.toastr.success(res.message);
         localStorage.setItem('token', "Bearer " + res.jwt);
-        localStorage.setItem('id', res.user.userId.toString());
-        localStorage.setItem('nome', res.user.nome);
-        localStorage.setItem('cognome', res.user.cognome);
-        localStorage.setItem('username', res.user.username);
-        localStorage.setItem('ruolo', res.user.ruolo);
-        localStorage.setItem('email', res.user.email);
-        localStorage.setItem('iscrittoNewsletter', res.user.iscrittoNewsletter.toString());
+        localStorage.setItem('id', res.userId.toString());
+        localStorage.setItem('nome', res.nome);
+        localStorage.setItem('cognome', res.cognome);
+        localStorage.setItem('username', res.username);
+        localStorage.setItem('ruolo', res.ruolo);
+        localStorage.setItem('email', res.email);
+        localStorage.setItem('iscrittoNewsletter', res.iscrittoNewsletter.toString());
         this.router.navigateByUrl('homepage');
       },
       error: (err: HttpErrorResponse) => {

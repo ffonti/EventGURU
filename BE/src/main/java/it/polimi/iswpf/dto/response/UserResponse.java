@@ -1,13 +1,12 @@
 package it.polimi.iswpf.dto.response;
 
 import it.polimi.iswpf.model.Ruolo;
-import it.polimi.iswpf.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LoginResponse {
+public class UserResponse {
 
     private Long userId;
 
@@ -15,15 +14,13 @@ public class LoginResponse {
 
     private String cognome;
 
+    private String email;
+
     private String username;
+
+    private String password;
 
     private Ruolo ruolo;
 
-    private String email;
-
     private boolean iscrittoNewsletter;
-
-    private String message;
-
-    private String jwt;
 }

@@ -2,8 +2,7 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.CreaEventoRequest;
 import it.polimi.iswpf.dto.response.CreaEventoResponse;
-import it.polimi.iswpf.dto.response.GetAllEventiResponse;
-import it.polimi.iswpf.model.Evento;
+import it.polimi.iswpf.dto.response.GetAllEventiByOrganizzatoreResponse;
 import it.polimi.iswpf.service._interface.EventoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,11 +31,11 @@ public class EventoController {
                 .body(new CreaEventoResponse("Evento creato con successo!"));
     }
 
-    @GetMapping("/getAllEventi")
-    public ResponseEntity<GetAllEventiResponse> getAllEventi() {
+    @GetMapping("/getByOrganizzatore/{organizzatoreId}")
+    public ResponseEntity<List<GetAllEventiByOrganizzatoreResponse>> getEventiByOrganizzatore(@PathVariable String organizzatoreId) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new GetAllEventiResponse(eventoService.getAllEventi()));
+                .body(eventoService.getAllEventi(Long.parseLong(organizzatoreId)));
     }
 }

@@ -88,6 +88,11 @@ public class User implements UserDetails {
     )
     private List<Evento> iscrizioni; //Eventi a cui l'utente si è iscritto.
 
+    @Override
+    public String toString() {
+        return "_-_-_-_-_-_-_-_-_-";
+    }
+
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
      * settati con il builder (viene eseguito alla chiamata del metodo build() di {@link UserBuilder}).

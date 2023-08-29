@@ -21,10 +21,10 @@ export class EventService {
     return this.http.post<CreaEventoResponse>(this.backendUrl + 'crea', request, { headers: header });
   }
 
-  getAllEventi(): Observable<any> {
+  getEventiByOrganizzatore(): Observable<any> {
     const header = this.getHeader();
 
-    return this.http.get(this.backendUrl + 'getAllEventi', { headers: header });
+    return this.http.get(this.backendUrl + 'getByOrganizzatore/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
   //chiamo il backend per prendere tutti gli eventi

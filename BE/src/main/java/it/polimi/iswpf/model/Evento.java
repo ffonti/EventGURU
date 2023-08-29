@@ -88,4 +88,9 @@ public class Evento {
         this.organizzatore = builder.getOrganizzatore();
         this.luogo = builder.getLuogo();
     }
+
+    @Override
+    public String toString() {
+        return "_-_-_-_-_-_-_-_-_-";
+    }
 }

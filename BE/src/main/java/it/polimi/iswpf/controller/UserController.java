@@ -2,6 +2,7 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.dto.response.DeleteUserResponse;
+import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service._interface.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +29,11 @@ public class UserController {
      * @return Model {@link User} con tutti i dati.
      */
     @GetMapping("/getUserData/{userId}")
-    public ResponseEntity<User> getUserData(@PathVariable String userId) {
-
-        final User response = userService.getUserData(Long.parseLong(userId));
+    public ResponseEntity<UserResponse> getUserData(@PathVariable String userId) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(response);
+                .body(userService.getUserData(Long.parseLong(userId)));
     }
 
     /**
@@ -44,15 +43,13 @@ public class UserController {
      * @return Model {@link User} con i dati modificati.
      */
     @PutMapping("/updateUserData/{userId}")
-    public ResponseEntity<User> updateUserData(
+    public ResponseEntity<UserResponse> updateUserData(
             @RequestBody UpdateUserDataRequest request,
             @PathVariable String userId) {
 
-        final User response = userService.updateUserData(Long.parseLong(userId), request);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(response);
+                .body(userService.updateUserData(Long.parseLong(userId), request));
     }
 
     /**
@@ -63,15 +60,13 @@ public class UserController {
      */
     @PutMapping("/adminUpdateUserData/{username}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> adminUpdateUserData(
+    public ResponseEntity<UserResponse> adminUpdateUserData(
             @RequestBody UpdateUserDataRequest request,
             @PathVariable String username) {
 
-        final User response = userService.adminUpdateUserData(username, request);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(response);
+                .body(userService.adminUpdateUserData(username, request));
     }
 
     /**
@@ -81,13 +76,11 @@ public class UserController {
      */
     @GetMapping("/getAll/{ruolo}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> getAll(@PathVariable String ruolo) {
-
-        final List<User> response = userService.getAll(ruolo);
+    public ResponseEntity<List<UserResponse>> getAll(@PathVariable String ruolo) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(response);
+                .body(userService.getAll(ruolo));
     }
 
     /**
@@ -112,13 +105,11 @@ public class UserController {
      */
     @GetMapping("getAdminUserData/{username}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> getAdminUserData(@PathVariable String username) {
-
-        final User response = userService.getAdminUserData(username);
+    public ResponseEntity<UserResponse> getAdminUserData(@PathVariable String username) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(response);
+                .body(userService.getAdminUserData(username));
     }
 
     /**

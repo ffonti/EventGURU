@@ -5,6 +5,7 @@ import { LoginRequest } from '../dtos/request/LoginRequest';
 import { RegisterRequest } from '../dtos/request/RegisterRequest';
 import { LoginResponse } from '../dtos/response/LoginResponse';
 import { RegisterResponse } from '../dtos/response/RegisterResponse';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class AuthService {
   private backendUrl: string = 'http://localhost:8080/api/v1/auth/';
 
   //costruttore dove istanzio le classi con cui interagire
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   //chiamo il backend per il login, gli mando un dto con i dati per la request e riceverò un dto con l'utente e il token
   login(request: LoginRequest): Observable<LoginResponse> {
@@ -26,8 +27,9 @@ export class AuthService {
   }
 
   //per il logout pulisco il localstorage
-  logout(): Observable<void> {
+  logout(): void {
+    this.router.navigateByUrl('login');
     localStorage.clear();
-    return this.http.get<void>(this.backendUrl + 'logout');
+    // return this.http.get<void>(this.backendUrl + 'logout');
   }
 }
