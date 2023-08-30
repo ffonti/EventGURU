@@ -14,7 +14,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity(name = "Luogo")
-@Table(name = "luogo")
+@Table(name = "luogo",
+        uniqueConstraints = @UniqueConstraint(
+        name = "nome_unique",
+        columnNames = "nome"
+    )
+)
 public class Luogo {
 
     /* @SequenceGenerator e @GeneratedValue servono per
@@ -32,7 +37,7 @@ public class Luogo {
     @Column(name = "luogo_id", updatable = false, nullable = false)
     private Long luogoId;
 
-    @Column(name = "nome", nullable = false, columnDefinition = "VARCHAR(50)")
+    @Column(name = "nome", nullable = false, unique = true, columnDefinition = "VARCHAR(50)")
     private String nome;
 
     @Column(name = "lat", columnDefinition = "VARCHAR(20)", updatable = false, nullable = false)

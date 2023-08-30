@@ -1,14 +1,17 @@
 package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.builder.EventoBuilder;
+import it.polimi.iswpf.builder.LuogoBuilder;
 import it.polimi.iswpf.dto.request.CreaEventoRequest;
 import it.polimi.iswpf.dto.response.GetAllEventiByOrganizzatoreResponse;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
 import it.polimi.iswpf.exception.NotFoundException;
 import it.polimi.iswpf.model.Evento;
+import it.polimi.iswpf.model.Luogo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.EventoRepository;
+import it.polimi.iswpf.repository.LuogoRepository;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.EventoService;
 import it.polimi.iswpf.util.SessionManager;
@@ -30,6 +33,7 @@ public class EventoServiceImpl implements EventoService {
 
     private final EventoRepository eventoRepository;
     private final UserRepository userRepository;
+    private final LuogoRepository luogoRepository;
 
     /**
      * Metodo per creare un evento. Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
@@ -52,7 +56,10 @@ public class EventoServiceImpl implements EventoService {
 
         //Controllo validità di tutti i campi.
         if(request.getTitolo().isEmpty() || request.getTitolo().isBlank() ||
-            request.getDescrizione().isEmpty() || request.getDescrizione().isBlank()) {
+            request.getDescrizione().isEmpty() || request.getDescrizione().isBlank() ||
+            request.getLng().isEmpty() || request.getLng().isBlank() ||
+            request.getLat().isEmpty() || request.getLat().isBlank() ||
+            request.getNomeLuogo().isEmpty() || request.getNomeLuogo().isBlank()) {
             throw new BadRequestException("Compilare tutti i campi");
         }
 
@@ -64,6 +71,27 @@ public class EventoServiceImpl implements EventoService {
             throw new ForbiddenException("L'utente non ha i permessi adatti");
         }
 
+        //Verifico se il luogo con un dato nome è già salvato sul database.
+        Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(request.getNomeLuogo());
+
+        Luogo luogo;
+
+        if(luogoExists.isEmpty()) {
+            //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto.
+            luogo = new LuogoBuilder()
+                    .lat(request.getLat())
+                    .lng(request.getLng())
+                    .nome(request.getNomeLuogo())
+                    .build();
+
+            //Salvo sul database l'oggetto appena costruito
+            luogoRepository.save(luogo);
+
+        } else {
+            //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
+            luogo = luogoExists.get();
+        }
+
         //Costruisco l'oggetto evento da salvare sul database.
         Evento evento = new EventoBuilder()
                 .titolo(request.getTitolo())
@@ -72,6 +100,7 @@ public class EventoServiceImpl implements EventoService {
                 .dataFine(request.getDataFine())
                 .dataCreazione(LocalDateTime.now())
                 .organizzatore(organizzatore)
+                .luogo(luogo)
                 .build();
 
         //Salvo l'oggetto evento sul database.
