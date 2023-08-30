@@ -1,37 +1,55 @@
-<main>
+<main class="h-full w-full">
 
-  <section class="flex-center flex-col">
+  <section class="flex-center h-full w-full">
 
+    <!-- Modale -->
     <div class="modal mt-[5%]">
 
-      <div class="flex-center w-full">
-        <div class="space-y-6 flex-center flex-col w-full">
-          <h1 class="text-xl font-bold">Crea un nuovo evento</h1>
+      <div class="flex-center w-full h-full">
 
-          <div class="flex-col justify-center items-center gap-3 w-full space-y-2">
-            <div class="w-full">
-              <label for="titolo" class="label-form">Titolo</label>
-              <input [(ngModel)]="titolo" name="titolo" type="text" class="input-form" required />
-            </div>
-            <div class="w-full">
-              <label for="descrizione" class="label-form">Descrizione</label>
-              <textarea [(ngModel)]="descrizione" class="input-form"></textarea>
-            </div>
-            <div class="flex-center w-full gap-4">
-              <div class="flex-col w-full">
-                <label for="data-inizio" class="label-form">Data e ora inizio</label>
-                <input [(ngModel)]="dataInizio" class="input-form" type="datetime-local">
-              </div>
-              <div class="flex-col w-full">
-                <label for="data-fine" class="label-form">Data e ora fine</label>
-                <input [(ngModel)]="dataFine" class="input-form" type="datetime-local">
-              </div>
-            </div>
+        <!-- Form con i dati -->
+        <div class="h-full w-full">
+          <div class="space-y-6 flex-center flex-col w-full">
+            <h1 class="text-xl font-bold">Crea un nuovo evento</h1>
 
+            <div class="flex-col justify-center items-center gap-3 w-full space-y-2">
+              <div class="w-full">
+                <label for="titolo" class="label-form">Titolo</label>
+                <input [(ngModel)]="titolo" name="titolo" type="text" class="input-form" required />
+              </div>
+              <div class="w-full">
+                <label for="descrizione" class="label-form">Descrizione</label>
+                <textarea [(ngModel)]="descrizione" class="input-form"></textarea>
+              </div>
+              <div class="flex-center w-full gap-4">
+                <div class="flex-col w-full">
+                  <label for="data-inizio" class="label-form">Data e ora inizio</label>
+                  <input [(ngModel)]="dataInizio" class="input-form" type="datetime-local">
+                </div>
+                <div class="flex-col w-full">
+                  <label for="data-fine" class="label-form">Data e ora fine</label>
+                  <input [(ngModel)]="dataFine" class="input-form" type="datetime-local">
+                </div>
+              </div>
+              <div class="w-full">
+                <label for="titolo" class="label-form">Nome del luogo</label>
+                <input [(ngModel)]="nomeLuogo" name="nomeLuogo" type="text" class="input-form" required />
+              </div>
+
+            </div>
+            <div class="w-full flex-center gap-4">
+              <button type="submit" class="btn-submit" (click)="creaEvento()">Crea</button>
+              <button type="submit" class="btn-red-submit" (click)="resetForm()">Reset</button>
+            </div>
           </div>
-          <div class="w-full flex-center gap-4">
-            <button type="submit" class="btn-submit" (click)="creaEvento()">Crea</button>
-            <button type="submit" class="btn-red-submit" (click)="resetForm()">Reset</button>
+        </div>
+
+        <!-- Mappa -->
+        <div class="h-full w-full">
+          <div class="map-container bg-slate-700 w-[31%] h-[56%]">
+            <div class="map-frame">
+              <div id="map"></div>
+            </div>
           </div>
         </div>
       </div>

@@ -16,4 +16,10 @@ public class CreaEventoRequest {
     private LocalDateTime dataInizio;
 
     private LocalDateTime dataFine;
+
+    private String lat;
+
+    private String lng;
+
+    private String nomeLuogo;
 }

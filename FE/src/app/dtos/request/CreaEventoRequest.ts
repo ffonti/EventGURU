@@ -3,4 +3,7 @@ export interface CreaEventoRequest {
     descrizione: string;
     dataInizio: Date;
     dataFine: Date;
+    lat: string;
+    lng: string;
+    nomeLuogo: string;
 }

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CreaEventoRequest } from '../dtos/request/CreaEventoRequest';
 import { CreaEventoResponse } from '../dtos/response/CreaEventoResponse';
-import { GetAllEventiResponse } from '../dtos/response/GetAllEventiResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +13,10 @@ export class EventService {
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
 
-  creaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date): Observable<CreaEventoResponse> {
+  creaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string): Observable<CreaEventoResponse> {
     const header = this.getHeader();
-    const request: CreaEventoRequest = { titolo, descrizione, dataInizio, dataFine };
+    const request: CreaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
+    console.log(request);
 
     return this.http.post<CreaEventoResponse>(this.backendUrl + 'crea', request, { headers: header });
   }

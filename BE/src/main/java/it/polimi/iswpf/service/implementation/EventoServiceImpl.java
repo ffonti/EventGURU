@@ -38,10 +38,21 @@ public class EventoServiceImpl implements EventoService {
     @Override
     public void creaEvento(@NonNull CreaEventoRequest request) {
 
+        //La data di inizio dell'evento deve essere precedente alla data di fine dell'evento.
+        if(request.getDataFine().isBefore(request.getDataInizio()) ||
+            request.getDataInizio().isEqual(request.getDataFine())) {
+            throw new BadRequestException("La data di inizio deve essere precedente alla data di fine");
+        }
+
+        //La data di inizio dell'evento deve essere precedente alla data attuale.
+        if(request.getDataInizio().isBefore(LocalDateTime.now()) ||
+            request.getDataInizio().isEqual(LocalDateTime.now())) {
+            throw new BadRequestException("L'evento non può avvenire nel passato");
+        }
+
         //Controllo validità di tutti i campi.
         if(request.getTitolo().isEmpty() || request.getTitolo().isBlank() ||
-            request.getDescrizione().isEmpty() || request.getDescrizione().isBlank() ||
-            request.getDataInizio() == null || request.getDataFine() == null) {
+            request.getDescrizione().isEmpty() || request.getDescrizione().isBlank()) {
             throw new BadRequestException("Compilare tutti i campi");
         }
 
