@@ -48,7 +48,7 @@ export class CreaEventoComponent implements AfterViewInit {
     this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo).subscribe({
       next: (res: CreaEventoResponse) => {
         this.toastr.success(res.message);
-        // this.router.navigateByUrl('homepage/eventiOrganizzati');
+        this.router.navigateByUrl('homepage/eventiOrganizzati');
       },
       error: (err: HttpErrorResponse) => {
         this.toastr.error(err.error.message);

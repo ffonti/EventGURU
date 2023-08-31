@@ -15,6 +15,9 @@ export class EventsComponent implements OnInit {
   protected allEventiByOrganizzatoreWithDateFormatted: any[] = [];
   protected showModalEliminaEvento: boolean = false;
   protected eventoIdDaEliminare: number = 0;
+  protected cercaPerTitolo: string = '';
+  protected cercaPerLuogo: string = '';
+  protected cercaPerStato: string = '';
 
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router) { }
 
@@ -72,6 +75,7 @@ export class EventsComponent implements OnInit {
     this.eventService.eliminaEvento(this.eventoIdDaEliminare).subscribe({
       next: (res: any) => {
         this.rimuoviEventoDaArray(this.eventoIdDaEliminare);
+        this.eventoIdDaEliminare = 0;
         this.showModalEliminaEvento = !this.showModalEliminaEvento;
         this.toastr.success(res.message);
       },
@@ -90,5 +94,16 @@ export class EventsComponent implements OnInit {
     this.allEventiByOrganizzatoreWithDateFormatted = this.allEventiByOrganizzatoreWithDateFormatted.filter((evento: any) => {
       return +evento.eventoId !== +eventoId;
     });
+  }
+
+  checkFilters(evento: GetAllEventiByOrganizzatoreResponse): boolean {
+    return evento.titolo.toLowerCase().trim().includes(this.cercaPerTitolo.toLowerCase().trim()) &&
+      evento.nomeLuogo.toLowerCase().trim().includes(this.cercaPerLuogo.toLowerCase().trim());
+  }
+
+  resetFiltri(): void {
+    this.cercaPerLuogo = '';
+    this.cercaPerTitolo = '';
+    this.cercaPerStato = '';
   }
 }
