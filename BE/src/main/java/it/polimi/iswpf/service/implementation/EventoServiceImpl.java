@@ -6,6 +6,7 @@ import it.polimi.iswpf.dto.request.CreaEventoRequest;
 import it.polimi.iswpf.dto.response.GetAllEventiByOrganizzatoreResponse;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
+import it.polimi.iswpf.exception.InternalServerErrorException;
 import it.polimi.iswpf.exception.NotFoundException;
 import it.polimi.iswpf.model.Evento;
 import it.polimi.iswpf.model.Luogo;
@@ -155,5 +156,37 @@ public class EventoServiceImpl implements EventoService {
         }
 
         return response;
+    }
+
+    /**
+     * Metodo per eliminare un evento.
+     * @param eventoId Id dell'evento da eliminare.
+     */
+    @Override
+    public void eliminaEvento(Long eventoId) {
+
+        //L'id autoincrement parte da 1.
+        if(eventoId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(eventoExists.isEmpty()) {
+            throw new NotFoundException("Evento non trovato");
+        }
+
+        //Elimino l'evento dal database.
+        eventoRepository.delete(eventoExists.get());
+
+        //Controllo se esiste ancora l'evento con quell'id
+        Optional<Evento> eventoDeleted = eventoRepository.findById(eventoId);
+
+        //Se non è stato eliminato, lancio un'eccezione.
+        if(eventoDeleted.isPresent()) {
+            throw new InternalServerErrorException("Errore nell'eliminazione dell'evento");
+        }
     }
 }

@@ -24,4 +24,10 @@ public interface EventoService {
      * @return Lista di DTO con i dati degli eventi {@link GetAllEventiByOrganizzatoreResponse}.
      */
     List<GetAllEventiByOrganizzatoreResponse> getAllEventi(Long organizzatoreId);
+
+    /**
+     * Metodo per eliminare un evento.
+     * @param eventoId Id dell'evento da eliminare.
+     */
+    void eliminaEvento(Long eventoId);
 }

@@ -2,6 +2,7 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.CreaEventoRequest;
 import it.polimi.iswpf.dto.response.CreaEventoResponse;
+import it.polimi.iswpf.dto.response.EliminaEventoResponse;
 import it.polimi.iswpf.dto.response.GetAllEventiByOrganizzatoreResponse;
 import it.polimi.iswpf.service._interface.EventoService;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +49,21 @@ public class EventoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventoService.getAllEventi(Long.parseLong(organizzatoreId)));
+    }
+
+
+    /**
+     * Metodo per eliminare un evento. Chiama il service che eliminerà l'evento dal database.
+     * @param eventoId Id dell'evento da eliminare, passato in modo dinamico con l'endpoint.
+     * @return Messaggio di avvenuta eliminazione.
+     */
+    @DeleteMapping("/eliminaEvento/{eventoId}")
+    public ResponseEntity<EliminaEventoResponse> creaEvento(@PathVariable String eventoId) {
+
+        eventoService.eliminaEvento(Long.parseLong(eventoId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new EliminaEventoResponse("Evento eliminato con successo!"));
     }
 }

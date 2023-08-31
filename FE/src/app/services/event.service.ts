@@ -28,6 +28,12 @@ export class EventService {
     return this.http.get<GetAllEventiByOrganizzatoreResponse[]>(this.backendUrl + 'getByOrganizzatore/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
+  eliminaEvento(eventoId: number): Observable<any> {
+    const header = this.getHeader();
+
+    return this.http.delete(this.backendUrl + 'eliminaEvento/' + eventoId.toString().trim(), { headers: header });
+  }
+
   //chiamo il backend per prendere tutti gli eventi
   // getAllEvents(): Observable<any> {
   //   const header = this.getHeader();

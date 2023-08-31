@@ -34,7 +34,7 @@
             <a class="btn-submit">
               Modifica
             </a>
-            <a class="btn-red-submit" (click)="toggleModalEliminaEvento()">
+            <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
               Elimina
             </a>
           </div>
@@ -55,8 +55,8 @@
                   <p class="font-medium text-lg">Sicuro di voler eliminare l'evento?</p>
                 </div>
                 <div class="flex-center gap-4 w-full">
-                  <button class="btn-submit" (click)="toggleModalEliminaEvento()">ANNULLA</button>
-                  <button class="btn-red-submit" (click)="eliminaEvento(3)">ELIMINA</button>
+                  <button class="btn-submit" (click)="toggleModalEliminaEvento(0)">ANNULLA</button>
+                  <button class="btn-red-submit" (click)="eliminaEvento()">ELIMINA</button>
                 </div>
               </div>
             </div>

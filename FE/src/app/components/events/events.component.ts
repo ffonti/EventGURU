@@ -14,6 +14,7 @@ export class EventsComponent implements OnInit {
   protected allEventiByOrganizzatore: GetAllEventiByOrganizzatoreResponse[] = [];
   protected allEventiByOrganizzatoreWithDateFormatted: any[] = [];
   protected showModalEliminaEvento: boolean = false;
+  protected eventoIdDaEliminare: number = 0;
 
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router) { }
 
@@ -27,8 +28,6 @@ export class EventsComponent implements OnInit {
         this.allEventiByOrganizzatoreWithDateFormatted = JSON.parse(JSON.stringify(this.allEventiByOrganizzatore));
 
         this.changeFormatDate(this.allEventiByOrganizzatoreWithDateFormatted);
-        console.log(this.allEventiByOrganizzatore);
-        console.log(this.allEventiByOrganizzatoreWithDateFormatted);
       },
       error: (err: any) => {
         console.log(err);
@@ -64,11 +63,32 @@ export class EventsComponent implements OnInit {
     });
   }
 
-  toggleModalEliminaEvento(): void {
+  toggleModalEliminaEvento(eventoId: number): void {
+    this.eventoIdDaEliminare = eventoId;
     this.showModalEliminaEvento = !this.showModalEliminaEvento;
   }
 
-  eliminaEvento(eventoId: number): void {
-    console.log('elimino evento id ' + eventoId);
+  eliminaEvento(): void {
+    this.eventService.eliminaEvento(this.eventoIdDaEliminare).subscribe({
+      next: (res: any) => {
+        this.rimuoviEventoDaArray(this.eventoIdDaEliminare);
+        this.showModalEliminaEvento = !this.showModalEliminaEvento;
+        this.toastr.success(res.message);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
+      }
+    })
+  }
+
+  rimuoviEventoDaArray(eventoId: number): void {
+    this.allEventiByOrganizzatore = this.allEventiByOrganizzatore.filter((evento: GetAllEventiByOrganizzatoreResponse) => {
+      return +evento.eventoId !== +eventoId;
+    });
+
+    this.allEventiByOrganizzatoreWithDateFormatted = this.allEventiByOrganizzatoreWithDateFormatted.filter((evento: any) => {
+      return +evento.eventoId !== +eventoId;
+    });
   }
 }
