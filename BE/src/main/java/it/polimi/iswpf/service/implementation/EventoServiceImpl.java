@@ -142,11 +142,15 @@ public class EventoServiceImpl implements EventoService {
         //Per ogni evento presente sul database, salvo tutti i campi nell'array di risposta.
         for(Evento evento: eventi.get()) {
             response.add(new GetAllEventiByOrganizzatoreResponse(
+                    evento.getEventoId(),
                     evento.getTitolo(),
                     evento.getDescrizione(),
                     evento.getDataInizio(),
                     evento.getDataFine(),
-                    evento.getDataCreazione()
+                    evento.getDataCreazione(),
+                    evento.getLuogo().getLat(),
+                    evento.getLuogo().getLng(),
+                    evento.getLuogo().getNome()
             ));
         }
 

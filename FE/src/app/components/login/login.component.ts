@@ -62,7 +62,15 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('ruolo', res.ruolo);
         localStorage.setItem('email', res.email);
         localStorage.setItem('iscrittoNewsletter', res.iscrittoNewsletter.toString());
-        this.router.navigateByUrl('homepage');
+
+        const ruoloLogin: string = res.ruolo.toString().trim().toUpperCase();
+
+        if(ruoloLogin === 'ORGANIZZATORE') {
+          this.router.navigateByUrl('homepage/eventiOrganizzati');
+        } else if(ruoloLogin === 'TURISTA' || ruoloLogin === 'ADMIN') {
+          this.router.navigateByUrl('homepage/esplora');
+        }
+        
       },
       error: (err: HttpErrorResponse) => {
         //In caso di errore stampo un messaggio

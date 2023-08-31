@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CreaEventoRequest } from '../dtos/request/CreaEventoRequest';
 import { CreaEventoResponse } from '../dtos/response/CreaEventoResponse';
+import { GetAllEventiByOrganizzatoreResponse } from '../dtos/response/GetAllEventiByOrganizzatoreResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +22,10 @@ export class EventService {
     return this.http.post<CreaEventoResponse>(this.backendUrl + 'crea', request, { headers: header });
   }
 
-  getEventiByOrganizzatore(): Observable<any> {
+  getEventiByOrganizzatore(): Observable<GetAllEventiByOrganizzatoreResponse[]> {
     const header = this.getHeader();
 
-    return this.http.get(this.backendUrl + 'getByOrganizzatore/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+    return this.http.get<GetAllEventiByOrganizzatoreResponse[]>(this.backendUrl + 'getByOrganizzatore/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
   //chiamo il backend per prendere tutti gli eventi

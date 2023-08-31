@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class GetAllEventiByOrganizzatoreResponse {
 
+    private Long eventoId;
+
     private String titolo;
 
     private String descrizione;
@@ -18,4 +20,10 @@ public class GetAllEventiByOrganizzatoreResponse {
     private LocalDateTime dataFine;
 
     private LocalDateTime dataCreazione;
+
+    private String lat;
+
+    private String lng;
+
+    private String nomeLuogo;
 }
