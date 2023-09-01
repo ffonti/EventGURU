@@ -48,6 +48,9 @@ public class Evento {
     @Column(name = "data_fine", nullable = false, updatable = false)
     private LocalDateTime dataFine;
 
+    @Enumerated(EnumType.STRING)
+    private Stato stato;
+
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "iscrizione",
@@ -82,6 +85,7 @@ public class Evento {
         this.dataCreazione = builder.getDataCreazione();
         this.dataInizio = builder.getDataInizio();
         this.dataFine = builder.getDataFine();
+        this.stato = builder.getStato();
         this.iscritti = builder.getIscritti();
         this.recensioni = builder.getRecensioni();
         this.messaggi = builder.getMessaggi();

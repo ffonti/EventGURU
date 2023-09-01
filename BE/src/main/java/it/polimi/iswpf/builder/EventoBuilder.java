@@ -22,6 +22,7 @@ public class EventoBuilder {
     private LocalDateTime dataCreazione;
     private LocalDateTime dataInizio;
     private LocalDateTime dataFine;
+    private Stato stato;
     private List<User> iscritti;
     private List<Recensione> recensioni;
     private List<Messaggio> messaggi;
@@ -85,6 +86,16 @@ public class EventoBuilder {
      */
     public EventoBuilder dataFine(LocalDateTime dataFine) {
         this.dataFine = dataFine;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param stato Enum con lo stato dell'evento (passato, presente, futuro).
+     * @return Un'istanza della classe stessa.
+     */
+    public EventoBuilder stato(Stato stato) {
+        this.stato = stato;
         return this;
     }
 
