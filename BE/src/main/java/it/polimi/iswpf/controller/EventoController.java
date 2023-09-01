@@ -3,7 +3,7 @@ package it.polimi.iswpf.controller;
 import it.polimi.iswpf.dto.request.CreaEventoRequest;
 import it.polimi.iswpf.dto.response.CreaEventoResponse;
 import it.polimi.iswpf.dto.response.EliminaEventoResponse;
-import it.polimi.iswpf.dto.response.GetAllEventiByOrganizzatoreResponse;
+import it.polimi.iswpf.dto.response.GetEventoResponse;
 import it.polimi.iswpf.service._interface.EventoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,10 +41,10 @@ public class EventoController {
     /**
      * Metodo per prendere tutti gli eventi dato un organizzatore.
      * @param organizzatoreId Id dell'organizzatore da cui prendere gli eventi, passato in modo dinamico con l'endpoint.
-     * @return Lista di DTO con gli eventi creati dall'organizzatore {@link GetAllEventiByOrganizzatoreResponse}
+     * @return Lista di DTO con gli eventi creati dall'organizzatore -> {@link GetEventoResponse}.
      */
     @GetMapping("/getByOrganizzatore/{organizzatoreId}")
-    public ResponseEntity<List<GetAllEventiByOrganizzatoreResponse>> getEventiByOrganizzatore(@PathVariable String organizzatoreId) {
+    public ResponseEntity<List<GetEventoResponse>> getEventiByOrganizzatore(@PathVariable String organizzatoreId) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -65,5 +65,19 @@ public class EventoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new EliminaEventoResponse("Evento eliminato con successo!"));
+    }
+
+
+    /**
+     * Metodo per prendere un evento dato l'id.
+     * @param eventoId Id dell'evento, passato in modo dinamico con l'endpoint.
+     * @return DTO con l'evento richiesto -> {@link GetEventoResponse}.
+     */
+    @GetMapping("/getEventoById/{eventoId}")
+    public ResponseEntity<GetEventoResponse> getEventoById(@PathVariable String eventoId) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventoService.getEventoById(Long.parseLong(eventoId)));
     }
 }

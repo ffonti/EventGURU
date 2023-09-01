@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         //Prendo l'utente dal db con quell'id.
         Optional<User> userExists = userRepository.findByUserId(userId);
 
-        //Se non esiste un utente con quell'id, lanco un'eccezione.
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
         if(userExists.isEmpty()) {
             throw new NotFoundException("Utente non trovato");
         }

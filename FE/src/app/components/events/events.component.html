@@ -65,7 +65,7 @@
 
               <!-- Pulsanti -->
               <div class="flex gap-3 h-full items-end">
-                <a class="btn-submit">
+                <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
                   Modifica
                 </a>
                 <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">

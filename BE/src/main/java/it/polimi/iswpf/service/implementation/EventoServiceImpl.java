@@ -3,7 +3,7 @@ package it.polimi.iswpf.service.implementation;
 import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.LuogoBuilder;
 import it.polimi.iswpf.dto.request.CreaEventoRequest;
-import it.polimi.iswpf.dto.response.GetAllEventiByOrganizzatoreResponse;
+import it.polimi.iswpf.dto.response.GetEventoResponse;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
 import it.polimi.iswpf.exception.InternalServerErrorException;
@@ -112,10 +112,10 @@ public class EventoServiceImpl implements EventoService {
     /**
      * Metodo per prendere tutti gli eventi di un organizzatore.
      * @param organizzatoreId Id dell'organizzatore di cui si vogliono prendere gli eventi.
-     * @return Lista di DTO con i dati degli eventi {@link GetAllEventiByOrganizzatoreResponse}.
+     * @return Lista di DTO con i dati degli eventi {@link GetEventoResponse}.
      */
     @Override
-    public List<GetAllEventiByOrganizzatoreResponse> getAllEventi(Long organizzatoreId) {
+    public List<GetEventoResponse> getAllEventi(Long organizzatoreId) {
 
         //L'id autoincrement parte da 1.
         if(organizzatoreId < 1) {
@@ -139,7 +139,7 @@ public class EventoServiceImpl implements EventoService {
         }
 
         //Se sono presenti eventi, inizializzo l'array che conterrà gli eventi.
-        List<GetAllEventiByOrganizzatoreResponse> response = new ArrayList<>();
+        List<GetEventoResponse> response = new ArrayList<>();
 
         Stato statoEvento;
 
@@ -154,7 +154,7 @@ public class EventoServiceImpl implements EventoService {
                 statoEvento = Stato.PRESENTE;
             }
 
-            response.add(new GetAllEventiByOrganizzatoreResponse(
+            response.add(new GetEventoResponse(
                     evento.getEventoId(),
                     evento.getTitolo(),
                     evento.getDescrizione(),
@@ -201,5 +201,41 @@ public class EventoServiceImpl implements EventoService {
         if(eventoDeleted.isPresent()) {
             throw new InternalServerErrorException("Errore nell'eliminazione dell'evento");
         }
+    }
+
+    /**
+     * Metodo per prendere un evento dato un id.
+     * @param eventoId Id del singolo evento.
+     * @return DTO con i dati dell'evento richiesto -> {@link GetEventoResponse}.
+     */
+    @Override
+    public GetEventoResponse getEventoById(Long eventoId) {
+
+        //L'id autoincrement parte da 1.
+        if(eventoId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(eventoExists.isEmpty()) {
+            throw new NotFoundException("Evento non trovato");
+        }
+
+        //Se esiste, ritorno l'oggetto evento.
+        return new GetEventoResponse(
+                eventoExists.get().getEventoId(),
+                eventoExists.get().getTitolo(),
+                eventoExists.get().getDescrizione(),
+                eventoExists.get().getDataInizio(),
+                eventoExists.get().getDataFine(),
+                eventoExists.get().getDataCreazione(),
+                eventoExists.get().getStato(),
+                eventoExists.get().getLuogo().getLat(),
+                eventoExists.get().getLuogo().getLng(),
+                eventoExists.get().getLuogo().getNome()
+        );
     }
 }

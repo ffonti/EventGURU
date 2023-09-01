@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class GetAllEventiByOrganizzatoreResponse {
+public class GetEventoResponse {
 
     private Long eventoId;
 

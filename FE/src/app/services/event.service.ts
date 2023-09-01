@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { CreaEventoRequest } from '../dtos/request/CreaEventoRequest';
 import { CreaEventoResponse } from '../dtos/response/CreaEventoResponse';
 import { GetAllEventiByOrganizzatoreResponse } from '../dtos/response/GetAllEventiByOrganizzatoreResponse';
+import { GetEventoByIdResponse } from '../dtos/response/GetEventoByIdResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -28,18 +29,17 @@ export class EventService {
     return this.http.get<GetAllEventiByOrganizzatoreResponse[]>(this.backendUrl + 'getByOrganizzatore/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
-  eliminaEvento(eventoId: number): Observable<any> {
+  eliminaEvento(eventoId: number): Observable<string> {
     const header = this.getHeader();
 
-    return this.http.delete(this.backendUrl + 'eliminaEvento/' + eventoId.toString().trim(), { headers: header });
+    return this.http.delete<string>(this.backendUrl + 'eliminaEvento/' + eventoId.toString().trim(), { headers: header });
   }
 
-  //chiamo il backend per prendere tutti gli eventi
-  // getAllEvents(): Observable<any> {
-  //   const header = this.getHeader();
+  getEventoById(eventoId: string): Observable<GetEventoByIdResponse> {
+    const header = this.getHeader();
 
-  //   return this.http.get(this.backendUrl + '/getAllEvents', { headers: header });
-  // }
+    return this.http.get<GetEventoByIdResponse>(this.backendUrl + 'getEventoById/' + eventoId.toString().trim(), { headers: header });
+  }
 
   //creo l'header con il token da mandare al backend
   private getHeader(): HttpHeaders {

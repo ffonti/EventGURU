@@ -147,4 +147,8 @@ export class EventsComponent implements OnInit {
   onChangeModoOrdine(value: string) {
     this.allEventiByOrganizzatoreWithDateFormatted = this.allEventiByOrganizzatoreWithDateFormatted.reverse();
   }
+
+  modificaEvento(eventoId: number) {
+    this.router.navigateByUrl('/homepage/creaEvento/' + eventoId.toString().trim());
+  }
 }
