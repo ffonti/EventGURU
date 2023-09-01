@@ -10,6 +10,7 @@ import it.polimi.iswpf.exception.InternalServerErrorException;
 import it.polimi.iswpf.exception.NotFoundException;
 import it.polimi.iswpf.model.Evento;
 import it.polimi.iswpf.model.Luogo;
+import it.polimi.iswpf.model.Stato;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.EventoRepository;
 import it.polimi.iswpf.repository.LuogoRepository;
@@ -140,8 +141,19 @@ public class EventoServiceImpl implements EventoService {
         //Se sono presenti eventi, inizializzo l'array che conterrà gli eventi.
         List<GetAllEventiByOrganizzatoreResponse> response = new ArrayList<>();
 
+        Stato statoEvento;
+
         //Per ogni evento presente sul database, salvo tutti i campi nell'array di risposta.
         for(Evento evento: eventi.get()) {
+
+            if(evento.getDataInizio().isAfter(LocalDateTime.now())) {
+                statoEvento = Stato.FUTURO;
+            } else if(evento.getDataFine().isBefore(LocalDateTime.now())) {
+                statoEvento = Stato.PASSATO;
+            } else {
+                statoEvento = Stato.PRESENTE;
+            }
+
             response.add(new GetAllEventiByOrganizzatoreResponse(
                     evento.getEventoId(),
                     evento.getTitolo(),
@@ -149,6 +161,7 @@ public class EventoServiceImpl implements EventoService {
                     evento.getDataInizio(),
                     evento.getDataFine(),
                     evento.getDataCreazione(),
+                    statoEvento,
                     evento.getLuogo().getLat(),
                     evento.getLuogo().getLng(),
                     evento.getLuogo().getNome()

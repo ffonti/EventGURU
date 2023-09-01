@@ -1,5 +1,6 @@
 package it.polimi.iswpf.dto.response;
 
+import it.polimi.iswpf.model.Stato;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -20,6 +21,8 @@ public class GetAllEventiByOrganizzatoreResponse {
     private LocalDateTime dataFine;
 
     private LocalDateTime dataCreazione;
+
+    private Stato stato;
 
     private String lat;
 

@@ -18,6 +18,8 @@ export class EventsComponent implements OnInit {
   protected cercaPerTitolo: string = '';
   protected cercaPerLuogo: string = '';
   protected cercaPerStato: string = '';
+  protected modoOrdine: string = '';
+  protected attributoOrdine: string = '';
 
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router) { }
 
@@ -98,12 +100,51 @@ export class EventsComponent implements OnInit {
 
   checkFilters(evento: GetAllEventiByOrganizzatoreResponse): boolean {
     return evento.titolo.toLowerCase().trim().includes(this.cercaPerTitolo.toLowerCase().trim()) &&
-      evento.nomeLuogo.toLowerCase().trim().includes(this.cercaPerLuogo.toLowerCase().trim());
+      evento.nomeLuogo.toLowerCase().trim().includes(this.cercaPerLuogo.toLowerCase().trim()) &&
+      (evento.stato.toString().trim().toUpperCase() == this.cercaPerStato.toString().trim().toUpperCase() ||
+        this.cercaPerStato.toString().toLowerCase() == '');
   }
 
   resetFiltri(): void {
     this.cercaPerLuogo = '';
     this.cercaPerTitolo = '';
     this.cercaPerStato = '';
+  }
+
+  onChangeOrdinaPer(value: string) {
+    switch (value) {
+      case 'DATA':
+        this.allEventiByOrganizzatoreWithDateFormatted =
+          this.allEventiByOrganizzatoreWithDateFormatted.sort(
+            (a: any, b: any) => {
+              if (a.dataInizio > b.dataInizio) return 1;
+              if (a.dataInizio < b.dataInizio) return -1;
+              return 0;
+            });
+        break;
+      case 'TITOLO':
+        this.allEventiByOrganizzatoreWithDateFormatted =
+          this.allEventiByOrganizzatoreWithDateFormatted.sort(
+            (a: any, b: any) => {
+              if (a.titolo.toLowerCase() > b.titolo.toLowerCase()) return 1;
+              if (a.titolo.toLowerCase() < b.titolo.toLowerCase()) return -1;
+              return 0;
+            });
+        break;
+      case 'LUOGO':
+        this.allEventiByOrganizzatoreWithDateFormatted =
+          this.allEventiByOrganizzatoreWithDateFormatted.sort(
+            (a: any, b: any) => {
+              if (a.nomeLuogo.toLowerCase() > b.nomeLuogo.toLowerCase()) return 1;
+              if (a.nomeLuogo.toLowerCase() < b.nomeLuogo.toLowerCase()) return -1;
+              return 0;
+            });
+        break;
+    }
+    this.modoOrdine = 'CRESCENTE';
+  }
+
+  onChangeModoOrdine(value: string) {
+    this.allEventiByOrganizzatoreWithDateFormatted = this.allEventiByOrganizzatoreWithDateFormatted.reverse();
   }
 }

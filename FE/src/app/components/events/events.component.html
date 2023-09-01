@@ -4,18 +4,32 @@
 
       <!-- Filtri -->
       <div class="w-full">
-        <div class="mt-[3%] w-[50%] flex justify-start gap-4">
+        <div class="mt-[3%] w-[70%] flex justify-start gap-4">
           <input type="text" class="input-form" [(ngModel)]="cercaPerTitolo" placeholder="Cerca per titolo">
+
           <input type="text" class="input-form" [(ngModel)]="cercaPerLuogo" placeholder="Cerca per luogo">
+
           <select class="input-form" [(ngModel)]="cercaPerStato">
-            <option value="" selected>
-              <p>Cerca per stato</p>
-            </option>
-            <option value="inCorso">In corso</option>
-            <option value="passato">Passati</option>
-            <option value="futuro">Futuri</option>
+            <option value="" selected>Cerca per stato</option>
+            <option value="PRESENTE">In corso</option>
+            <option value="PASSATO">Passati</option>
+            <option value="FUTURO">Futuri</option>
           </select>
+
           <button (click)="resetFiltri()" class="btn-submit">Reset filtri</button>
+
+          <select class="input-form" [(ngModel)]="attributoOrdine" (ngModelChange)="onChangeOrdinaPer($event)">
+            <option value="" selected>Ordina per</option>
+            <option value="DATA">Data</option>
+            <option value="TITOLO">Titolo</option>
+            <option value="LUOGO">Luogo</option>
+          </select>
+
+          <select class="input-form" [(ngModel)]="modoOrdine" (ngModelChange)="onChangeModoOrdine($event)">
+            <option value="" selected>Ordine</option>
+            <option value="CRESCENTE">Crescente</option>
+            <option value="DECRESCENTE">Decrescente</option>
+          </select>
         </div>
       </div>
 
