@@ -141,18 +141,8 @@ public class EventoServiceImpl implements EventoService {
         //Se sono presenti eventi, inizializzo l'array che conterrà gli eventi.
         List<GetEventoResponse> response = new ArrayList<>();
 
-        Stato statoEvento;
-
         //Per ogni evento presente sul database, salvo tutti i campi nell'array di risposta.
         for(Evento evento: eventi.get()) {
-
-            if(evento.getDataInizio().isAfter(LocalDateTime.now())) {
-                statoEvento = Stato.FUTURO;
-            } else if(evento.getDataFine().isBefore(LocalDateTime.now())) {
-                statoEvento = Stato.PASSATO;
-            } else {
-                statoEvento = Stato.PRESENTE;
-            }
 
             response.add(new GetEventoResponse(
                     evento.getEventoId(),
@@ -161,7 +151,7 @@ public class EventoServiceImpl implements EventoService {
                     evento.getDataInizio(),
                     evento.getDataFine(),
                     evento.getDataCreazione(),
-                    statoEvento,
+                    getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
                     evento.getLuogo().getLat(),
                     evento.getLuogo().getLng(),
                     evento.getLuogo().getNome()
@@ -232,10 +222,20 @@ public class EventoServiceImpl implements EventoService {
                 eventoExists.get().getDataInizio(),
                 eventoExists.get().getDataFine(),
                 eventoExists.get().getDataCreazione(),
-                eventoExists.get().getStato(),
+                getStatoEvento(eventoExists.get().getDataInizio(), eventoExists.get().getDataFine()),
                 eventoExists.get().getLuogo().getLat(),
                 eventoExists.get().getLuogo().getLng(),
                 eventoExists.get().getLuogo().getNome()
         );
+    }
+
+    private Stato getStatoEvento(LocalDateTime dataInizio, LocalDateTime dataFine) {
+        if(dataInizio.isAfter(LocalDateTime.now())) {
+            return Stato.FUTURO;
+        } else if(dataFine.isBefore(LocalDateTime.now())) {
+            return Stato.PASSATO;
+        } else {
+            return Stato.PRESENTE;
+        }
     }
 }

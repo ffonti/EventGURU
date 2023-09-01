@@ -32,7 +32,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
     if (this.eventoId !== null && this.eventoId !== undefined && this.eventoId !== '') {
       this.eventService.getEventoById(this.eventoId).subscribe({
         next: (res: GetEventoByIdResponse) => {
-          console.log(res);
+          this.compilaCampi(res);
         },
         error: (err: HttpErrorResponse) => {
           console.log(err);
@@ -73,5 +73,14 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
         console.log(err);
       }
     })
+  }
+
+  compilaCampi(res: GetEventoByIdResponse) {
+    this.titolo = res.titolo;
+    this.descrizione = res.descrizione;
+    this.dataInizio = res.dataInizio;
+    this.dataFine = res.dataFine;
+    this.nomeLuogo = res.nomeLuogo;
+    this.map = this.mapService.addMarker(this.map, +res.lat, +res.lng);
   }
 }

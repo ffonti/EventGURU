@@ -114,4 +114,16 @@ export class MapService {
   getCurrentLng(): string {
     return this.currentLng;
   }
+
+  addMarker(map: any, lat: number, lng: number): any {
+    const marker = L.marker([lat, lng]);
+    marker.addTo(map);
+    this.markers.push('1');
+    marker.on('click', (e: any) => {
+      this.markers = [];
+      marker.remove();
+    });
+    this.map = map;
+    return map;
+  }
 }
