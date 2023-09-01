@@ -23,6 +23,7 @@ Marker.prototype.options.icon = iconDefault;
 export class MapService {
   currentLat: string = '';
   currentLng: string = '';
+  markers: string[] = [];
   hasPoligono: boolean = false;
   layer: any = undefined;
   map: any;
@@ -78,11 +79,22 @@ export class MapService {
 
     map.on('draw:created', (e: any) => {
       this.layer = e.layer;
+
       if (e.layerType === 'marker') {
-        this.currentLat = e.layer._latlng.lat.toString();
-        this.currentLng = e.layer._latlng.lng.toString();
-        const marker = L.marker([+this.currentLat, +this.currentLng]);
-        marker.addTo(map).bindPopup('ciao');
+        if (this.markers.length) {
+          this.toastr.warning('Inserire un solo marker alla volta');
+          this.toastr.info('Puoi rimuovere un marker cliccandolo');
+        } else {
+          this.currentLat = e.layer._latlng.lat.toString();
+          this.currentLng = e.layer._latlng.lng.toString();
+          const marker = L.marker([+this.currentLat, +this.currentLng]);
+          marker.addTo(map);
+          marker.on('click', (e: any) => {
+            this.markers = [];
+            marker.remove();
+          });
+          this.markers.push('1');
+        }
       } else if (drawFeatures.getLayers().length) {
         map.removeLayer(e.layer);
         this.toastr.warning('Non possono esistere più poligoni!');
