@@ -1,4 +1,4 @@
-export interface CreaEventoRequest {
+export interface CreaModificaEventoRequest {
     titolo: string;
     descrizione: string;
     dataInizio: Date;

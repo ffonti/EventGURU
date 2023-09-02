@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CreaEventoResponse } from 'src/app/dtos/response/CreaEventoResponse';
+import { CreaModificaEventoResponse } from 'src/app/dtos/response/CreaModificaEventoResponse';
 import { GetEventoByIdResponse } from 'src/app/dtos/response/GetEventoByIdResponse';
 import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
@@ -54,7 +54,6 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
     this.eventoId = this.router.url.split('/homepage/creaEvento/')[1];
     if (this.eventoId !== null && this.eventoId !== undefined && this.eventoId !== '') {
       this.compilaCampi(this.campiIniziali);
-      this.map = this.mapService.addMarker(this.map, +this.mapService.getCurrentLat(), +this.mapService.getCurrentLng());
       return;
 
     } else {
@@ -68,20 +67,29 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
   }
 
   creaOModificaEvento(): void {
-    if (!this.mapService.getCurrentLat() || !this.mapService.getCurrentLng()) {
-      this.toastr.warning('Selezionare prima un punto sulla mappa');
-      return;
-    }
 
     this.eventoId = this.router.url.split('/homepage/creaEvento/')[1];
     if (this.eventoId !== null && this.eventoId !== undefined && this.eventoId !== '') {
-      //modifica endpoint
+      this.eventService.modificaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo, this.eventoId).subscribe({
+        next: (res: CreaModificaEventoResponse) => {
+          this.toastr.success(res.message);
+          this.router.navigateByUrl('homepage/eventiOrganizzati');
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+          this.toastr.error(err.error.message);
+        }
+      });
       return;
 
     } else {
+      if (!this.mapService.getCurrentLat() || !this.mapService.getCurrentLng()) {
+        this.toastr.warning('Selezionare prima un punto sulla mappa');
+        return;
+      }
       //TODO controllare che tutti i campi siano stati compilati (con bordo rosso)
       this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo).subscribe({
-        next: (res: CreaEventoResponse) => {
+        next: (res: CreaModificaEventoResponse) => {
           this.toastr.success(res.message);
           this.router.navigateByUrl('homepage/eventiOrganizzati');
         },

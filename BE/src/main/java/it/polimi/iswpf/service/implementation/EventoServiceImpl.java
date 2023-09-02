@@ -2,7 +2,7 @@ package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.LuogoBuilder;
-import it.polimi.iswpf.dto.request.CreaEventoRequest;
+import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
@@ -39,10 +39,10 @@ public class EventoServiceImpl implements EventoService {
 
     /**
      * Metodo per creare un evento. Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
-     * @param request DTO con i dati dell'evento da creare -> {@link CreaEventoRequest}.
+     * @param request DTO con i dati dell'evento da creare -> {@link CreaModificaEventoRequest}.
      */
     @Override
-    public void creaEvento(@NonNull CreaEventoRequest request) {
+    public void creaEvento(@NonNull CreaModificaEventoRequest request) {
 
         //La data di inizio dell'evento deve essere precedente alla data di fine dell'evento.
         if(request.getDataFine().isBefore(request.getDataInizio()) ||
@@ -230,6 +230,34 @@ public class EventoServiceImpl implements EventoService {
     }
 
     /**
+     * Metodo per modificare i dati di un evento già esistente.
+     * @param request DTO con nuovi dati per aggiornare l'evento -> {@link CreaModificaEventoRequest}.
+     * @param eventoId Id dell'evento da modificare, passato in modo dinamico tramite l'endpoint.
+     */
+    @Override
+    public void modificaEvento(CreaModificaEventoRequest request, Long eventoId) {
+
+        //L'id autoincrement parte da 1.
+        if(eventoId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(eventoExists.isEmpty()) {
+            throw new NotFoundException("Evento non trovato");
+        } else {
+            //Se l'evento esiste, lo assegno a una variabile.
+            Evento evento = eventoExists.get();
+
+            //Aggiorno i dati dell'evento.
+            updateEvento(evento, request);
+        }
+    }
+
+    /**
      * Ricevuti in input data di inizio e data di fine di un evento, restituisce lo stato basato su data e ora attuali.
      * @param dataInizio Data di inizio dell'evento.
      * @param dataFine Data di fine dell'evento.
@@ -243,5 +271,71 @@ public class EventoServiceImpl implements EventoService {
         } else {
             return Stato.PRESENTE;
         }
+    }
+
+    /**
+     * Code cleaning. Metodo usato da due endpoint (admin e no) per modificare i dati di un evento.
+     * @param evento Evento da modificare.
+     * @param request DTO con i nuovi dati -> {@link CreaModificaEventoRequest}.
+     */
+    private void updateEvento(Evento evento, CreaModificaEventoRequest request) {
+
+        //Se il client ha compilato il campo "Titolo" e non è vuoto, aggiorno il titolo dell'evento.
+        if(!request.getTitolo().isEmpty() && !request.getTitolo().isBlank()) {
+            evento.setTitolo(request.getTitolo());
+        }
+
+        //Se il client ha compilato il campo "Descrizione" e non è vuoto, aggiorno la descrizione dell'evento.
+        if(!request.getDescrizione().isEmpty() && !request.getDescrizione().isBlank()) {
+            evento.setDescrizione(request.getDescrizione());
+        }
+
+        //La data di inizio dell'evento deve essere precedente alla data di fine dell'evento.
+        if(request.getDataFine().isBefore(request.getDataInizio()) ||
+                request.getDataInizio().isEqual(request.getDataFine())) {
+            throw new BadRequestException("La data di inizio deve essere precedente alla data di fine");
+        }
+
+        //La data di inizio dell'evento deve essere precedente alla data attuale.
+        if(request.getDataInizio().isBefore(LocalDateTime.now()) ||
+                request.getDataInizio().isEqual(LocalDateTime.now())) {
+            throw new BadRequestException("L'evento non può avvenire nel passato");
+        }
+
+        //TODO capire perché le date non vengono aggiornate.
+        //Aggiorno la data di inizio e fine dell'evento.
+        evento.setDataInizio(request.getDataInizio());
+        evento.setDataFine(request.getDataFine());
+
+        //Se il client ha compilato il campo "Nome luogo" e non è vuoto, aggiorno il nome del luogo dell'evento.
+        if(!request.getNomeLuogo().isEmpty() && !request.getNomeLuogo().isBlank()) {
+
+            //Verifico se il luogo con un dato nome è già salvato sul database.
+            Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(request.getNomeLuogo());
+
+            Luogo luogo;
+
+            if(luogoExists.isEmpty()) {
+                //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto.
+                luogo = new LuogoBuilder()
+                        .nome(request.getNomeLuogo())
+                        .lat(request.getLat())
+                        .lng(request.getLng())
+                        .build();
+
+                //Salvo sul database l'oggetto appena costruito
+                luogoRepository.save(luogo);
+
+            } else {
+                //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
+                luogo = luogoExists.get();
+            }
+
+            //Aggiorno il luogo dell'evento
+            evento.setLuogo(luogo);
+        }
+
+        //Chiamo la repository e salvo i dati aggiornati dell'evento.
+        eventoRepository.save(evento);
     }
 }

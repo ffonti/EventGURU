@@ -1,7 +1,7 @@
 package it.polimi.iswpf.controller;
 
-import it.polimi.iswpf.dto.request.CreaEventoRequest;
-import it.polimi.iswpf.dto.response.CreaEventoResponse;
+import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
+import it.polimi.iswpf.dto.response.CreaModificaEventoResponse;
 import it.polimi.iswpf.dto.response.EliminaEventoResponse;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
 import it.polimi.iswpf.service._interface.EventoService;
@@ -25,17 +25,17 @@ public class EventoController {
     /**
      * Metodo per creare un evento. Chiama il service che controllerà la validità
      * dei dati prima di salvarli sul database.
-     * @param request DTO con i dati per la creazione dell'evento -> {@link CreaEventoRequest}
+     * @param request DTO con i dati per la creazione dell'evento -> {@link CreaModificaEventoRequest}
      * @return Messaggio di avvenuta creazione.
      */
     @PostMapping("/crea")
-    public ResponseEntity<CreaEventoResponse> creaEvento(@RequestBody CreaEventoRequest request) {
+    public ResponseEntity<CreaModificaEventoResponse> creaEvento(@RequestBody CreaModificaEventoRequest request) {
 
         eventoService.creaEvento(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new CreaEventoResponse("Evento creato con successo!"));
+                .body(new CreaModificaEventoResponse("Evento creato con successo!"));
     }
 
     /**
@@ -79,5 +79,24 @@ public class EventoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventoService.getEventoById(Long.parseLong(eventoId)));
+    }
+
+    /**
+     * Metodo per modificare i dati di un evento già esistente. Chiama il service che controllerà
+     * la validità dei dati prima di procedere con l'effettiva modifica.
+     * @param request DTO con nuovi dati per aggiornare l'evento -> {@link CreaModificaEventoRequest}.
+     * @param eventoId Id dell'evento da modificare, passato in modo dinamico tramite l'endpoint.
+     * @return Messaggio di avvenuta modifica.
+     */
+    @PutMapping("/modifica/{eventoId}")
+    public ResponseEntity<CreaModificaEventoResponse> modificaEvento(
+            @RequestBody CreaModificaEventoRequest request,
+            @PathVariable String eventoId) {
+
+        eventoService.modificaEvento(request, Long.parseLong(eventoId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CreaModificaEventoResponse("Evento modificato con successo"));
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * @- Model che rappresenta l'evento sul db.
+ * Model che rappresenta l'evento sul db.
  */
 @Data
 @NoArgsConstructor

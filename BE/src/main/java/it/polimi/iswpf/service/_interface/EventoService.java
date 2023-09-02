@@ -1,6 +1,7 @@
 package it.polimi.iswpf.service._interface;
 
-import it.polimi.iswpf.dto.request.CreaEventoRequest;
+import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
+import it.polimi.iswpf.dto.response.CreaModificaEventoResponse;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
 import it.polimi.iswpf.service.implementation.EventoServiceImpl;
 
@@ -14,9 +15,9 @@ public interface EventoService {
 
     /**
      * Metodo per creare un evento. Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
-     * @param request DTO con i dati dell'evento da creare -> {@link CreaEventoRequest}.
+     * @param request DTO con i dati dell'evento da creare -> {@link CreaModificaEventoRequest}.
      */
-    void creaEvento(CreaEventoRequest request);
+    void creaEvento(CreaModificaEventoRequest request);
 
     /**
      * Metodo per prendere tutti gli eventi di un organizzatore.
@@ -37,4 +38,11 @@ public interface EventoService {
      * @return DTO con i dati dell'evento richiesto -> {@link GetEventoResponse}.
      */
     GetEventoResponse getEventoById(Long eventoId);
+
+    /**
+     * Metodo per modificare i dati di un evento già esistente.
+     * @param request DTO con nuovi dati per aggiornare l'evento -> {@link CreaModificaEventoRequest}.
+     * @param eventoId Id dell'evento da modificare, passato in modo dinamico tramite l'endpoint.
+     */
+    void modificaEvento(CreaModificaEventoRequest request, Long eventoId);
 }

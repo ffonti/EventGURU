@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
             //Se l'utente esiste, lo assegno a una variabile.
             User user = userExists.get();
 
-            //Aggiorno i dati dell'utente
+            //Aggiorno i dati dell'utente.
             return updateGeneralUser(user, request);
         }
     }
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Code cleaning. Metodo usato da due endpoint (admin e no) per modificare i dati di un utente.
      * @param user Utente da modificare.
-     * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
+     * @param request DTO con i nuovi dati -> {@link UpdateUserDataRequest}.
      * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
      */
     private UserResponse updateGeneralUser(User user, UpdateUserDataRequest request) {

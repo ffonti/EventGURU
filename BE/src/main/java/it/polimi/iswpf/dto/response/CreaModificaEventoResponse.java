@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CreaEventoResponse {
+public class CreaModificaEventoResponse {
 
     private String message;
 }

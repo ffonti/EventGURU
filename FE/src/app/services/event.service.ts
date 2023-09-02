@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreaEventoRequest } from '../dtos/request/CreaEventoRequest';
-import { CreaEventoResponse } from '../dtos/response/CreaEventoResponse';
+import { CreaModificaEventoResponse } from '../dtos/response/CreaModificaEventoResponse';
 import { GetAllEventiByOrganizzatoreResponse } from '../dtos/response/GetAllEventiByOrganizzatoreResponse';
 import { GetEventoByIdResponse } from '../dtos/response/GetEventoByIdResponse';
+import { CreaModificaEventoRequest } from '../dtos/request/CreaModificaEventoRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +15,18 @@ export class EventService {
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
 
-  creaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string): Observable<CreaEventoResponse> {
+  creaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string): Observable<CreaModificaEventoResponse> {
     const header = this.getHeader();
-    const request: CreaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
-    console.log(request);
+    const request: CreaModificaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
 
-    return this.http.post<CreaEventoResponse>(this.backendUrl + 'crea', request, { headers: header });
+    return this.http.post<CreaModificaEventoResponse>(this.backendUrl + 'crea', request, { headers: header });
+  }
+
+  modificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, eventoId: string): Observable<CreaModificaEventoResponse> {
+    const header = this.getHeader();
+    const request: CreaModificaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
+
+    return this.http.put<CreaModificaEventoResponse>(this.backendUrl + 'modifica/' + eventoId, request, { headers: header });
   }
 
   getEventiByOrganizzatore(): Observable<GetAllEventiByOrganizzatoreResponse[]> {
