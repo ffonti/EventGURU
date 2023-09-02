@@ -229,6 +229,12 @@ public class EventoServiceImpl implements EventoService {
         );
     }
 
+    /**
+     * Ricevuti in input data di inizio e data di fine di un evento, restituisce lo stato basato su data e ora attuali.
+     * @param dataInizio Data di inizio dell'evento.
+     * @param dataFine Data di fine dell'evento.
+     * @return Lo stato dell'evento (passato, presente o futuro).
+     */
     private Stato getStatoEvento(LocalDateTime dataInizio, LocalDateTime dataFine) {
         if(dataInizio.isAfter(LocalDateTime.now())) {
             return Stato.FUTURO;

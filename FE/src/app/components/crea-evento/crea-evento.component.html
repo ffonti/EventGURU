@@ -38,7 +38,8 @@
 
             </div>
             <div class="w-full flex-center gap-4">
-              <button type="submit" class="btn-submit" (click)="creaEvento()">Crea</button>
+              <button type="submit" class="btn-submit"
+                (click)="creaOModificaEvento()">{{!eventoId ? 'Crea' : 'Modifica'}}</button>
               <button type="submit" class="btn-red-submit" (click)="resetForm()">Reset</button>
             </div>
           </div>

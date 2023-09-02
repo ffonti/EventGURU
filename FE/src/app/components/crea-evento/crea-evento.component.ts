@@ -20,6 +20,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
   protected dataInizio: Date = new Date();
   protected dataFine: Date = new Date();
   protected eventoId: string = '';
+  private campiIniziali!: GetEventoByIdResponse;
 
   constructor(
     private toastr: ToastrService,
@@ -33,6 +34,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
       this.eventService.getEventoById(this.eventoId).subscribe({
         next: (res: GetEventoByIdResponse) => {
           this.compilaCampi(res);
+          this.campiIniziali = JSON.parse(JSON.stringify(res));
         },
         error: (err: HttpErrorResponse) => {
           console.log(err);
@@ -49,30 +51,46 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
 
   //Inizializza i campi del form
   resetForm(): void {
-    this.titolo = '';
-    this.descrizione = '';
-    this.dataInizio = new Date();
-    this.dataFine = new Date();
+    this.eventoId = this.router.url.split('/homepage/creaEvento/')[1];
+    if (this.eventoId !== null && this.eventoId !== undefined && this.eventoId !== '') {
+      this.compilaCampi(this.campiIniziali);
+      this.map = this.mapService.addMarker(this.map, +this.mapService.getCurrentLat(), +this.mapService.getCurrentLng());
+      return;
+
+    } else {
+      this.titolo = '';
+      this.descrizione = '';
+      this.dataInizio = new Date();
+      this.dataFine = new Date();
+      this.nomeLuogo = '';
+    }
     this.toastr.info('Dati resettati');
   }
 
-  creaEvento(): void {
+  creaOModificaEvento(): void {
     if (!this.mapService.getCurrentLat() || !this.mapService.getCurrentLng()) {
       this.toastr.warning('Selezionare prima un punto sulla mappa');
       return;
     }
 
-    //TODO controllare che tutti i campi siano stati compilati (con bordo rosso)
-    this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo).subscribe({
-      next: (res: CreaEventoResponse) => {
-        this.toastr.success(res.message);
-        this.router.navigateByUrl('homepage/eventiOrganizzati');
-      },
-      error: (err: HttpErrorResponse) => {
-        this.toastr.error(err.error.message);
-        console.log(err);
-      }
-    })
+    this.eventoId = this.router.url.split('/homepage/creaEvento/')[1];
+    if (this.eventoId !== null && this.eventoId !== undefined && this.eventoId !== '') {
+      //modifica endpoint
+      return;
+
+    } else {
+      //TODO controllare che tutti i campi siano stati compilati (con bordo rosso)
+      this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo).subscribe({
+        next: (res: CreaEventoResponse) => {
+          this.toastr.success(res.message);
+          this.router.navigateByUrl('homepage/eventiOrganizzati');
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastr.error(err.error.message);
+          console.log(err);
+        }
+      });
+    }
   }
 
   compilaCampi(res: GetEventoByIdResponse) {
