@@ -1,6 +1,7 @@
 package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
+import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.CreaModificaEventoResponse;
 import it.polimi.iswpf.dto.response.EliminaEventoResponse;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
@@ -8,6 +9,7 @@ import it.polimi.iswpf.service._interface.EventoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -98,5 +100,18 @@ public class EventoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CreaModificaEventoResponse("Evento modificato con successo"));
+    }
+
+    /**
+     * Metodo per prendere tutti gli eventi presenti sul database.
+     * @return Lista di DTO con tutti i dati di ogni evento -> {@link AllEventiResponse}.
+     */
+    @GetMapping("/getAll")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<AllEventiResponse>> getAllEventi() {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventoService.adminGetAllEventi());
     }
 }

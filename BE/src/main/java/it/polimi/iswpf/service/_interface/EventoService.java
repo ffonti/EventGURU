@@ -1,6 +1,7 @@
 package it.polimi.iswpf.service._interface;
 
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
+import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.CreaModificaEventoResponse;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
 import it.polimi.iswpf.service.implementation.EventoServiceImpl;
@@ -45,4 +46,10 @@ public interface EventoService {
      * @param eventoId Id dell'evento da modificare, passato in modo dinamico tramite l'endpoint.
      */
     void modificaEvento(CreaModificaEventoRequest request, Long eventoId);
+
+    /**
+     * Metodo per prendere tutti gli eventi presenti sul database.
+     * @return Lista di DTO con tutti i dati di ogni evento -> {@link AllEventiResponse}.
+     */
+    List<AllEventiResponse> adminGetAllEventi();
 }

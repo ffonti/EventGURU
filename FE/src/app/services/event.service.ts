@@ -5,6 +5,7 @@ import { CreaModificaEventoResponse } from '../dtos/response/CreaModificaEventoR
 import { GetAllEventiByOrganizzatoreResponse } from '../dtos/response/GetAllEventiByOrganizzatoreResponse';
 import { GetEventoByIdResponse } from '../dtos/response/GetEventoByIdResponse';
 import { CreaModificaEventoRequest } from '../dtos/request/CreaModificaEventoRequest';
+import { GetAllEventiResponse } from '../dtos/response/GetAllEventiResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,12 @@ export class EventService {
     const header = this.getHeader();
 
     return this.http.get<GetAllEventiByOrganizzatoreResponse[]>(this.backendUrl + 'getByOrganizzatore/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+  }
+
+  getAllEventi(): Observable<GetAllEventiResponse[]> {
+    const header = this.getHeader();
+
+    return this.http.get<GetAllEventiResponse[]>(this.backendUrl + 'getAll', { headers: header });
   }
 
   eliminaEvento(eventoId: number): Observable<string> {

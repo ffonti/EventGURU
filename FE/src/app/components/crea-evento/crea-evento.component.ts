@@ -73,7 +73,11 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
       this.eventService.modificaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo, this.eventoId).subscribe({
         next: (res: CreaModificaEventoResponse) => {
           this.toastr.success(res.message);
-          this.router.navigateByUrl('homepage/eventiOrganizzati');
+          if (localStorage.getItem('ruolo') == 'ADMIN') {
+            this.router.navigateByUrl('homepage/esplora');
+          } else {
+            this.router.navigateByUrl('homepage/eventiOrganizzati');
+          }
         },
         error: (err: HttpErrorResponse) => {
           console.log(err);
@@ -91,7 +95,11 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
       this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo).subscribe({
         next: (res: CreaModificaEventoResponse) => {
           this.toastr.success(res.message);
-          this.router.navigateByUrl('homepage/eventiOrganizzati');
+          if (localStorage.getItem('ruolo') == 'ADMIN') {
+            this.router.navigateByUrl('homepage/esplora');
+          } else {
+            this.router.navigateByUrl('homepage/eventiOrganizzati');
+          }
         },
         error: (err: HttpErrorResponse) => {
           this.toastr.error(err.error.message);

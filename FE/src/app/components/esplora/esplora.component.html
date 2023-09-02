@@ -1,1 +1,114 @@
-<p>esplora works!</p>
+<ng-container *ngIf="allEventiWithDateFormatted.length; else noEventi">
+  <div class="flex-center">
+    <div class="flex-center flex-col w-[90%]">
+
+      <!-- Filtri -->
+      <div class="w-full">
+        <div class="mt-[3%] w-[70%] flex justify-start gap-4">
+          <input type="text" class="input-form" [(ngModel)]="cercaPerTitolo" placeholder="Cerca per titolo">
+
+          <input type="text" class="input-form" [(ngModel)]="cercaPerLuogo" placeholder="Cerca per luogo">
+
+          <select class="input-form" [(ngModel)]="cercaPerStato">
+            <option value="" selected>Cerca per stato</option>
+            <option value="PRESENTE">In corso</option>
+            <option value="PASSATO">Passati</option>
+            <option value="FUTURO">Futuri</option>
+          </select>
+
+          <button (click)="resetFiltri()" class="btn-submit">Reset filtri</button>
+
+          <select class="input-form" [(ngModel)]="attributoOrdine" (ngModelChange)="onChangeOrdinaPer($event)">
+            <option value="" selected>Ordina per</option>
+            <option value="DATA">Data</option>
+            <option value="TITOLO">Titolo</option>
+            <option value="LUOGO">Luogo</option>
+          </select>
+
+          <select class="input-form" [(ngModel)]="modoOrdine" (ngModelChange)="onChangeModoOrdine($event)">
+            <option value="" selected>Ordine</option>
+            <option value="CRESCENTE">Crescente</option>
+            <option value="DECRESCENTE">Decrescente</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Container cards -->
+      <div class="grid grid-cols-4 w-full gap-4 mt-[2%]">
+
+        <ng-container *ngFor="let evento of allEventiWithDateFormatted">
+          <ng-container *ngIf="checkFilters(evento)">
+            <!-- Single card -->
+            <div class="card-evento">
+
+              <!-- Titolo -->
+              <div class="flex-center">
+                <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                  {{evento.titolo}}
+                </h2>
+              </div>
+
+              <!-- Data -->
+              <div class="flex-center">
+                <p class="mb-3 font-normal text-sm text-gray-400">{{evento.dataInizio}} - {{evento.dataFine}}</p>
+              </div>
+
+              <!-- Nome luogo -->
+              <div class="flex justify-start">
+                <p class="font-normal text-gray-700">Luogo: {{evento.nomeLuogo}}</p>
+              </div>
+
+              <!-- Descrizione -->
+              <div class="flex justify-start">
+                <p class="mb-3 font-normal text-gray-700">{{evento.descrizione}}</p>
+              </div>
+
+              <!-- Pulsanti -->
+              <div class="flex gap-3 h-full items-end">
+                <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
+                  Modifica
+                </a>
+                <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
+                  Elimina
+                </a>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #noEventi>
+  <div class="flex-center flex-col mt-[5%] w-full h-full">
+    <p class="font-bold text-2xl">Non sono presenti eventi! :(</p>
+    <div class="mt-[2%] w-44">
+      <button class="btn-submit" routerLink="/homepage/creaEvento">Creane uno</button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Modale elimina evento -->
+<ng-container *ngIf="showModalEliminaEvento">
+  <div
+    class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+    <div class="relative mx-auto w-[25%] h-[24%]">
+      <div
+        class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
+        <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
+          <div class="flex-center flex-col space-y-8 mt-5">
+            <div>
+              <p class="font-medium text-lg">Sicuro di voler eliminare l'evento?</p>
+            </div>
+            <div class="flex-center gap-4 w-full">
+              <button class="btn-submit" (click)="toggleModalEliminaEvento(0)">ANNULLA</button>
+              <button class="btn-red-submit" (click)="eliminaEvento()">ELIMINA</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+</ng-container>

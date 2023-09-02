@@ -3,15 +3,14 @@ package it.polimi.iswpf.service.implementation;
 import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.LuogoBuilder;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
+import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
+import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
 import it.polimi.iswpf.exception.InternalServerErrorException;
 import it.polimi.iswpf.exception.NotFoundException;
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.Luogo;
-import it.polimi.iswpf.model.Stato;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model.*;
 import it.polimi.iswpf.repository.EventoRepository;
 import it.polimi.iswpf.repository.LuogoRepository;
 import it.polimi.iswpf.repository.UserRepository;
@@ -255,6 +254,44 @@ public class EventoServiceImpl implements EventoService {
             //Aggiorno i dati dell'evento.
             updateEvento(evento, request);
         }
+    }
+
+    /**
+     * Metodo per prendere tutti gli eventi presenti sul database.
+     * @return Lista di DTO con tutti i dati di ogni evento -> {@link AllEventiResponse}.
+     */
+    @Override
+    public List<AllEventiResponse> adminGetAllEventi() {
+
+        //Prendo tutti gli eventi presenti sul database.
+        List<Evento> eventi = eventoRepository.findAll();
+
+        //Se non è presente nessun evento lancio un'eccezione.
+        if(eventi.isEmpty())  {
+            throw new NotFoundException("Eventi non trovati");
+        }
+
+        //Se non sono presenti eventi, ritorno un array vuoto.
+        List<AllEventiResponse> response = new ArrayList<>();
+
+        //Per ogni evento, aggiungo all'array di risposta i dati dell'evento stesso.
+        for(Evento evento: eventi) {
+            response.add(new AllEventiResponse(
+                    evento.getEventoId(),
+                    evento.getTitolo(),
+                    evento.getDescrizione(),
+                    evento.getDataInizio(),
+                    evento.getDataFine(),
+                    evento.getDataCreazione(),
+                    getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
+                    evento.getLuogo().getLat(),
+                    evento.getLuogo().getLng(),
+                    evento.getLuogo().getNome(),
+                    evento.getOrganizzatore().getUsername()
+            ));
+        }
+
+        return response;
     }
 
     /**
