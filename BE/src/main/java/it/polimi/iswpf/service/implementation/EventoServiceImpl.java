@@ -377,7 +377,7 @@ public class EventoServiceImpl implements EventoService {
 
         //Se non è un organizzatore, lancio un'eccezione.
         if(!organizzatoreExists.get().getRuolo().equals(Ruolo.ORGANIZZATORE)) {
-            throw new BadRequestException("L'utente selezionato non è un organizzatore");
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
         }
 
         //Costruisco l'oggetto evento da salvare sul database.
@@ -485,7 +485,7 @@ public class EventoServiceImpl implements EventoService {
 
                 //Se non è un organizzatore, lancio un'eccezione.
                 if(!organizzatoreExists.get().getRuolo().equals(Ruolo.ORGANIZZATORE)) {
-                    throw new BadRequestException("L'utente selezionato non è un organizzatore");
+                    throw new ForbiddenException("L'utente non ha i permessi adatti");
                 }
 
                 evento.setOrganizzatore(organizzatoreExists.get());
@@ -494,6 +494,63 @@ public class EventoServiceImpl implements EventoService {
             //Chiamo la repository e salvo i dati aggiornati dell'evento.
             eventoRepository.save(evento);
         }
+    }
+
+    /**
+     * Metodo per iscrivere un turista a un evento.
+     * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    @Override
+    public void iscrizioneEvento(Long eventoId, Long turistaId) {
+
+        //L'id autoincrement parte da 1.
+        if(eventoId < 1) {
+            throw new BadRequestException("Id dell'evento non valido");
+        }
+
+        if(turistaId < 1) {
+            throw new BadRequestException("Id del turista non valido");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(eventoExists.isEmpty()) {
+            throw new NotFoundException("Evento non trovato");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(turistaExists.isEmpty()) {
+            throw new NotFoundException("Turista non trovato");
+        }
+
+        //Controllo se il ruolo è corretto.
+        if(!turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
+
+        Evento evento = eventoExists.get();
+        User turista = turistaExists.get();
+
+        if(evento.getIscritti().isEmpty()) {
+            evento.setIscritti(new ArrayList<>(List.of(turista)));
+        } else {
+            evento.getIscritti().add(turista);
+        }
+
+        if(turista.getEventi().isEmpty()) {
+            turista.setEventi(new ArrayList<>(List.of(evento)));
+        } else {
+            turista.getEventi().add(evento);
+        }
+
+        System.out.println(turista.getEventi().size());
+        System.out.println(evento.getIscritti().size());
     }
 
     /**

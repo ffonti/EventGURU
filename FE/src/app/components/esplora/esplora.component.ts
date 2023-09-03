@@ -20,10 +20,12 @@ export class EsploraComponent implements OnInit {
   protected cercaPerStato: string = '';
   protected modoOrdine: string = '';
   protected attributoOrdine: string = '';
+  protected ruolo: string | undefined = '';
 
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
+    this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
     this.eventService.getAllEventi().subscribe({
       next: (res: GetAllEventiResponse[]) => {
         res.forEach(evento => {
@@ -111,7 +113,7 @@ export class EsploraComponent implements OnInit {
     this.cercaPerStato = '';
   }
 
-  onChangeOrdinaPer(value: string) {
+  onChangeOrdinaPer(value: string): void {
     switch (value) {
       case 'DATA':
         this.allEventiWithDateFormatted =
@@ -144,11 +146,23 @@ export class EsploraComponent implements OnInit {
     this.modoOrdine = 'CRESCENTE';
   }
 
-  onChangeModoOrdine(value: string) {
+  onChangeModoOrdine(): void {
     this.allEventiWithDateFormatted = this.allEventiWithDateFormatted.reverse();
   }
 
-  modificaEvento(eventoId: number) {
+  modificaEvento(eventoId: number): void {
     this.router.navigateByUrl('/homepage/creaEvento/' + eventoId.toString().trim());
+  }
+
+  iscrizioneEvento(eventoId: number): void {
+    this.eventService.iscrizioneEvento(eventoId.toString().trim()).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
+      }
+    });
   }
 }

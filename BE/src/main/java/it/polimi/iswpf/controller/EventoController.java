@@ -2,10 +2,7 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.AdminCreaModificaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
-import it.polimi.iswpf.dto.response.AllEventiResponse;
-import it.polimi.iswpf.dto.response.CreaModificaEventoResponse;
-import it.polimi.iswpf.dto.response.EliminaEventoResponse;
-import it.polimi.iswpf.dto.response.GetEventoResponse;
+import it.polimi.iswpf.dto.response.*;
 import it.polimi.iswpf.service._interface.EventoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -153,5 +150,17 @@ public class EventoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CreaModificaEventoResponse("Evento modificato con successo"));
+    }
+
+    @GetMapping("iscrizione/{eventoId}/{turistaId}")
+    public ResponseEntity<IscrizioneEventoResponse> iscrizioneEvento(
+            @PathVariable String eventoId,
+            @PathVariable String turistaId) {
+
+        eventoService.iscrizioneEvento(Long.parseLong(eventoId), Long.parseLong(turistaId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new IscrizioneEventoResponse("Iscrizione avvenuta con successo"));
     }
 }

@@ -66,4 +66,11 @@ public interface EventoService {
      * @param eventoId Id dell'evento da modificare, passato in modo dinamico tramite l'endpoint.
      */
     void adminModificaEvento(AdminCreaModificaEventoRequest request, Long eventoId);
+
+    /**
+     * Metodo per iscrivere un turista a un evento.
+     * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    void iscrizioneEvento(Long eventoId, Long turistaId);
 }

@@ -9,12 +9,14 @@
 
           <input type="text" class="input-form" [(ngModel)]="cercaPerLuogo" placeholder="Cerca per luogo">
 
-          <select class="input-form" [(ngModel)]="cercaPerStato">
-            <option value="" selected>Cerca per stato</option>
-            <option value="PRESENTE">In corso</option>
-            <option value="PASSATO">Passati</option>
-            <option value="FUTURO">Futuri</option>
-          </select>
+          <ng-container *ngIf="ruolo == 'ADMIN'">
+            <select class="input-form" [(ngModel)]="cercaPerStato">
+              <option value="" selected>Cerca per stato</option>
+              <option value="PRESENTE">In corso</option>
+              <option value="PASSATO">Passati</option>
+              <option value="FUTURO">Futuri</option>
+            </select>
+          </ng-container>
 
           <button (click)="resetFiltri()" class="btn-submit">Reset filtri</button>
 
@@ -25,7 +27,7 @@
             <option value="LUOGO">Luogo</option>
           </select>
 
-          <select class="input-form" [(ngModel)]="modoOrdine" (ngModelChange)="onChangeModoOrdine($event)">
+          <select class="input-form" [(ngModel)]="modoOrdine" (ngModelChange)="onChangeModoOrdine()">
             <option value="" selected>Ordine</option>
             <option value="CRESCENTE">Crescente</option>
             <option value="DECRESCENTE">Decrescente</option>
@@ -64,14 +66,23 @@
               </div>
 
               <!-- Pulsanti -->
-              <div class="flex gap-3 h-full items-end">
-                <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
-                  Modifica
-                </a>
-                <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
-                  Elimina
-                </a>
-              </div>
+              <ng-container *ngIf="ruolo == 'ADMIN'; else turista">
+                <div class="flex gap-3 h-full items-end">
+                  <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
+                    Modifica
+                  </a>
+                  <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
+                    Elimina
+                  </a>
+                </div>
+              </ng-container>
+              <ng-template #turista>
+                <div class="flex h-full items-end">
+                  <a class="btn-submit" (click)="iscrizioneEvento(evento.eventoId)">
+                    Iscriviti
+                  </a>
+                </div>
+              </ng-template>
             </div>
           </ng-container>
         </ng-container>
