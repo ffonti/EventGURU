@@ -93,7 +93,6 @@ export class MapService {
             this.markers = [];
             marker.remove();
           });
-          this.markers.push('1');
         }
       } else if (drawFeatures.getLayers().length) {
         map.removeLayer(e.layer);
@@ -118,7 +117,6 @@ export class MapService {
   addMarker(map: any, lat: number, lng: number): any {
     const marker = L.marker([lat, lng]);
     marker.addTo(map);
-    this.markers.push('1');
     marker.on('click', (e: any) => {
       this.markers = [];
       marker.remove();

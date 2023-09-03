@@ -11,4 +11,5 @@ export interface GetEventoByIdResponse {
     nomeLuogo: string;
     lat: string;
     lng: string;
+    usernameOrganizzatore: string;
 }

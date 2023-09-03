@@ -1,9 +1,8 @@
 package it.polimi.iswpf.service._interface;
 
-import it.polimi.iswpf.dto.request.AdminCreaEventoRequest;
+import it.polimi.iswpf.dto.request.AdminCreaModificaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
 import it.polimi.iswpf.dto.response.AllEventiResponse;
-import it.polimi.iswpf.dto.response.CreaModificaEventoResponse;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
 import it.polimi.iswpf.service.implementation.EventoServiceImpl;
 
@@ -57,7 +56,14 @@ public interface EventoService {
     /**
      * Metodo per gli admin. Permette di creare un evento scegliendo l'organizzatore.
      * Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
-     * @param request DTO con i dati dell'evento da creare -> {@link AdminCreaEventoRequest}.
+     * @param request DTO con i dati dell'evento da creare -> {@link AdminCreaModificaEventoRequest}.
      */
-    void adminCreaEvento(AdminCreaEventoRequest request);
+    void adminCreaEvento(AdminCreaModificaEventoRequest request);
+
+    /**
+     * Metodo per gli admin, usato per modificare i dati di un evento già esistente.
+     * @param request DTO con nuovi dati per aggiornare l'evento -> {@link AdminCreaModificaEventoRequest}.
+     * @param eventoId Id dell'evento da modificare, passato in modo dinamico tramite l'endpoint.
+     */
+    void adminModificaEvento(AdminCreaModificaEventoRequest request, Long eventoId);
 }

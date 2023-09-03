@@ -1,6 +1,6 @@
 package it.polimi.iswpf.controller;
 
-import it.polimi.iswpf.dto.request.AdminCreaEventoRequest;
+import it.polimi.iswpf.dto.request.AdminCreaModificaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
 import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.CreaModificaEventoResponse;
@@ -119,18 +119,39 @@ public class EventoController {
     /**
      * Metodo per gli admin. Permette di creare un evento scegliendo l'organizzatore.
      * Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
-     * @param request DTO con i dati dell'evento da creare -> {@link AdminCreaEventoRequest}.
+     * @param request DTO con i dati dell'evento da creare -> {@link AdminCreaModificaEventoRequest}.
      * @return Messaggio di avvenuta creazione.
      */
     @PostMapping("/adminCrea")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CreaModificaEventoResponse> adminCreaEvento(
-            @RequestBody AdminCreaEventoRequest request) {
+            @RequestBody AdminCreaModificaEventoRequest request) {
 
         eventoService.adminCreaEvento(request);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CreaModificaEventoResponse("Evento creato con successo"));
+    }
+
+    /**
+     * Metodo per gli admin. Permette di modificare i dati di un evento già esistente.
+     * Chiama il service che controllerà la validità dei dati prima di procedere
+     * con l'effettiva modifica.
+     * @param request DTO con nuovi dati per aggiornare l'evento -> {@link AdminCreaModificaEventoRequest}.
+     * @param eventoId Id dell'evento da modificare, passato in modo dinamico tramite l'endpoint.
+     * @return Messaggio di avvenuta modifica.
+     */
+    @PutMapping("/adminModifica/{eventoId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CreaModificaEventoResponse> adminModificaEvento(
+            @RequestBody AdminCreaModificaEventoRequest request,
+            @PathVariable String eventoId) {
+
+        eventoService.adminModificaEvento(request, Long.parseLong(eventoId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CreaModificaEventoResponse("Evento modificato con successo"));
     }
 }

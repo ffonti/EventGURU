@@ -38,6 +38,13 @@ export class EventService {
     return this.http.put<CreaModificaEventoResponse>(this.backendUrl + 'modifica/' + eventoId, request, { headers: header });
   }
 
+  adminModificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, eventoId: string, usernameOrganizzatore: string): Observable<CreaModificaEventoResponse> {
+    const header = this.getHeader();
+    const request: AdminCreaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo, usernameOrganizzatore };
+
+    return this.http.put<CreaModificaEventoResponse>(this.backendUrl + 'adminModifica/' + eventoId, request, { headers: header });
+  }
+
   getEventiByOrganizzatore(): Observable<GetAllEventiByOrganizzatoreResponse[]> {
     const header = this.getHeader();
 

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class AdminCreaEventoRequest {
+public class AdminCreaModificaEventoRequest {
 
     private String titolo;
 

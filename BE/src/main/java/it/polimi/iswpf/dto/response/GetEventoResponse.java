@@ -29,4 +29,6 @@ public class GetEventoResponse {
     private String lng;
 
     private String nomeLuogo;
+
+    private String usernameOrganizzatore;
 }
