@@ -2,6 +2,7 @@ package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.LuogoBuilder;
+import it.polimi.iswpf.dto.request.AdminCreaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
 import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
@@ -72,26 +73,8 @@ public class EventoServiceImpl implements EventoService {
             throw new ForbiddenException("L'utente non ha i permessi adatti");
         }
 
-        //Verifico se il luogo con un dato nome è già salvato sul database.
-        Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(request.getNomeLuogo());
-
-        Luogo luogo;
-
-        if(luogoExists.isEmpty()) {
-            //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto.
-            luogo = new LuogoBuilder()
-                    .lat(request.getLat())
-                    .lng(request.getLng())
-                    .nome(request.getNomeLuogo())
-                    .build();
-
-            //Salvo sul database l'oggetto appena costruito
-            luogoRepository.save(luogo);
-
-        } else {
-            //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
-            luogo = luogoExists.get();
-        }
+        //Chiamo il metodo per configurare il luogo dell'evento.
+        Luogo luogo = getLuogo(request.getNomeLuogo(), request.getLat(), request.getLng());
 
         //Costruisco l'oggetto evento da salvare sul database.
         Evento evento = new EventoBuilder()
@@ -295,7 +278,67 @@ public class EventoServiceImpl implements EventoService {
     }
 
     /**
-     * Ricevuti in input data di inizio e data di fine di un evento, restituisce lo stato basato su data e ora attuali.
+     * Metodo per gli admin. Permette di creare un evento scegliendo l'organizzatore.
+     * Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
+     * @param request DTO con i dati dell'evento da creare -> {@link AdminCreaEventoRequest}.
+     */
+    @Override
+    public void adminCreaEvento(AdminCreaEventoRequest request) {
+
+        //La data di inizio dell'evento deve essere precedente alla data di fine dell'evento.
+        if(request.getDataFine().isBefore(request.getDataInizio()) ||
+                request.getDataInizio().isEqual(request.getDataFine())) {
+            throw new BadRequestException("La data di inizio deve essere precedente alla data di fine");
+        }
+
+        //La data di inizio dell'evento deve essere precedente alla data attuale.
+        if(request.getDataInizio().isBefore(LocalDateTime.now()) ||
+                request.getDataInizio().isEqual(LocalDateTime.now())) {
+            throw new BadRequestException("L'evento non può avvenire nel passato");
+        }
+
+        //Controllo validità di tutti i campi.
+        if(request.getTitolo().isEmpty() || request.getTitolo().isBlank() ||
+                request.getDescrizione().isEmpty() || request.getDescrizione().isBlank() ||
+                request.getLng().isEmpty() || request.getLng().isBlank() ||
+                request.getLat().isEmpty() || request.getLat().isBlank() ||
+                request.getNomeLuogo().isEmpty() || request.getNomeLuogo().isBlank() ||
+                request.getUsernameOrganizzatore().isEmpty() || request.getUsernameOrganizzatore().isBlank()) {
+            throw new BadRequestException("Compilare tutti i campi");
+        }
+
+        //Chiamo il metodo per configurare il luogo dell'evento.
+        Luogo luogo = getLuogo(request.getNomeLuogo(), request.getLat(), request.getLng());
+
+        //Verifico se esiste un organizzatore con quell'username sul database.
+        Optional<User> organizzatoreExists = userRepository.findByUsername(request.getUsernameOrganizzatore());
+
+        //Se non esiste, lancio un'eccezione.
+        if(organizzatoreExists.isEmpty()) {
+            throw new BadRequestException("Non esiste alcun organizzatore con questo username");
+        }
+
+        if(!organizzatoreExists.get().getRuolo().equals(Ruolo.ORGANIZZATORE)) {
+            throw new BadRequestException("L'utente selezionato non è un organizzatore");
+        }
+
+        //Costruisco l'oggetto evento da salvare sul database.
+        Evento evento = new EventoBuilder()
+                .titolo(request.getTitolo())
+                .descrizione(request.getDescrizione())
+                .dataInizio(request.getDataInizio())
+                .dataFine(request.getDataFine())
+                .dataCreazione(LocalDateTime.now())
+                .organizzatore(organizzatoreExists.get())
+                .luogo(luogo)
+                .build();
+
+        //Salvo l'oggetto evento sul database.
+        eventoRepository.save(evento);
+    }
+
+    /**
+     * Ricevuti in ingresso data di inizio e data di fine di un evento, restituisce lo stato basato su data e ora attuali.
      * @param dataInizio Data di inizio dell'evento.
      * @param dataFine Data di fine dell'evento.
      * @return Lo stato dell'evento (passato, presente o futuro).
@@ -374,5 +417,37 @@ public class EventoServiceImpl implements EventoService {
 
         //Chiamo la repository e salvo i dati aggiornati dell'evento.
         eventoRepository.save(evento);
+    }
+
+    /**
+     * Code cleaning. Metodo usato da due endpoint (admin e no) per gestire il luogo di un evento.
+     * @param nomeLuogo Nome del luogo dell'evento.
+     * @param lat Latitudine del luogo dell'evento.
+     * @param lng Longitudine del luogo dell'evento.
+     * @return Un'istanza di {@link Luogo}, dopo averla salvata sul database (in caso non fosse presente).
+     */
+    private Luogo getLuogo(String nomeLuogo, String lat, String lng) {
+
+        Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(nomeLuogo);
+
+        Luogo luogo;
+
+        if(luogoExists.isEmpty()) {
+            //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto.
+            luogo = new LuogoBuilder()
+                    .lat(lat)
+                    .lng(lng)
+                    .nome(nomeLuogo)
+                    .build();
+
+            //Salvo sul database l'oggetto appena costruito
+            luogoRepository.save(luogo);
+
+        } else {
+            //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
+            luogo = luogoExists.get();
+        }
+
+        return luogo;
     }
 }

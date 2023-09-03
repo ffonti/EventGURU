@@ -21,6 +21,13 @@
               Page</button>
           </li>
         </ng-container>
+        <ng-container *ngIf="ruolo == 'ADMIN'">
+          <li>
+            <button routerLink="/homepage/creaEvento"
+              [ngClass]="(urlPath.includes('creaEvento') && !showLogoutModal) ? 'btn-navbar-active' : 'btn-navbar'">Crea
+              evento</button>
+          </li>
+        </ng-container>
         <ng-container *ngIf="ruolo != 'ORGANIZZATORE'">
           <li>
             <button routerLink="/homepage/esplora"

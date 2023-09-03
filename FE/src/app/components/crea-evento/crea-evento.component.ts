@@ -21,6 +21,8 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
   protected dataFine: Date = new Date();
   protected eventoId: string = '';
   private campiIniziali!: GetEventoByIdResponse;
+  protected ruolo: string | undefined = '';
+  protected usernameOrganizzatore: string = '';
 
   constructor(
     private toastr: ToastrService,
@@ -29,6 +31,8 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
     private mapService: MapService) { }
 
   ngOnInit(): void {
+    this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
+
     this.eventoId = this.router.url.split('/homepage/creaEvento/')[1];
     if (this.eventoId !== null && this.eventoId !== undefined && this.eventoId !== '') {
       this.eventService.getEventoById(this.eventoId).subscribe({
@@ -92,20 +96,37 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
         return;
       }
       //TODO controllare che tutti i campi siano stati compilati (con bordo rosso)
-      this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo).subscribe({
-        next: (res: CreaModificaEventoResponse) => {
-          this.toastr.success(res.message);
-          if (localStorage.getItem('ruolo') == 'ADMIN') {
-            this.router.navigateByUrl('homepage/esplora');
-          } else {
-            this.router.navigateByUrl('homepage/eventiOrganizzati');
+      if (this.ruolo === 'ORGANIZZATORE') {
+        this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo).subscribe({
+          next: (res: CreaModificaEventoResponse) => {
+            this.toastr.success(res.message);
+            if (localStorage.getItem('ruolo') == 'ADMIN') {
+              this.router.navigateByUrl('homepage/esplora');
+            } else {
+              this.router.navigateByUrl('homepage/eventiOrganizzati');
+            }
+          },
+          error: (err: HttpErrorResponse) => {
+            this.toastr.error(err.error.message);
+            console.log(err);
           }
-        },
-        error: (err: HttpErrorResponse) => {
-          this.toastr.error(err.error.message);
-          console.log(err);
-        }
-      });
+        });
+      } else {
+        this.eventService.adminCreaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo, this.usernameOrganizzatore).subscribe({
+          next: (res: CreaModificaEventoResponse) => {
+            this.toastr.success(res.message);
+            if (localStorage.getItem('ruolo') == 'ADMIN') {
+              this.router.navigateByUrl('homepage/esplora');
+            } else {
+              this.router.navigateByUrl('homepage/eventiOrganizzati');
+            }
+          },
+          error: (err: HttpErrorResponse) => {
+            this.toastr.error(err.error.message);
+            console.log(err);
+          }
+        });
+      }
     }
   }
 

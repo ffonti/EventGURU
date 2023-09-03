@@ -1,5 +1,6 @@
 package it.polimi.iswpf.controller;
 
+import it.polimi.iswpf.dto.request.AdminCreaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
 import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.CreaModificaEventoResponse;
@@ -113,5 +114,23 @@ public class EventoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventoService.adminGetAllEventi());
+    }
+
+    /**
+     * Metodo per gli admin. Permette di creare un evento scegliendo l'organizzatore.
+     * Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
+     * @param request DTO con i dati dell'evento da creare -> {@link AdminCreaEventoRequest}.
+     * @return Messaggio di avvenuta creazione.
+     */
+    @PostMapping("/adminCrea")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CreaModificaEventoResponse> adminCreaEvento(
+            @RequestBody AdminCreaEventoRequest request) {
+
+        eventoService.adminCreaEvento(request);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CreaModificaEventoResponse("Evento creato con successo"));
     }
 }

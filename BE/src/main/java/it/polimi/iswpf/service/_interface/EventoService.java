@@ -1,5 +1,6 @@
 package it.polimi.iswpf.service._interface;
 
+import it.polimi.iswpf.dto.request.AdminCreaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
 import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.CreaModificaEventoResponse;
@@ -52,4 +53,11 @@ public interface EventoService {
      * @return Lista di DTO con tutti i dati di ogni evento -> {@link AllEventiResponse}.
      */
     List<AllEventiResponse> adminGetAllEventi();
+
+    /**
+     * Metodo per gli admin. Permette di creare un evento scegliendo l'organizzatore.
+     * Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
+     * @param request DTO con i dati dell'evento da creare -> {@link AdminCreaEventoRequest}.
+     */
+    void adminCreaEvento(AdminCreaEventoRequest request);
 }

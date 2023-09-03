@@ -6,6 +6,7 @@ import { GetAllEventiByOrganizzatoreResponse } from '../dtos/response/GetAllEven
 import { GetEventoByIdResponse } from '../dtos/response/GetEventoByIdResponse';
 import { CreaModificaEventoRequest } from '../dtos/request/CreaModificaEventoRequest';
 import { GetAllEventiResponse } from '../dtos/response/GetAllEventiResponse';
+import { AdminCreaEventoRequest } from '../dtos/request/AdminCreaEventoRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,13 @@ export class EventService {
     const request: CreaModificaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
 
     return this.http.post<CreaModificaEventoResponse>(this.backendUrl + 'crea', request, { headers: header });
+  }
+
+  adminCreaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, usernameOrganizzatore: string): Observable<CreaModificaEventoResponse> {
+    const header = this.getHeader();
+    const request: AdminCreaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo, usernameOrganizzatore };
+
+    return this.http.post<CreaModificaEventoResponse>(this.backendUrl + 'adminCrea', request, { headers: header });
   }
 
   modificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, eventoId: string): Observable<CreaModificaEventoResponse> {

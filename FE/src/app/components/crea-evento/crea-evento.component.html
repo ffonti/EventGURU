@@ -35,6 +35,13 @@
                 <label for="titolo" class="label-form">Nome del luogo</label>
                 <input [(ngModel)]="nomeLuogo" name="nomeLuogo" type="text" class="input-form" required />
               </div>
+              <ng-container *ngIf="ruolo === 'ADMIN'">
+                <div class="w-full">
+                  <label for="titolo" class="label-form">Username dell'organizzatore</label>
+                  <input [(ngModel)]="usernameOrganizzatore" name="usernameOrganizzatore" type="text" class="input-form"
+                    required />
+                </div>
+              </ng-container>
 
             </div>
             <div class="w-full flex-center gap-4">
