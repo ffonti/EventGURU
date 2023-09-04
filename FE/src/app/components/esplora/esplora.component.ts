@@ -29,7 +29,9 @@ export class EsploraComponent implements OnInit {
     this.eventService.getAllEventi().subscribe({
       next: (res: GetAllEventiResponse[]) => {
         res.forEach(evento => {
-          this.allEventi.push(evento);
+          if ((this.ruolo == 'TURISTA' && evento.stato == 'FUTURO') || this.ruolo == 'ADMIN') {
+            this.allEventi.push(evento);
+          }
         });
 
         this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.allEventi));

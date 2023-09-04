@@ -534,23 +534,27 @@ public class EventoServiceImpl implements EventoService {
             throw new ForbiddenException("L'utente non ha i permessi adatti");
         }
 
+        //Salvo in delle variabili i dati presi dal database, per poterli aggiornare.
         Evento evento = eventoExists.get();
         User turista = turistaExists.get();
 
+        //Se l'evento non ha ancora nessun iscritto, inizializzo l'array e aggiungo il primo turista.
         if(evento.getIscritti().isEmpty()) {
             evento.setIscritti(new ArrayList<>(List.of(turista)));
         } else {
+            //Se l'evento ha già degli iscritti, controllo che il turista non sia già iscritto all'evento.
+            for(User turistaIscritto: evento.getIscritti()) {
+                if(turistaIscritto.getUserId().equals(turista.getUserId())) {
+                    throw new BadRequestException("Il turista è già iscritto all'evento");
+                }
+            }
+
+            //Passati i controlli aggiorno la lista di utenti.
             evento.getIscritti().add(turista);
         }
 
-        if(turista.getEventi().isEmpty()) {
-            turista.setEventi(new ArrayList<>(List.of(evento)));
-        } else {
-            turista.getEventi().add(evento);
-        }
-
-        System.out.println(turista.getEventi().size());
-        System.out.println(evento.getIscritti().size());
+        //Aggiorno l'evento sul database
+        eventoRepository.save(evento);
     }
 
     /**
