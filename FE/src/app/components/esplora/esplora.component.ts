@@ -160,13 +160,31 @@ export class EsploraComponent implements OnInit {
   }
 
   iscrizioneEvento(eventoId: number): void {
-    this.allEventi.forEach((evento) => {
+    this.allEventiWithDateFormatted.forEach((evento) => {
       if (evento.eventoId == eventoId && this.username) {
         evento.usernameTuristi.push(this.username);
       }
     });
 
     this.eventService.iscrizioneEvento(eventoId.toString().trim()).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
+      }
+    });
+  }
+
+  annullaIscrizione(eventoId: number): void {
+    this.allEventiWithDateFormatted.forEach((evento) => {
+      if (evento.eventoId == eventoId && this.username) {
+        evento.usernameTuristi.pop(this.username);
+      }
+    });
+
+    this.eventService.annullaIscrizione(eventoId.toString().trim()).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
       },

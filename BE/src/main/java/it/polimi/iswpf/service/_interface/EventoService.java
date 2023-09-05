@@ -73,4 +73,11 @@ public interface EventoService {
      * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
      */
     void iscrizioneEvento(Long eventoId, Long turistaId);
+
+    /**
+     * Metodo per annullare l'iscrizione di un turista a un evento.
+     * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    void annullaIscrizione(Long eventoId, Long turistaId);
 }

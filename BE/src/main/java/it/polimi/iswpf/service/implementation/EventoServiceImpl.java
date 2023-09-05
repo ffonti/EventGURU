@@ -594,6 +594,55 @@ public class EventoServiceImpl implements EventoService {
     }
 
     /**
+     * Metodo per annullare l'iscrizione di un turista a un evento.
+     * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    @Override
+    public void annullaIscrizione(Long eventoId, Long turistaId) {
+
+        //L'id autoincrement parte da 1.
+        if(eventoId < 1) {
+            throw new BadRequestException("Id dell'evento non valido");
+        }
+
+        if(turistaId < 1) {
+            throw new BadRequestException("Id del turista non valido");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(eventoExists.isEmpty()) {
+            throw new NotFoundException("Evento non trovato");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(turistaExists.isEmpty()) {
+            throw new NotFoundException("Turista non trovato");
+        }
+
+        //Controllo se il ruolo è corretto.
+        if(!turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
+
+        //Salvo in delle variabili i dati presi dal database, per poterli aggiornare.
+        Evento evento = eventoExists.get();
+        User turista = turistaExists.get();
+
+        //Rimuovo il turista dalla lista degli iscritti.
+        evento.getIscritti().remove(turista);
+
+        //Salvo le modifiche sul database.
+        eventoRepository.save(evento);
+    }
+
+    /**
      * Ricevuti in ingresso data di inizio e data di fine di un evento, restituisce lo stato basato su data e ora attuali.
      * @param dataInizio Data di inizio dell'evento.
      * @param dataFine Data di fine dell'evento.

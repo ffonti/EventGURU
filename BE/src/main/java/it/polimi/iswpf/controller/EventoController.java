@@ -161,4 +161,21 @@ public class EventoController {
                 .status(HttpStatus.OK)
                 .body(new IscrizioneEventoResponse("Iscrizione avvenuta con successo"));
     }
+
+    /**
+     * Metodo per annullare l'iscrizione di un turista a un evento.
+     * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    @GetMapping("annullaIscrizione/{eventoId}/{turistaId}")
+    public ResponseEntity<AnnullaIscrizioneResponse> annullaIscrizione(
+            @PathVariable String eventoId,
+            @PathVariable String turistaId) {
+
+        eventoService.annullaIscrizione(Long.parseLong(eventoId), Long.parseLong(turistaId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new AnnullaIscrizioneResponse("Iscrizione annullata con successo"));
+    }
 }

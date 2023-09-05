@@ -75,6 +75,12 @@ export class EventService {
     return this.http.get(this.backendUrl + 'iscrizione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
+  annullaIscrizione(eventoId: string): Observable<any> {
+    const header = this.getHeader();
+
+    return this.http.get(this.backendUrl + 'annullaIscrizione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+  }
+
   //creo l'header con il token da mandare al backend
   private getHeader(): HttpHeaders {
     return new HttpHeaders({
