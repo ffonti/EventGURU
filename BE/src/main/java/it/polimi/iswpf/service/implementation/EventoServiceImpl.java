@@ -122,9 +122,21 @@ public class EventoServiceImpl implements EventoService {
         //Se sono presenti eventi, inizializzo l'array che conterrà gli eventi.
         List<GetEventoResponse> response = new ArrayList<>();
 
-        //Per ogni evento presente sul database, salvo tutti i campi nell'array di risposta.
-        for(Evento evento: eventi.get()) {
+        //Lista di username dei turisti iscritti per ogni evento.
+        List<String> usernameTuristi;
 
+        //Per ogni evento presente sul database, salvo tutti i campi nell'array di risposta.
+        for(Evento evento : eventi.get()) {
+
+            //Inizializzo la lista per ogni evento.
+            usernameTuristi = new ArrayList<>();
+
+            //Aggiungo tutti gli utenti iscritti all'evento.
+            for(User turista : evento.getIscritti()) {
+                usernameTuristi.add(turista.getUsername());
+            }
+
+            //Costruisco il DTO.
             response.add(new GetEventoResponse(
                     evento.getEventoId(),
                     evento.getTitolo(),
@@ -136,7 +148,8 @@ public class EventoServiceImpl implements EventoService {
                     evento.getLuogo().getLat(),
                     evento.getLuogo().getLng(),
                     evento.getLuogo().getNome(),
-                    evento.getOrganizzatore().getUsername()
+                    evento.getOrganizzatore().getUsername(),
+                    usernameTuristi
             ));
         }
 
@@ -196,7 +209,15 @@ public class EventoServiceImpl implements EventoService {
             throw new NotFoundException("Evento non trovato");
         }
 
-        //Se esiste, ritorno l'oggetto evento.
+        //Lista di username dei turisti iscritti all'evento.
+        List<String> usernameTuristi = new ArrayList<>();
+
+        //Salvo tutti i campi nell'array di risposta.
+        for(User turista : eventoExists.get().getIscritti()) {
+            usernameTuristi.add(turista.getUsername());
+        }
+
+        //Costruisco il DTO.
         return new GetEventoResponse(
                 eventoExists.get().getEventoId(),
                 eventoExists.get().getTitolo(),
@@ -208,7 +229,8 @@ public class EventoServiceImpl implements EventoService {
                 eventoExists.get().getLuogo().getLat(),
                 eventoExists.get().getLuogo().getLng(),
                 eventoExists.get().getLuogo().getNome(),
-                eventoExists.get().getOrganizzatore().getUsername()
+                eventoExists.get().getOrganizzatore().getUsername(),
+                usernameTuristi
         );
     }
 
@@ -314,8 +336,21 @@ public class EventoServiceImpl implements EventoService {
         //Se non sono presenti eventi, ritorno un array vuoto.
         List<AllEventiResponse> response = new ArrayList<>();
 
+        //Lista di username dei turisti iscritti per ogni evento.
+        List<String> usernameTuristi;
+
         //Per ogni evento, aggiungo all'array di risposta i dati dell'evento stesso.
-        for(Evento evento: eventi) {
+        for(Evento evento : eventi) {
+
+            //Inizializzo la lista per ogni evento.
+            usernameTuristi = new ArrayList<>();
+
+            //Aggiungo tutti gli utenti iscritti all'evento.
+            for(User turista : evento.getIscritti()) {
+                usernameTuristi.add(turista.getUsername());
+            }
+
+            //Costruisco il DTO.
             response.add(new AllEventiResponse(
                     evento.getEventoId(),
                     evento.getTitolo(),
@@ -327,7 +362,8 @@ public class EventoServiceImpl implements EventoService {
                     evento.getLuogo().getLat(),
                     evento.getLuogo().getLng(),
                     evento.getLuogo().getNome(),
-                    evento.getOrganizzatore().getUsername()
+                    evento.getOrganizzatore().getUsername(),
+                    usernameTuristi
             ));
         }
 

@@ -78,9 +78,19 @@
               </ng-container>
               <ng-template #turista>
                 <div class="flex h-full items-end">
-                  <a class="btn-submit" (click)="iscrizioneEvento(evento.eventoId)">
+                  <ng-container *ngIf="!evento.usernameTuristi.includes(username); else annullaIscrizione">
+                    <button class="btn-submit" (click)="iscrizioneEvento(evento.eventoId)">
+                      Iscriviti
+                    </button>
+                  </ng-container>
+                  <ng-template #annullaIscrizione>
+                    <button class="btn-red-submit" (click)="iscrizioneEvento(evento.eventoId)">
+                      Annulla iscrizione
+                    </button>
+                  </ng-template>
+                  <!-- <button class="btn-submit" (click)="iscrizioneEvento(evento.eventoId)">
                     Iscriviti
-                  </a>
+                  </button> -->
                 </div>
               </ng-template>
             </div>

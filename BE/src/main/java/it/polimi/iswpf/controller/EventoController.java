@@ -105,9 +105,7 @@ public class EventoController {
      * @return Lista di DTO con tutti i dati di ogni evento -> {@link AllEventiResponse}.
      */
     @GetMapping("/getAll")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<AllEventiResponse>> getAllEventi() {
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventoService.adminGetAllEventi());

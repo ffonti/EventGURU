@@ -11,4 +11,5 @@ export interface GetAllEventiResponse {
     nomeLuogo: string;
     lat: string;
     lng: string;
+    usernameTuristi: string[];
 }

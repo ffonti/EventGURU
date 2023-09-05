@@ -21,11 +21,14 @@ export class EsploraComponent implements OnInit {
   protected modoOrdine: string = '';
   protected attributoOrdine: string = '';
   protected ruolo: string | undefined = '';
+  protected username: string = '';
 
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
+    this.username = localStorage.getItem('username')?.toString().trim().toLowerCase() || '';
+
     this.eventService.getAllEventi().subscribe({
       next: (res: GetAllEventiResponse[]) => {
         res.forEach(evento => {
@@ -157,6 +160,12 @@ export class EsploraComponent implements OnInit {
   }
 
   iscrizioneEvento(eventoId: number): void {
+    this.allEventi.forEach((evento) => {
+      if (evento.eventoId == eventoId && this.username) {
+        evento.usernameTuristi.push(this.username);
+      }
+    });
+
     this.eventService.iscrizioneEvento(eventoId.toString().trim()).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
