@@ -1,0 +1,4 @@
+.card-evento {
+    @apply flex flex-col py-4 px-6 ring-2 h-72 space-y-[4%] w-full
+    ring-inset ring-[#005cb9] rounded-lg shadow bg-white;
+  }

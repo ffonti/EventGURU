@@ -15,4 +15,7 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 
     //Si cercano gli eventi organizzati da un dato organizzatore.
     Optional<List<Evento>> findAllByOrganizzatore(User organizzatore);
+
+    //Si cercano gli eventi in cui un dato turista è iscritto.
+    List<Evento> findAllByIscrittiIsContaining(User turista);
 }

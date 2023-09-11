@@ -4,6 +4,7 @@ import it.polimi.iswpf.dto.request.AdminCreaModificaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
 import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
+import it.polimi.iswpf.model.Evento;
 import it.polimi.iswpf.service.implementation.EventoServiceImpl;
 
 import java.util.List;
@@ -80,4 +81,11 @@ public interface EventoService {
      * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
      */
     void annullaIscrizione(Long eventoId, Long turistaId);
+
+    /**
+     * Metodo per prendere tutti gli eventi a cui è iscritto un turista.
+     * @param usernameTurista Username del turista, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con tutti i dati di ogni evento.
+     */
+    List<AllEventiResponse> getEventiByTurista(String usernameTurista);
 }

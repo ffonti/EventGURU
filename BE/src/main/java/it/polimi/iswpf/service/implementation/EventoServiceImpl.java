@@ -329,7 +329,7 @@ public class EventoServiceImpl implements EventoService {
         List<Evento> eventi = eventoRepository.findAll();
 
         //Se non è presente nessun evento lancio un'eccezione.
-        if(eventi.isEmpty())  {
+        if(eventi.isEmpty()) {
             throw new NotFoundException("Eventi non trovati");
         }
 
@@ -688,5 +688,63 @@ public class EventoServiceImpl implements EventoService {
         }
 
         return luogo;
+    }
+
+    /**
+     * Metodo per prendere tutti gli eventi a cui è iscritto un turista.
+     * @param usernameTurista Username del turista, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con tutti i dati di ogni evento.
+     */
+    @Override
+    public List<AllEventiResponse> getEventiByTurista(String usernameTurista) {
+
+        if(usernameTurista.isEmpty() || usernameTurista.isBlank()) {
+            throw new BadRequestException("Inserire un username valido");
+        }
+
+        Optional<User> turistaExists = userRepository.findByUsername(usernameTurista);
+
+        if(turistaExists.isEmpty() || !turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
+            throw new NotFoundException("Non esiste un turista con questo username");
+        }
+
+        //Prendo tutti gli eventi presenti sul database.
+        List<Evento> eventi = eventoRepository.findAllByIscrittiIsContaining(turistaExists.get());
+
+        //Se non sono presenti eventi, ritorno un array vuoto.
+        List<AllEventiResponse> response = new ArrayList<>();
+
+        //Lista di username dei turisti iscritti per ogni evento.
+        List<String> usernameTuristi;
+
+        //Per ogni evento, aggiungo all'array di risposta i dati dell'evento stesso.
+        for(Evento evento : eventi) {
+
+            //Inizializzo la lista per ogni evento.
+            usernameTuristi = new ArrayList<>();
+
+            //Aggiungo tutti gli utenti iscritti all'evento.
+            for(User turista : evento.getIscritti()) {
+                usernameTuristi.add(turista.getUsername());
+            }
+
+            //Costruisco il DTO.
+            response.add(new AllEventiResponse(
+                    evento.getEventoId(),
+                    evento.getTitolo(),
+                    evento.getDescrizione(),
+                    evento.getDataInizio(),
+                    evento.getDataFine(),
+                    evento.getDataCreazione(),
+                    getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
+                    evento.getLuogo().getLat(),
+                    evento.getLuogo().getLng(),
+                    evento.getLuogo().getNome(),
+                    evento.getOrganizzatore().getUsername(),
+                    usernameTuristi
+            ));
+        }
+
+        return response;
     }
 }

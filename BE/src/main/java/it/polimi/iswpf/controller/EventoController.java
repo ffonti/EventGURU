@@ -178,4 +178,17 @@ public class EventoController {
                 .status(HttpStatus.OK)
                 .body(new AnnullaIscrizioneResponse("Iscrizione annullata con successo"));
     }
+
+    /**
+     * Metodo per prendere tutti gli eventi a cui è iscritto un turista.
+     * @param usernameTurista Username del turista, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con tutti i dati di ogni evento.
+     */
+    @GetMapping("getByTurista/{usernameTurista}")
+    public ResponseEntity<List<AllEventiResponse>> getEventiByTurista(@PathVariable String usernameTurista) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventoService.getEventiByTurista(usernameTurista));
+    }
 }
