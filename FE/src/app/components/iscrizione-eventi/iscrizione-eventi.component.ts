@@ -25,6 +25,7 @@ export class IscrizioneEventiComponent implements OnInit {
   protected showModalRecensione: boolean = false;
   protected eventoIdDaRecensire: number = 0;
   protected testoRecensione: string = '';
+  protected rating: number = 0;
 
   constructor(private toastr: ToastrService, private eventService: EventService, private router: Router) { }
 
@@ -205,5 +206,41 @@ export class IscrizioneEventiComponent implements OnInit {
   toggleModalRecensione(eventoId: number): void {
     this.eventoIdDaRecensire = eventoId;
     this.showModalRecensione = !this.showModalRecensione;
+  }
+
+  inviaRecensione(): void {
+    if (this.rating === 0) {
+      this.toastr.warning('Inserire prima un voto');
+      return;
+    }
+    this.eventService.inviaRecensione(this.eventoIdDaRecensire.toString().trim()).subscribe({
+      next: (res: any) => {
+        console.log(res);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toastr.error(err.error.message);
+        console.log(err);
+      }
+    })
+  }
+
+  ratingUno(): void {
+    this.rating = 1;
+  }
+
+  ratingDue(): void {
+    this.rating = 2;
+  }
+
+  ratingTre(): void {
+    this.rating = 3;
+  }
+
+  ratingQuattro(): void {
+    this.rating = 4;
+  }
+
+  ratingCinque(): void {
+    this.rating = 5;
   }
 }

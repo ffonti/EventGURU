@@ -114,18 +114,35 @@
 <ng-container *ngIf="showModalRecensione">
   <div
     class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
-    <div class="relative mx-auto w-[55%] h-[70%]">
+    <div class="relative mx-auto w-[50%] h-[60%]">
       <div
         class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
         <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
           <div class="flex-center flex-col space-y-8 mt-5">
             <h1 class="text-xl font-bold">Lascia una recensione</h1>
             <div class="w-full">
-              <textarea [(ngModel)]="testoRecensione" class="input-form"></textarea>
+              <textarea [(ngModel)]="testoRecensione" class="input-form h-40"></textarea>
             </div>
-            <div class="flex-center gap-4 w-full">
-              <button class="btn-submit" (click)="toggleModalRecensione(0)">ANNULLA</button>
-              <button class="btn-red-submit" (click)="eliminaEvento()">INVIA</button>
+            <div class="flex-center gap-5">
+              <span class="material-icons cursor-pointer" (click)="ratingUno()">
+                {{ rating >= 1 ? 'star' : 'star_border' }}
+              </span>
+              <span class="material-icons cursor-pointer" (click)="ratingDue()">
+                {{ rating >= 2 ? 'star' : 'star_border' }}
+              </span>
+              <span class="material-icons cursor-pointer" (click)="ratingTre()">
+                {{ rating >= 3 ? 'star' : 'star_border' }}
+              </span>
+              <span class="material-icons cursor-pointer" (click)="ratingQuattro()">
+                {{ rating >= 4 ? 'star' : 'star_border' }}
+              </span>
+              <span class="material-icons cursor-pointer" (click)="ratingCinque()">
+                {{ rating >= 5 ? 'star' : 'star_border' }}
+              </span>
+            </div>
+            <div class="flex gap-4 w-full h-full">
+              <button class="btn-red-submit" (click)="toggleModalRecensione(0)">ANNULLA</button>
+              <button class="btn-submit" (click)="inviaRecensione()">INVIA</button>
             </div>
           </div>
         </div>
