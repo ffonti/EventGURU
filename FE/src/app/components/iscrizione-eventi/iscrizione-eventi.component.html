@@ -1,4 +1,4 @@
-<ng-container *ngIf="allEventiByOrganizzatoreWithDateFormatted.length; else noEventi">
+<ng-container *ngIf="allEventiWithDateFormatted.length; else noEventi">
   <div class="flex-center">
     <div class="flex-center flex-col w-[90%]">
 
@@ -25,7 +25,7 @@
             <option value="LUOGO">Luogo</option>
           </select>
 
-          <select class="input-form" [(ngModel)]="modoOrdine" (ngModelChange)="onChangeModoOrdine($event)">
+          <select class="input-form" [(ngModel)]="modoOrdine" (ngModelChange)="onChangeModoOrdine()">
             <option value="" selected>Ordine</option>
             <option value="CRESCENTE">Crescente</option>
             <option value="DECRESCENTE">Decrescente</option>
@@ -36,7 +36,7 @@
       <!-- Container cards -->
       <div class="grid grid-cols-4 w-full gap-4 mt-[2%]">
 
-        <ng-container *ngFor="let evento of allEventiByOrganizzatoreWithDateFormatted">
+        <ng-container *ngFor="let evento of allEventiWithDateFormatted">
           <ng-container *ngIf="checkFilters(evento)">
             <!-- Single card -->
             <div class="card-evento">
@@ -64,14 +64,35 @@
               </div>
 
               <!-- Pulsanti -->
-              <div class="flex gap-3 h-full items-end">
-                <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
-                  Modifica
-                </a>
-                <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
-                  Elimina
-                </a>
-              </div>
+              <ng-container *ngIf="ruolo == 'ADMIN'; else turista">
+                <div class="flex gap-3 h-full items-end">
+                  <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
+                    Modifica
+                  </a>
+                  <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
+                    Elimina
+                  </a>
+                </div>
+              </ng-container>
+              <ng-template #turista>
+                <div class="flex h-full items-end">
+                  <ng-container *ngIf="!evento.usernameTuristi.includes(username)">
+                    <button class="btn-submit" (click)="iscrizioneEvento(evento.eventoId)">
+                      Iscriviti
+                    </button>
+                  </ng-container>
+                  <ng-container *ngIf="evento.usernameTuristi.includes(username) && evento.stato === 'FUTURO'">
+                    <button class="btn-red-submit" (click)="annullaIscrizione(evento.eventoId)">
+                      Annulla iscrizione
+                    </button>
+                  </ng-container>
+                  <ng-container *ngIf="evento.usernameTuristi.includes(username) && evento.stato === 'PASSATO'">
+                    <button class="btn-submit" (click)="toggleModalRecensione(evento.eventoId)">
+                      Lascia una recensione
+                    </button>
+                  </ng-container>
+                </div>
+              </ng-template>
             </div>
           </ng-container>
         </ng-container>
@@ -88,3 +109,28 @@
     </div>
   </div>
 </ng-template>
+
+<!-- Modale elimina evento -->
+<ng-container *ngIf="showModalRecensione">
+  <div
+    class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+    <div class="relative mx-auto w-[55%] h-[70%]">
+      <div
+        class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
+        <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
+          <div class="flex-center flex-col space-y-8 mt-5">
+            <h1 class="text-xl font-bold">Lascia una recensione</h1>
+            <div class="w-full">
+              <textarea [(ngModel)]="testoRecensione" class="input-form"></textarea>
+            </div>
+            <div class="flex-center gap-4 w-full">
+              <button class="btn-submit" (click)="toggleModalRecensione(0)">ANNULLA</button>
+              <button class="btn-red-submit" (click)="eliminaEvento()">INVIA</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+</ng-container>

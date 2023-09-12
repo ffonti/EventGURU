@@ -11,9 +11,8 @@ import { EventService } from 'src/app/services/event.service';
   styleUrls: ['./iscrizione-eventi.component.css']
 })
 export class IscrizioneEventiComponent implements OnInit {
-  protected usernameTurista: string = '';
-  protected allEventiByOrganizzatore: GetAllEventiByOrganizzatoreResponse[] = [];
-  protected allEventiByOrganizzatoreWithDateFormatted: any[] = [];
+  protected allEventi: GetAllEventiByOrganizzatoreResponse[] = [];
+  protected allEventiWithDateFormatted: any[] = [];
   protected showModalEliminaEvento: boolean = false;
   protected eventoIdDaEliminare: number = 0;
   protected cercaPerTitolo: string = '';
@@ -21,27 +20,34 @@ export class IscrizioneEventiComponent implements OnInit {
   protected cercaPerStato: string = '';
   protected modoOrdine: string = '';
   protected attributoOrdine: string = '';
+  protected ruolo: string | undefined = '';
+  protected username: string = '';
+  protected showModalRecensione: boolean = false;
+  protected eventoIdDaRecensire: number = 0;
+  protected testoRecensione: string = '';
 
   constructor(private toastr: ToastrService, private eventService: EventService, private router: Router) { }
 
   ngOnInit(): void {
-    this.usernameTurista = localStorage.getItem('username')?.toString().trim().toLowerCase() || '';
+    this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
+    this.username = localStorage.getItem('username')?.toString().trim().toLowerCase() || '';
 
-    this.eventService.getEventiByTurista(this.usernameTurista).subscribe({
+    this.eventService.getEventiByTurista(this.username).subscribe({
       next: (res: GetAllEventiByOrganizzatoreResponse[]) => {
         res.forEach(evento => {
-          this.allEventiByOrganizzatore.push(evento);
+          this.allEventi.push(evento);
         });
 
-        this.allEventiByOrganizzatoreWithDateFormatted = JSON.parse(JSON.stringify(this.allEventiByOrganizzatore));
+        this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.allEventi));
 
-        this.changeFormatDate(this.allEventiByOrganizzatoreWithDateFormatted);
+        this.changeFormatDate(this.allEventiWithDateFormatted);
       },
-      error: (err: HttpErrorResponse) => {
-        this.toastr.error(err.error.message);
+      error: (err: any) => {
         console.log(err);
+        this.toastr.error('Errore nella visualizzazione degli eventi');
+        this.router.navigateByUrl('homepage/admin');
       }
-    })
+    });
   }
 
   changeFormatDate(eventi: any[]): void {
@@ -91,11 +97,11 @@ export class IscrizioneEventiComponent implements OnInit {
   }
 
   rimuoviEventoDaArray(eventoId: number): void {
-    this.allEventiByOrganizzatore = this.allEventiByOrganizzatore.filter((evento: GetAllEventiByOrganizzatoreResponse) => {
-      return +evento.eventoId !== +eventoId;
+    this.allEventi = this.allEventi.filter((evento: GetAllEventiByOrganizzatoreResponse) => {
+      // return +evento.eventoId !== +eventoId;
     });
 
-    this.allEventiByOrganizzatoreWithDateFormatted = this.allEventiByOrganizzatoreWithDateFormatted.filter((evento: any) => {
+    this.allEventiWithDateFormatted = this.allEventiWithDateFormatted.filter((evento: any) => {
       return +evento.eventoId !== +eventoId;
     });
   }
@@ -113,11 +119,11 @@ export class IscrizioneEventiComponent implements OnInit {
     this.cercaPerStato = '';
   }
 
-  onChangeOrdinaPer(value: string) {
+  onChangeOrdinaPer(value: string): void {
     switch (value) {
       case 'DATA':
-        this.allEventiByOrganizzatoreWithDateFormatted =
-          this.allEventiByOrganizzatoreWithDateFormatted.sort(
+        this.allEventiWithDateFormatted =
+          this.allEventiWithDateFormatted.sort(
             (a: any, b: any) => {
               if (a.dataInizio > b.dataInizio) return 1;
               if (a.dataInizio < b.dataInizio) return -1;
@@ -125,8 +131,8 @@ export class IscrizioneEventiComponent implements OnInit {
             });
         break;
       case 'TITOLO':
-        this.allEventiByOrganizzatoreWithDateFormatted =
-          this.allEventiByOrganizzatoreWithDateFormatted.sort(
+        this.allEventiWithDateFormatted =
+          this.allEventiWithDateFormatted.sort(
             (a: any, b: any) => {
               if (a.titolo.toLowerCase() > b.titolo.toLowerCase()) return 1;
               if (a.titolo.toLowerCase() < b.titolo.toLowerCase()) return -1;
@@ -134,8 +140,8 @@ export class IscrizioneEventiComponent implements OnInit {
             });
         break;
       case 'LUOGO':
-        this.allEventiByOrganizzatoreWithDateFormatted =
-          this.allEventiByOrganizzatoreWithDateFormatted.sort(
+        this.allEventiWithDateFormatted =
+          this.allEventiWithDateFormatted.sort(
             (a: any, b: any) => {
               if (a.nomeLuogo.toLowerCase() > b.nomeLuogo.toLowerCase()) return 1;
               if (a.nomeLuogo.toLowerCase() < b.nomeLuogo.toLowerCase()) return -1;
@@ -146,11 +152,58 @@ export class IscrizioneEventiComponent implements OnInit {
     this.modoOrdine = 'CRESCENTE';
   }
 
-  onChangeModoOrdine(value: string) {
-    this.allEventiByOrganizzatoreWithDateFormatted = this.allEventiByOrganizzatoreWithDateFormatted.reverse();
+  onChangeModoOrdine(): void {
+    this.allEventiWithDateFormatted = this.allEventiWithDateFormatted.reverse();
   }
 
-  modificaEvento(eventoId: number) {
+  modificaEvento(eventoId: number): void {
     this.router.navigateByUrl('/homepage/creaEvento/' + eventoId.toString().trim());
+  }
+
+  iscrizioneEvento(eventoId: number): void {
+    this.allEventiWithDateFormatted.forEach((evento) => {
+      if (evento.eventoId == eventoId && this.username) {
+        evento.usernameTuristi.push(this.username);
+      }
+    });
+
+    this.eventService.iscrizioneEvento(eventoId.toString().trim()).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
+      }
+    });
+  }
+
+  annullaIscrizione(eventoId: number): void {
+    this.allEventiWithDateFormatted.forEach((evento) => {
+      if (evento.eventoId == eventoId) {
+        evento.usernameTuristi.pop(this.username);
+      }
+    });
+
+    this.allEventiWithDateFormatted = this.allEventiWithDateFormatted.filter((evento: any) => {
+      return evento.eventoId != eventoId;
+    })
+
+    console.log(this.allEventiWithDateFormatted);
+
+    this.eventService.annullaIscrizione(eventoId.toString().trim()).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
+      }
+    });
+  }
+
+  toggleModalRecensione(eventoId: number): void {
+    this.eventoIdDaRecensire = eventoId;
+    this.showModalRecensione = !this.showModalRecensione;
   }
 }
