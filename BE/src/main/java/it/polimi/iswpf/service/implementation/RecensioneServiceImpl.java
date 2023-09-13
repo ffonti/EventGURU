@@ -69,6 +69,13 @@ public class RecensioneServiceImpl implements RecensioneService {
             throw new ForbiddenException("Il turista non è iscritto all'evento");
         }
 
+        //Controllo se l'evento è già stato recensito dal turista stesso.
+        for(Recensione recensione : eventoExists.get().getRecensioni()) {
+            if(recensione.getUser().equals(turistaExists.get())) {
+                throw new BadRequestException("Lasciare massimo una recensione per ogni evento");
+            }
+        }
+
         //Controllo se il voto è un numero compreso tra 1 e 5.
         if(request.getVoto() < 1 || request.getVoto() > 5) {
             throw new BadRequestException("Inserire un voto valido");

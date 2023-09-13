@@ -6,6 +6,7 @@ import it.polimi.iswpf.dto.request.AdminCreaModificaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
 import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.GetEventoResponse;
+import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
 import it.polimi.iswpf.exception.InternalServerErrorException;
@@ -339,15 +340,28 @@ public class EventoServiceImpl implements EventoService {
         //Lista di username dei turisti iscritti per ogni evento.
         List<String> usernameTuristi;
 
+        //Lista di recensioni per ogni evento
+        List<RecensioneResponse> recensioni;
+
         //Per ogni evento, aggiungo all'array di risposta i dati dell'evento stesso.
         for(Evento evento : eventi) {
 
-            //Inizializzo la lista per ogni evento.
+            //Inizializzo le liste per ogni evento.
             usernameTuristi = new ArrayList<>();
+            recensioni = new ArrayList<>();
 
             //Aggiungo tutti gli utenti iscritti all'evento.
             for(User turista : evento.getIscritti()) {
                 usernameTuristi.add(turista.getUsername());
+            }
+
+            //Aggiungo tutte le recensioni dell'evento
+            for(Recensione recensione : evento.getRecensioni()) {
+                recensioni.add(new RecensioneResponse(
+                        recensione.getUser().getUsername(),
+                        recensione.getVoto(),
+                        recensione.getTesto()
+                ));
             }
 
             //Costruisco il DTO.
@@ -363,7 +377,8 @@ public class EventoServiceImpl implements EventoService {
                     evento.getLuogo().getLng(),
                     evento.getLuogo().getNome(),
                     evento.getOrganizzatore().getUsername(),
-                    usernameTuristi
+                    usernameTuristi,
+                    recensioni
             ));
         }
 
@@ -717,15 +732,28 @@ public class EventoServiceImpl implements EventoService {
         //Lista di username dei turisti iscritti per ogni evento.
         List<String> usernameTuristi;
 
+        //Lista di recensioni per ogni evento
+        List<RecensioneResponse> recensioni;
+
         //Per ogni evento, aggiungo all'array di risposta i dati dell'evento stesso.
         for(Evento evento : eventi) {
 
-            //Inizializzo la lista per ogni evento.
+            //Inizializzo le liste per ogni evento.
             usernameTuristi = new ArrayList<>();
+            recensioni = new ArrayList<>();
 
             //Aggiungo tutti gli utenti iscritti all'evento.
             for(User turista : evento.getIscritti()) {
                 usernameTuristi.add(turista.getUsername());
+            }
+
+            //Aggiungo tutte le recensioni dell'evento
+            for(Recensione recensione : evento.getRecensioni()) {
+                recensioni.add(new RecensioneResponse(
+                        recensione.getUser().getUsername(),
+                        recensione.getVoto(),
+                        recensione.getTesto()
+                ));
             }
 
             //Costruisco il DTO.
@@ -741,7 +769,8 @@ public class EventoServiceImpl implements EventoService {
                     evento.getLuogo().getLng(),
                     evento.getLuogo().getNome(),
                     evento.getOrganizzatore().getUsername(),
-                    usernameTuristi
+                    usernameTuristi,
+                    recensioni
             ));
         }
 

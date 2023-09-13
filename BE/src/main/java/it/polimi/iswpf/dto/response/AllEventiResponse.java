@@ -34,4 +34,6 @@ public class AllEventiResponse {
     private String usernameOrganizzatore;
 
     private List<String> usernameTuristi;
+
+    private List<RecensioneResponse> recensioni;
 }

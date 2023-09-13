@@ -27,6 +27,7 @@ export class IscrizioneEventiComponent implements OnInit {
   protected eventoIdDaRecensire: number = 0;
   protected testoRecensione: string = '';
   protected rating: number = 0;
+  protected usernameRecensioni: string[] = [];
 
   constructor(private toastr: ToastrService, private eventService: EventService, private router: Router, private recensioneService: RecensioneService) { }
 
@@ -36,6 +37,8 @@ export class IscrizioneEventiComponent implements OnInit {
 
     this.eventService.getEventiByTurista(this.username).subscribe({
       next: (res: GetAllEventiByOrganizzatoreResponse[]) => {
+        console.log(res);
+
         res.forEach(evento => {
           this.allEventi.push(evento);
         });
