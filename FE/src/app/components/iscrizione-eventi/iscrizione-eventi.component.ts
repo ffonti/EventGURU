@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAllEventiByOrganizzatoreResponse';
 import { EventService } from 'src/app/services/event.service';
+import { RecensioneService } from 'src/app/services/recensione.service';
 
 @Component({
   selector: 'app-iscrizione-eventi',
@@ -27,7 +28,7 @@ export class IscrizioneEventiComponent implements OnInit {
   protected testoRecensione: string = '';
   protected rating: number = 0;
 
-  constructor(private toastr: ToastrService, private eventService: EventService, private router: Router) { }
+  constructor(private toastr: ToastrService, private eventService: EventService, private router: Router, private recensioneService: RecensioneService) { }
 
   ngOnInit(): void {
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
@@ -204,6 +205,8 @@ export class IscrizioneEventiComponent implements OnInit {
   }
 
   toggleModalRecensione(eventoId: number): void {
+    this.rating = 0;
+    this.testoRecensione = '';
     this.eventoIdDaRecensire = eventoId;
     this.showModalRecensione = !this.showModalRecensione;
   }
@@ -213,15 +216,18 @@ export class IscrizioneEventiComponent implements OnInit {
       this.toastr.warning('Inserire prima un voto');
       return;
     }
-    this.eventService.inviaRecensione(this.eventoIdDaRecensire.toString().trim()).subscribe({
+
+    this.recensioneService.inviaRecensione(this.eventoIdDaRecensire.toString().trim(), this.rating, this.testoRecensione).subscribe({
       next: (res: any) => {
-        console.log(res);
+        this.toastr.success(res.message);
       },
       error: (err: HttpErrorResponse) => {
         this.toastr.error(err.error.message);
         console.log(err);
       }
-    })
+    });
+
+    this.showModalRecensione = !this.showModalRecensione;
   }
 
   ratingUno(): void {

@@ -618,7 +618,7 @@ public class EventoServiceImpl implements EventoService {
             throw new NotFoundException("Evento non trovato");
         }
 
-        //Prendo l'evento dal db con quell'id.
+        //Prendo il turista dal db con quell'id.
         Optional<User> turistaExists = userRepository.findByUserId(turistaId);
 
         //Se non esiste un evento con quell'id, lancio un'eccezione.

@@ -87,12 +87,6 @@ export class EventService {
     return this.http.get<GetAllEventiByOrganizzatoreResponse[]>(this.backendUrl + 'getByTurista/' + usernameTurista, { headers: header });
   }
 
-  inviaRecensione(eventoId: string): Observable<any> {
-    const header = this.getHeader();
-    //TODO sistemare il body
-    return this.http.post(this.backendUrl + 'inviaRecensione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), {}, { headers: header });
-  }
-
   //creo l'header con il token da mandare al backend
   private getHeader(): HttpHeaders {
     return new HttpHeaders({
