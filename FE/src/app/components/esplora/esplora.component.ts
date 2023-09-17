@@ -1,16 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetAllEventiResponse } from 'src/app/dtos/response/GetAllEventiResponse';
 import { EventService } from 'src/app/services/event.service';
+import { MapService } from 'src/app/services/map.service';
 
 @Component({
   selector: 'app-esplora',
   templateUrl: './esplora.component.html',
   styleUrls: ['./esplora.component.css']
 })
-export class EsploraComponent implements OnInit {
+export class EsploraComponent implements OnInit, AfterViewInit {
   protected allEventi: GetAllEventiResponse[] = [];
   protected allEventiWithDateFormatted: any[] = [];
   protected showModalEliminaEvento: boolean = false;
@@ -22,8 +23,10 @@ export class EsploraComponent implements OnInit {
   protected attributoOrdine: string = '';
   protected ruolo: string | undefined = '';
   protected username: string = '';
+  protected showModalMappaFiltro: boolean = false;
+  private map: any;
 
-  constructor(private eventService: EventService, private toastr: ToastrService, private router: Router) { }
+  constructor(private eventService: EventService, private toastr: ToastrService, private router: Router, private mapService: MapService) { }
 
   ngOnInit(): void {
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
@@ -47,6 +50,10 @@ export class EsploraComponent implements OnInit {
         this.router.navigateByUrl('homepage/admin');
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.map = this.mapService.initMap(this.map);
   }
 
   changeFormatDate(eventi: any[]): void {
@@ -193,5 +200,9 @@ export class EsploraComponent implements OnInit {
         this.toastr.error(err.error.message);
       }
     });
+  }
+
+  toggleModalMappaFiltro(): void {
+    this.showModalMappaFiltro = !this.showModalMappaFiltro;
   }
 }

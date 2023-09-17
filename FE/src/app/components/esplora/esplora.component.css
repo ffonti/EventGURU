@@ -2,3 +2,23 @@
     @apply flex flex-col py-4 px-6 ring-2 h-72 space-y-[4%] w-full
     ring-inset ring-[#005cb9] rounded-lg shadow bg-white;
   }
+
+.map-container {
+  position: absolute;
+  z-index: 50;
+  top: 20%;
+  left: 50%;
+  right: 0;
+  bottom: 0;
+  margin: 30px;
+}
+
+.map-frame {
+  border: 2px solid black;
+  height: 100%;
+  width: 100%;
+}
+
+#map {
+  height: 100%;
+}

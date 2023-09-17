@@ -88,4 +88,11 @@ public interface EventoService {
      * @return Lista di DTO con tutti i dati di ogni evento.
      */
     List<AllEventiResponse> getEventiByTurista(String usernameTurista);
+
+    /**
+     * Metodo che permette a un organizzatore di rimuovere un turista iscritto a un dato evento.
+     * @param usernameTurista Username univoco del turista, passato in modo dinamico tramite l'endpoint.
+     * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
+     */
+    void rimuoviTuristaDaEvento(String usernameTurista, Long eventoId);
 }

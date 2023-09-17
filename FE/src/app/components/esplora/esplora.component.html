@@ -18,6 +18,8 @@
             </select>
           </ng-container>
 
+          <button (click)="toggleModalMappaFiltro()" class="btn-submit">Filtra con mappa</button>
+
           <button (click)="resetFiltri()" class="btn-submit">Reset filtri</button>
 
           <select class="input-form" [(ngModel)]="attributoOrdine" (ngModelChange)="onChangeOrdinaPer($event)">
@@ -132,4 +134,38 @@
     </div>
   </div>
   <div class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+</ng-container>
+
+<!-- Modale mappa filtro -->
+<ng-container *ngIf="showModalMappaFiltro">
+  <div
+    class="overflow-x-hidden overflow-y-auto fixed inset-0 z-40 outline-none focus:outline-none justify-center items-center flex">
+    <div class="relative mx-auto w-[55%] h-[70%]">
+      <div
+        class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
+        <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
+          <div class="flex-center flex-col space-y-8 mt-5">
+            <div>
+              <p class="font-bold text-lg">Disegna un'area per visualizzare solo gli eventi all'interno</p>
+            </div>
+
+            <!-- Mappa -->
+            <div class="h-full w-full">
+              <div class="map-container bg-slate-700 w-[31%] h-[56%]">
+                <div class="map-frame">
+                  <div id="map"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-end justify-end gap-4 w-full">
+              <button class="btn-submit" (click)="toggleModalMappaFiltro()">ANNULLA</button>
+              <button class="btn-red-submit" (click)="eliminaEvento()">ELIMINA</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="opacity-25 fixed inset-0 z-30 bg-black"></div>
 </ng-container>

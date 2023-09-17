@@ -20,6 +20,10 @@ export class EventsComponent implements OnInit {
   protected cercaPerStato: string = '';
   protected modoOrdine: string = '';
   protected attributoOrdine: string = '';
+  protected showModalPartecipanti: boolean = false;
+  protected usernamePartecipanti: string[] = [];
+  protected eventoIdSelected: number = 0;
+  protected showModalPartecipantiNoRemove: boolean = false;
 
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router) { }
 
@@ -150,5 +154,50 @@ export class EventsComponent implements OnInit {
 
   modificaEvento(eventoId: number) {
     this.router.navigateByUrl('/homepage/creaEvento/' + eventoId.toString().trim());
+  }
+
+  toggleModalPartecipanti(eventoId: number): void {
+    this.eventoIdSelected = eventoId;
+    this.allEventiByOrganizzatore.forEach((evento) => {
+      if (evento.eventoId == eventoId) {
+        this.usernamePartecipanti = evento.usernameTuristi;
+      }
+    })
+    this.showModalPartecipanti = !this.showModalPartecipanti;
+  }
+
+  toggleModalPartecipantiNoRemove(eventoId: number): void {
+    this.eventoIdSelected = eventoId;
+    this.allEventiByOrganizzatore.forEach((evento) => {
+      if (evento.eventoId == eventoId) {
+        this.usernamePartecipanti = evento.usernameTuristi;
+      }
+    })
+    this.showModalPartecipantiNoRemove = !this.showModalPartecipantiNoRemove;
+  }
+
+  rimuoviTuristaDaEvento(usernameTurista: string): void {
+    this.eventService.rimuoviTuristaDaEvento(usernameTurista, this.eventoIdSelected.toString().trim()).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message);
+
+        this.usernamePartecipanti = this.usernamePartecipanti.filter((username) => {
+          return username != usernameTurista;
+        });
+
+        this.allEventiByOrganizzatore.forEach((evento) => {
+          if (evento.eventoId == this.eventoIdSelected) {
+            evento.usernameTuristi = evento.usernameTuristi.filter((username) => {
+              return username != usernameTurista;
+            });
+          }
+        });
+      },
+      error: (err: HttpErrorResponse) => {
+        this.showModalPartecipanti = false;
+        this.toastr.error(err.error.message);
+        console.log(err);
+      }
+    })
   }
 }

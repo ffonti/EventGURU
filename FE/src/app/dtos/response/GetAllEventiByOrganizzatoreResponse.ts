@@ -17,4 +17,5 @@ export interface GetAllEventiByOrganizzatoreResponse {
         voto: number;
         testo: string;
     }[];
+    usernameTuristi: string[];
 }

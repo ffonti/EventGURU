@@ -37,8 +37,6 @@ export class IscrizioneEventiComponent implements OnInit {
 
     this.eventService.getEventiByTurista(this.username).subscribe({
       next: (res: GetAllEventiByOrganizzatoreResponse[]) => {
-        console.log(res);
-
         res.forEach(evento => {
           this.allEventi.push(evento);
         });

@@ -64,14 +64,36 @@
               </div>
 
               <!-- Pulsanti -->
-              <div class="flex gap-3 h-full items-end">
-                <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
-                  Modifica
-                </a>
-                <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
-                  Elimina
-                </a>
-              </div>
+              <ng-container *ngIf="evento.stato == 'FUTURO'">
+                <div class="flex gap-3 h-full items-end">
+                  <a class="btn-submit" (click)="toggleModalPartecipanti(evento.eventoId)">
+                    Partecipanti
+                  </a>
+                  <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
+                    Modifica
+                  </a>
+                  <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
+                    Elimina
+                  </a>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="evento.stato == 'PRESENTE'">
+                <div class="flex gap-3 h-full items-end">
+                  <a class="btn-submit" (click)="toggleModalPartecipantiNoRemove(evento.eventoId)">
+                    Partecipanti
+                  </a>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="evento.stato == 'PASSATO'">
+                <div class="flex gap-3 h-full items-end">
+                  <a class="btn-submit" (click)="toggleModalPartecipantiNoRemove(evento.eventoId)">
+                    Partecipanti
+                  </a>
+                  <a class="btn-submit">
+                    Recensioni
+                  </a>
+                </div>
+              </ng-container>
             </div>
           </ng-container>
         </ng-container>
@@ -104,6 +126,79 @@
             <div class="flex-center gap-4 w-full">
               <button class="btn-submit" (click)="toggleModalEliminaEvento(0)">ANNULLA</button>
               <button class="btn-red-submit" (click)="eliminaEvento()">ELIMINA</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+</ng-container>
+
+<ng-container *ngIf="showModalPartecipantiNoRemove">
+  <div
+    class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+    <button (click)="toggleModalPartecipantiNoRemove(0)">
+      <span class="font-extrabold text-3xl text-red-600 absolute right-[35.5%] top-[24%] material-icons">
+        close
+      </span>
+    </button>
+    <div class="relative mx-auto w-[25%] h-[50%]">
+      <div
+        class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
+        <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
+
+          <div>
+            <div class="flex-center">
+              <h1 class="font-bold text-2xl">Partecipanti</h1>
+            </div>
+
+            <div class="mt-4 flex flex-col justify-center items-center gap-2">
+              <ng-container *ngFor="let username of usernamePartecipanti; let i = index">
+                <div class="flex-center flex-col w-full">
+                  <p>{{ username }}</p>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+</ng-container>
+
+<ng-container *ngIf="showModalPartecipanti">
+  <div
+    class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+    <button (click)="toggleModalPartecipanti(0)">
+      <span class="font-extrabold text-3xl text-red-600 absolute right-[35.5%] top-[24%] material-icons">
+        close
+      </span>
+    </button>
+    <div class="relative mx-auto w-[25%] h-[50%]">
+      <div
+        class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
+        <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
+
+          <div>
+            <div class="flex-center">
+              <h1 class="font-bold text-2xl">Partecipanti</h1>
+            </div>
+
+            <div class="mt-4 flex flex-col justify-center items-center gap-2">
+              <ng-container *ngFor="let username of usernamePartecipanti; let i = index">
+                <div class="flex-center w-full">
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="col-span-1">
+                      <button class="btn-red-submit" (click)="rimuoviTuristaDaEvento(username)">Rimuovi</button>
+                    </div>
+                    <div class="col-span-1 flex items-center">
+                      <p>{{ username }}</p>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>

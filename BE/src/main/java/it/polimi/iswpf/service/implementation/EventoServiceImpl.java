@@ -776,4 +776,52 @@ public class EventoServiceImpl implements EventoService {
 
         return response;
     }
+
+    /**
+     * Metodo che permette a un organizzatore di rimuovere un turista iscritto a un dato evento.
+     * @param usernameTurista Username univoco del turista, passato in modo dinamico tramite l'endpoint.
+     * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
+     */
+    @Override
+    public void rimuoviTuristaDaEvento(String usernameTurista, Long eventoId) {
+
+        //Controllo la validità della variabile.
+        if(usernameTurista.isEmpty() || usernameTurista.isBlank()) {
+            throw new BadRequestException("Inserire un username valido");
+        }
+
+        //Chiamo il database per controllare se esiste un turista con questo username.
+        Optional<User> turistaExists = userRepository.findByUsername(usernameTurista);
+
+        //Se non esiste, lancio un'eccezione.
+        if(turistaExists.isEmpty() || !turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
+            throw new NotFoundException("Non esiste un turista con questo username");
+        }
+
+        //L'id univoco è sempre maggiore o uguale a 1.
+        if(eventoId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(eventoExists.isEmpty()) {
+            throw new NotFoundException("Evento non trovato");
+        }
+
+        Evento evento = eventoExists.get();
+
+        //Controllo se il turista è effettivamente iscritto all'evento.
+        if(!evento.getIscritti().contains(turistaExists.get())) {
+            throw new BadRequestException("Il turista non risulta iscritto all'evento");
+        }
+
+        //Rimuovo il turista dalla lista di iscritti.
+        evento.getIscritti().remove(turistaExists.get());
+
+        //Salvo le modifiche sul database.
+        eventoRepository.save(evento);
+    }
 }

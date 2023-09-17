@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,7 +52,6 @@ public class EventoController {
                 .body(eventoService.getAllEventi(Long.parseLong(organizzatoreId)));
     }
 
-
     /**
      * Metodo per eliminare un evento. Chiama il service che eliminerà l'evento dal database.
      * @param eventoId Id dell'evento da eliminare, passato in modo dinamico con l'endpoint.
@@ -66,7 +66,6 @@ public class EventoController {
                 .status(HttpStatus.OK)
                 .body(new EliminaEventoResponse("Evento eliminato con successo!"));
     }
-
 
     /**
      * Metodo per prendere un evento dato l'id.
@@ -190,5 +189,23 @@ public class EventoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventoService.getEventiByTurista(usernameTurista));
+    }
+
+    /**
+     * Metodo che permette a un organizzatore di rimuovere un turista iscritto a un dato evento.
+     * @param usernameTurista Username univoco del turista, passato in modo dinamico tramite l'endpoint.
+     * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @return Messaggio di avvenuta rimozione -> {@link RimuoviTuristaDaEventoResponse}.
+     */
+    @DeleteMapping("rimuoviTuristaDaEvento/{usernameTurista}/{eventoId}")
+    public ResponseEntity<RimuoviTuristaDaEventoResponse> rimuoviTuristaDaEvento(
+            @PathVariable String usernameTurista,
+            @PathVariable String eventoId) {
+
+        eventoService.rimuoviTuristaDaEvento(usernameTurista, Long.parseLong(eventoId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new RimuoviTuristaDaEventoResponse("Turista rimosso con successo"));
     }
 }
