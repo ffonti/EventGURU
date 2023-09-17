@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAllEventiByOrganizzatoreResponse';
+import { RecensioneResponse } from 'src/app/dtos/response/RecensioneResponse';
 import { EventService } from 'src/app/services/event.service';
 import { RecensioneService } from 'src/app/services/recensione.service';
 
@@ -26,6 +27,10 @@ export class EventsComponent implements OnInit {
   protected eventoIdSelected: number = 0;
   protected showModalPartecipantiNoRemove: boolean = false;
   protected showModalRecensioni: boolean = false;
+  protected recensioni: RecensioneResponse[] = [];
+  protected votoMedio: number = 0.0;
+  protected showModalSingolaRecensione: boolean = false;
+  protected singolaRecensione!: RecensioneResponse;
 
   constructor(private eventService: EventService,
     private toastr: ToastrService,
@@ -210,8 +215,9 @@ export class EventsComponent implements OnInit {
     this.showModalRecensioni = !this.showModalRecensioni;
     if (this.showModalRecensioni) {
       this.recensioneService.getRecensioniByEvento(eventoId.toString().trim()).subscribe({
-        next: (res: any) => {
-          console.log(res);
+        next: (res: RecensioneResponse[]) => {
+          this.recensioni = res;
+          this.calcolaVotoMedio(this.recensioni);
         },
         error: (err: HttpErrorResponse) => {
           this.toastr.error(err.error.message);
@@ -220,5 +226,26 @@ export class EventsComponent implements OnInit {
         }
       })
     }
+  }
+
+  calcolaVotoMedio(recensioni: RecensioneResponse[]): void {
+    let counter: number = 0;
+    this.votoMedio = 0;
+
+    recensioni.forEach((recensione) => {
+      this.votoMedio += recensione.voto;
+      counter++;
+    });
+
+    this.votoMedio /= counter;
+  }
+
+  toggleModalSingolaRecensione(usernameTurista: string): void {
+    this.showModalSingolaRecensione = !this.showModalSingolaRecensione;
+    this.showModalRecensioni = !this.showModalSingolaRecensione;
+
+    this.singolaRecensione = this.recensioni.filter((recensione) => {
+      return recensione.usernameTurista == usernameTurista;
+    })[0];
   }
 }
