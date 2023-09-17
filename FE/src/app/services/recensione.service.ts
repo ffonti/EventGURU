@@ -19,6 +19,12 @@ export class RecensioneService {
     return this.http.post(this.backendUrl + 'inviaRecensione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
   }
 
+  getRecensioniByEvento(eventoId: string): Observable<any> {
+    const header = this.getHeader();
+
+    return this.http.get(this.backendUrl + 'getByEvento/' + eventoId, { headers: header });
+  }
+
   //creo l'header con il token da mandare al backend
   private getHeader(): HttpHeaders {
     return new HttpHeaders({

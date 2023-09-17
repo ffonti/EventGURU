@@ -2,6 +2,7 @@ package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.builder.RecensioneBuilder;
 import it.polimi.iswpf.dto.request.InviaRecensioneRequest;
+import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
 import it.polimi.iswpf.exception.NotFoundException;
@@ -16,6 +17,8 @@ import it.polimi.iswpf.service._interface.RecensioneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -91,5 +94,43 @@ public class RecensioneServiceImpl implements RecensioneService {
 
         //Salvo sul database la recensione
         recensioneRepository.save(recensione);
+    }
+
+    /**
+     * Metodo per prendere tutte le recensioni di un dato evento.
+     * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con i dati delle recensioni -> {@link RecensioneResponse}.
+     */
+    @Override
+    public List<RecensioneResponse> getByEvento(Long eventoId) {
+
+        //L'id autoincrement parte da 1.
+        if(eventoId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(eventoExists.isEmpty()) {
+            throw new NotFoundException("Evento non trovato");
+        }
+
+        List<Recensione> recensioni = eventoExists.get().getRecensioni();
+
+        //Inizializzo il DTO di risposta.
+        List<RecensioneResponse> response = new ArrayList<>();
+
+        //Aggiungo tutte le recensioni al DTO.
+        for(Recensione recensione : recensioni) {
+            response.add(new RecensioneResponse(
+                recensione.getUser().getUsername(),
+                recensione.getVoto(),
+                recensione.getTesto()
+            ));
+        }
+
+        return response;
     }
 }

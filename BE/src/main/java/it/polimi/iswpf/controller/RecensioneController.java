@@ -2,11 +2,14 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.InviaRecensioneRequest;
 import it.polimi.iswpf.dto.response.InviaRecensioneResponse;
+import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.service._interface.RecensioneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Controller per le recensioni.
@@ -37,5 +40,18 @@ public class RecensioneController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new InviaRecensioneResponse("Recensione inviata con successo"));
+    }
+
+    /**
+     * Metodo per prendere tutte le recensioni di un dato evento.
+     * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con i dati delle recensioni -> {@link RecensioneResponse}.
+     */
+    @GetMapping("getByEvento/{eventoId}")
+    public ResponseEntity<List<RecensioneResponse>> getByEvento(@PathVariable String eventoId) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(recensioneService.getByEvento(Long.parseLong(eventoId)));
     }
 }

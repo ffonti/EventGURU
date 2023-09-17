@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAllEventiByOrganizzatoreResponse';
 import { EventService } from 'src/app/services/event.service';
+import { RecensioneService } from 'src/app/services/recensione.service';
 
 @Component({
   selector: 'app-events',
@@ -24,8 +25,12 @@ export class EventsComponent implements OnInit {
   protected usernamePartecipanti: string[] = [];
   protected eventoIdSelected: number = 0;
   protected showModalPartecipantiNoRemove: boolean = false;
+  protected showModalRecensioni: boolean = false;
 
-  constructor(private eventService: EventService, private toastr: ToastrService, private router: Router) { }
+  constructor(private eventService: EventService,
+    private toastr: ToastrService,
+    private router: Router,
+    private recensioneService: RecensioneService) { }
 
   ngOnInit(): void {
     this.eventService.getEventiByOrganizzatore().subscribe({
@@ -199,5 +204,21 @@ export class EventsComponent implements OnInit {
         console.log(err);
       }
     })
+  }
+
+  toggleModalRecensioni(eventoId: number): void {
+    this.showModalRecensioni = !this.showModalRecensioni;
+    if (this.showModalRecensioni) {
+      this.recensioneService.getRecensioniByEvento(eventoId.toString().trim()).subscribe({
+        next: (res: any) => {
+          console.log(res);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastr.error(err.error.message);
+          console.log(err);
+          this.showModalRecensioni = !this.showModalRecensioni;
+        }
+      })
+    }
   }
 }

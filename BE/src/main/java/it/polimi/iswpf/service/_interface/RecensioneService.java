@@ -1,7 +1,10 @@
 package it.polimi.iswpf.service._interface;
 
 import it.polimi.iswpf.dto.request.InviaRecensioneRequest;
+import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.service.implementation.RecensioneServiceImpl;
+
+import java.util.List;
 
 /**
  * Interfaccia che contiene le firme dei metodi del service.
@@ -16,4 +19,11 @@ public interface RecensioneService {
      * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
      */
     void inviaRecensione(InviaRecensioneRequest request, Long eventoId, Long turistaId);
+
+    /**
+     * Metodo per prendere tutte le recensioni di un dato evento.
+     * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con i dati delle recensioni -> {@link RecensioneResponse}.
+     */
+    List<RecensioneResponse> getByEvento(Long eventoId);
 }
