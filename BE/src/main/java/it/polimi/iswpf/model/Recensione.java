@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.time.LocalDateTime;
+
 /**
  * Model che rappresenta l'associazione N:M tra user ed evento. Gli utenti possono
  * recensire a più eventi e un evento può recensito da più utenti, quindi come da prassi
@@ -43,6 +45,9 @@ public class Recensione {
     @Max(5)
     private Integer voto;
 
+    @Column(name = "data_creazione", updatable = false)
+    private LocalDateTime dataCreazione;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user; //Utente che recensisce.
@@ -60,6 +65,7 @@ public class Recensione {
         this.recensioneId = builder.getRecensioneId();
         this.testo = builder.getTesto();
         this.voto = builder.getVoto();
+        this.dataCreazione = builder.getDataCreazione();
         this.user = builder.getUser();
         this.evento = builder.getEvento();
     }

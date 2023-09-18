@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,8 +81,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(password))
                 .ruolo(ruolo)
                 .iscrittoNewsletter(false)
+                .dataCreazione(LocalDateTime.now())
                 .build();
-
+        System.out.println(user.getDataCreazione());
         userRepository.save(user); //Salvo l'utente sul database
 
         //Controllo se l'utente è presente sul database, se sì la registrazione è andata a buon fine.

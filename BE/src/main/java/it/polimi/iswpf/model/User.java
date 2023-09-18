@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -56,6 +57,9 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(100)")
     private String password;
 
+    @Column(name = "data_creazione", updatable = false)
+    private LocalDateTime dataCreazione;
+
     @Column(name = "ruolo", nullable = false, updatable = false, columnDefinition = "VARCHAR(20)")
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
@@ -103,6 +107,7 @@ public class User implements UserDetails {
         this.password = builder.getPassword();
         this.ruolo = builder.getRuolo();
         this.iscrittoNewsletter = builder.isIscrittoNewsletter();
+        this.dataCreazione = builder.getDataCreazione();
         this.eventi = builder.getEventi();
         this.recensioni = builder.getRecensioni();
         this.messaggi = builder.getMessaggi();

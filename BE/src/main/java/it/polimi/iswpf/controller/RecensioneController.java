@@ -2,6 +2,7 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.InviaRecensioneRequest;
 import it.polimi.iswpf.dto.response.InviaRecensioneResponse;
+import it.polimi.iswpf.dto.response.RecensioneDettagliataResponse;
 import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.service._interface.RecensioneService;
 import lombok.RequiredArgsConstructor;
@@ -53,5 +54,22 @@ public class RecensioneController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(recensioneService.getByEvento(Long.parseLong(eventoId)));
+    }
+
+    /**
+     * Metodo per prendere tutti i dati di una singola recensione.
+     * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @param usernameTurista Username univoco del turista che ha recensito l'evento,
+     * passato in modo dinamico tramite l'endpoint.
+     * @return DTO con i dati della recensione -> {@link RecensioneDettagliataResponse}.
+     */
+    @GetMapping("get/{eventoId}/{usernameTurista}")
+    public ResponseEntity<RecensioneDettagliataResponse> getRecensione(
+            @PathVariable String eventoId,
+            @PathVariable String usernameTurista) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(recensioneService.getRecensione(Long.parseLong(eventoId), usernameTurista));
     }
 }

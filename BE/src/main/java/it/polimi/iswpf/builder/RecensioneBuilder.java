@@ -6,6 +6,8 @@ import it.polimi.iswpf.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * Design pattern builder. Classe Builder dove vengono riportati esattamente tutti
  * gli attributi del model Recensione e un rispettivo metodo (setter) per ognuno di loro.
@@ -18,6 +20,7 @@ public class RecensioneBuilder {
     private Long recensioneId;
     private String testo;
     private Integer voto;
+    private LocalDateTime dataCreazione;
     private User user;
     private Evento evento;
 
@@ -48,6 +51,16 @@ public class RecensioneBuilder {
      */
     public RecensioneBuilder voto(Integer voto) {
         this.voto = voto;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param dataCreazione Data di creazione della recensione.
+     * @return Un'istanza della classe stessa.
+     */
+    public RecensioneBuilder dataCreazione(LocalDateTime dataCreazione) {
+        this.dataCreazione = dataCreazione;
         return this;
     }
 

@@ -2,6 +2,7 @@ package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.builder.RecensioneBuilder;
 import it.polimi.iswpf.dto.request.InviaRecensioneRequest;
+import it.polimi.iswpf.dto.response.RecensioneDettagliataResponse;
 import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
@@ -17,6 +18,7 @@ import it.polimi.iswpf.service._interface.RecensioneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,6 +90,7 @@ public class RecensioneServiceImpl implements RecensioneService {
         final Recensione recensione = new RecensioneBuilder()
             .voto(request.getVoto())
             .testo(request.getTesto())
+            .dataCreazione(LocalDateTime.now())
             .evento(eventoExists.get())
             .user(turistaExists.get())
             .build();
@@ -132,5 +135,62 @@ public class RecensioneServiceImpl implements RecensioneService {
         }
 
         return response;
+    }
+
+    /**
+     * Metodo per prendere tutti i dati di una singola recensione.
+     * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
+     * @param usernameTurista Username univoco del turista che ha recensito l'evento,
+     * passato in modo dinamico tramite l'endpoint.
+     * @return DTO con i dati della recensione -> {@link RecensioneDettagliataResponse}.
+     */
+    @Override
+    public RecensioneDettagliataResponse getRecensione(Long eventoId, String usernameTurista) {
+
+        //L'id autoincrement parte da 1.
+        if(eventoId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'evento dal db con quell'id.
+        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+
+        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        if(eventoExists.isEmpty()) {
+            throw new NotFoundException("Evento non trovato");
+        }
+
+        //Controllo la validità dell'username.
+        if(usernameTurista.isBlank() || usernameTurista.isEmpty()) {
+            throw new BadRequestException("Username non valido");
+        }
+
+        Optional<User> turistaExists = userRepository.findByUsername(usernameTurista);
+
+        //Controllo se esiste un turista con questo username.
+        if(turistaExists.isEmpty() || !turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
+
+        //Chiamo il database e controllo se esiste la recensione richiesta.
+        Optional<Recensione> recensioneExists = recensioneRepository.getRecensioneByEvento_EventoIdAndUser_Username(eventoId, usernameTurista);
+
+        if(recensioneExists.isEmpty()) {
+            throw new NotFoundException("Non esiste alcuna recensione lasciata da questo turista a questo evento");
+        }
+
+        User turista = turistaExists.get();
+        Recensione recensione = recensioneExists.get();
+
+        //Costruisco e ritorno il DTO con tutti i dati richiesti.
+        return new RecensioneDettagliataResponse(
+                turista.getNome(),
+                turista.getCognome(),
+                turista.getUsername(),
+                recensione.getTesto(),
+                recensione.getVoto(),
+                recensione.getDataCreazione(),
+                turista.getDataCreazione()
+        );
     }
 }

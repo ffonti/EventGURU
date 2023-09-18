@@ -229,7 +229,7 @@
                 <p class="font-bold text-2xl">Recensioni</p>
               </div>
               <div class="flex-center gap-3">
-                <span class="material-icons">
+                <span class="material-icons text-yellow-400">
                   star
                 </span>
                 <p> {{ votoMedio | number:'1.1-1' }} </p>
@@ -245,7 +245,7 @@
                     </span>
                     <p>{{ recensione.usernameTurista }}</p>
                     <p> • </p>
-                    <span class="material-icons">
+                    <span class="material-icons text-yellow-400">
                       star
                     </span>
                     <p>{{ recensione.voto }}</p>
@@ -277,13 +277,41 @@
       <div
         class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
         <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
-          <div class="flex-center flex-col space-y-8 mt-5">
-            <div>
-              <p class="font-medium text-lg">Singola recensione</p>
+          <div class="flex-center flex-col space-y-8">
+            <div class="h-full w-full ml-3 space-y-3">
+              <div class="w-full flex justify-start items-center gap-4">
+                <span class="material-icons text-7xl">
+                  account_circle
+                </span>
+                <div class="flex flex-col gap-1">
+                  <p class="font-semibold text-lg">{{ recensioneDettagliata.nomeTurista | titlecase }}
+                    {{ recensioneDettagliata.cognomeTurista | titlecase }} </p>
+                  <p class="font-normal text-sm text-gray-400">Utente dal {{recensioneDettagliata.dataCreazioneTurista}}
+                  </p>
+                </div>
+              </div>
+              <div class="w-full">
+                <div class="flex flex-col justify-center items-start space-y-3">
+                  <div class="flex-center gap-2">
+                    <ng-container *ngFor="let voto of [].constructor(recensioneDettagliata.voto)">
+                      <span class="material-icons text-yellow-400">
+                        star
+                      </span>
+                    </ng-container>
+                    <ng-container *ngFor="let voto of [].constructor(5 - recensioneDettagliata.voto)">
+                      <span class="material-icons text-gray-900">
+                        star
+                      </span>
+                    </ng-container>
+                  </div>
+                  <p class="font-normal text-sm text-gray-400">Recensito il
+                    {{ recensioneDettagliata.dataCreazioneRecensione }}</p>
+                </div>
+              </div>
+              <div class="w-full">
+                <p>{{ recensioneDettagliata.testo }}</p>
+              </div>
             </div>
-            {{singolaRecensione.voto}}
-            {{singolaRecensione.usernameTurista}}
-            {{singolaRecensione.testo}}
           </div>
         </div>
       </div>

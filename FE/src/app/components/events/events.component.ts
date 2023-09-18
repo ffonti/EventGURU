@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAllEventiByOrganizzatoreResponse';
+import { RecensioneDettagliataResponse } from 'src/app/dtos/response/RecensioneDettagliataResponse';
 import { RecensioneResponse } from 'src/app/dtos/response/RecensioneResponse';
 import { EventService } from 'src/app/services/event.service';
 import { RecensioneService } from 'src/app/services/recensione.service';
@@ -31,6 +32,8 @@ export class EventsComponent implements OnInit {
   protected votoMedio: number = 0.0;
   protected showModalSingolaRecensione: boolean = false;
   protected singolaRecensione!: RecensioneResponse;
+  protected eventoIdPerSingolaRecensione: number = 0;
+  protected recensioneDettagliata: any;
 
   constructor(private eventService: EventService,
     private toastr: ToastrService,
@@ -212,6 +215,7 @@ export class EventsComponent implements OnInit {
   }
 
   toggleModalRecensioni(eventoId: number): void {
+    this.eventoIdPerSingolaRecensione = eventoId;
     this.showModalRecensioni = !this.showModalRecensioni;
     if (this.showModalRecensioni) {
       this.recensioneService.getRecensioniByEvento(eventoId.toString().trim()).subscribe({
@@ -247,5 +251,39 @@ export class EventsComponent implements OnInit {
     this.singolaRecensione = this.recensioni.filter((recensione) => {
       return recensione.usernameTurista == usernameTurista;
     })[0];
+
+    if (this.showModalSingolaRecensione) {
+      this.recensioneService.getRecensione(this.eventoIdPerSingolaRecensione.toString().trim(), usernameTurista).subscribe({
+        next: (res: RecensioneDettagliataResponse) => {
+          this.recensioneDettagliata = res;
+
+          let giorno: string, mese: string, anno: string, ore: string, minuti: string;
+
+          let dataCreazioneRecensione: string = res.dataCreazioneRecensione.toString();
+
+          anno = dataCreazioneRecensione.slice(0, 4);
+          mese = dataCreazioneRecensione.slice(5, 7);
+          giorno = dataCreazioneRecensione.slice(8, 10);
+          ore = dataCreazioneRecensione.slice(11, 13);
+          minuti = dataCreazioneRecensione.slice(14, 16);
+
+          this.recensioneDettagliata.dataCreazioneRecensione = giorno + '/' + mese + '/' + anno + ' ' + ore + ':' + minuti;
+
+          let dataCreazioneTurista: string = res.dataCreazioneTurista.toString();
+
+          anno = dataCreazioneTurista.slice(0, 4);
+          mese = dataCreazioneTurista.slice(5, 7);
+          giorno = dataCreazioneTurista.slice(8, 10);
+          ore = dataCreazioneTurista.slice(11, 13);
+          minuti = dataCreazioneTurista.slice(14, 16);
+
+          this.recensioneDettagliata.dataCreazioneTurista = giorno + '/' + mese + '/' + anno + ' ' + ore + ':' + minuti;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastr.error(err.error.message);
+          console.log(err);
+        }
+      })
+    }
   }
 }

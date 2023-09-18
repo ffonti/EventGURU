@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { inviaRecensioneRequest } from '../dtos/request/InviaRecensioneRequest';
 import { RecensioneResponse } from '../dtos/response/RecensioneResponse';
+import { RecensioneDettagliataResponse } from '../dtos/response/RecensioneDettagliataResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,12 @@ export class RecensioneService {
     const header = this.getHeader();
 
     return this.http.get<RecensioneResponse[]>(this.backendUrl + 'getByEvento/' + eventoId, { headers: header });
+  }
+
+  getRecensione(eventoId: string, usernameTurista: string): Observable<RecensioneDettagliataResponse> {
+    const header = this.getHeader();
+
+    return this.http.get<RecensioneDettagliataResponse>(this.backendUrl + 'get/' + eventoId + '/' + usernameTurista, { headers: header });
   }
 
   //creo l'header con il token da mandare al backend

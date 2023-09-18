@@ -4,6 +4,7 @@ import it.polimi.iswpf.model.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class UserBuilder {
     private String password;
     private Ruolo ruolo;
     private boolean iscrittoNewsletter;
+    private LocalDateTime dataCreazione;
     private List<Evento> eventi;
     private List<Recensione> recensioni;
     private List<Messaggio> messaggi;
@@ -106,6 +108,16 @@ public class UserBuilder {
      */
     public UserBuilder iscrittoNewsletter(boolean iscrittoNewsletter) {
         this.iscrittoNewsletter = iscrittoNewsletter;
+        return this;
+    }
+
+    /**
+     * Chiamato prima del metodo build(), per settare l'attributo.
+     * @param dataCreazione Data di registrazione dell'utente.
+     * @return Un'istanza della classe stessa.
+     */
+    public UserBuilder dataCreazione(LocalDateTime dataCreazione) {
+        this.dataCreazione = dataCreazione;
         return this;
     }
 

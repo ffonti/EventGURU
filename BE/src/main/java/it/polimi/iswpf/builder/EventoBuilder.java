@@ -61,7 +61,7 @@ public class EventoBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param dataCreazione Stringa con la data di creazione dell'oggetto settata.
+     * @param dataCreazione Data di creazione dell'oggetto settata.
      * @return Un'istanza della classe stessa.
      */
     public EventoBuilder dataCreazione(LocalDateTime dataCreazione) {
@@ -71,7 +71,7 @@ public class EventoBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param dataInizio Stringa con la data d'inizio dell'evento settata.
+     * @param dataInizio Data d'inizio dell'evento settata.
      * @return Un'istanza della classe stessa.
      */
     public EventoBuilder dataInizio(LocalDateTime dataInizio) {
@@ -81,7 +81,7 @@ public class EventoBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param dataFine Stringa con la data di fine dell'evento settata.
+     * @param dataFine Data di fine dell'evento settata.
      * @return Un'istanza della classe stessa.
      */
     public EventoBuilder dataFine(LocalDateTime dataFine) {
