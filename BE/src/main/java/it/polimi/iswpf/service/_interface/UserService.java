@@ -1,6 +1,7 @@
 package it.polimi.iswpf.service._interface;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
+import it.polimi.iswpf.dto.response.OrganizzatoreResponse;
 import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service.implementation.UserServiceImpl;
@@ -61,4 +62,10 @@ public interface UserService {
      * @param username Username dell'account da eliminare.
      */
     void adminDeleteAccount(String username);
+
+    /**
+     * Metodo per prendere tutti gli organizzatori presenti sul database.
+     * @return Lista di DTO con i dati di ogni organizzatore -> {@link OrganizzatoreResponse}.
+     */
+    List<OrganizzatoreResponse> getAllOrganizzatori();
 }

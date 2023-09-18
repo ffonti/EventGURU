@@ -2,6 +2,7 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.dto.response.DeleteUserResponse;
+import it.polimi.iswpf.dto.response.OrganizzatoreResponse;
 import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service._interface.UserService;
@@ -126,5 +127,17 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new DeleteUserResponse("Account eliminato con successo"));
+    }
+
+    /**
+     * Metodo per prendere tutti gli organizzatori presenti sul database.
+     * @return Lista di DTO con i dati di ogni organizzatore -> {@link OrganizzatoreResponse}.
+     */
+    @GetMapping("getAllOrganizzatori")
+    public ResponseEntity<List<OrganizzatoreResponse>> getAllOrganizzatori() {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getAllOrganizzatori());
     }
 }

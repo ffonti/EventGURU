@@ -1,6 +1,7 @@
 package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
+import it.polimi.iswpf.dto.response.OrganizzatoreResponse;
 import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.exception.*;
 import it.polimi.iswpf.model.Ruolo;
@@ -338,5 +339,35 @@ public class UserServiceImpl implements UserService {
         if(userDeleted.isPresent()) {
             throw new InternalServerErrorException("Errore nell'eliminazione dell'utente");
         }
+    }
+
+    /**
+     * Metodo per prendere tutti gli organizzatori presenti sul database.
+     * @return Lista di DTO con i dati di ogni organizzatore -> {@link OrganizzatoreResponse}.
+     */
+    @Override
+    public List<OrganizzatoreResponse> getAllOrganizzatori() {
+
+        Optional<List<User>> organizzatori = userRepository.findAllByRuolo(Ruolo.ORGANIZZATORE);
+
+        //Se non è presente nessun utente lancio un'eccezione.
+        if(organizzatori.isEmpty()) {
+            throw new NotFoundException("Organizzatori non trovati");
+        }
+
+        //Inizializzo la variabile di risposta
+        List<OrganizzatoreResponse> response = new ArrayList<>();
+
+        //Per ogni utente, aggiungo all'array di risposta i dati dell'utente.
+        for(User organizzatore: organizzatori.get()) {
+            response.add(new OrganizzatoreResponse(
+                organizzatore.getNome(),
+                organizzatore.getCognome(),
+                organizzatore.getDataCreazione(),
+                organizzatore.getEventi().size()
+            ));
+        }
+
+        return response;
     }
 }

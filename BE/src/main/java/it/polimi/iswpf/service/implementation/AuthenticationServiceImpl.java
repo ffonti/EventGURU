@@ -83,7 +83,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .iscrittoNewsletter(false)
                 .dataCreazione(LocalDateTime.now())
                 .build();
-        System.out.println(user.getDataCreazione());
+
         userRepository.save(user); //Salvo l'utente sul database
 
         //Controllo se l'utente è presente sul database, se sì la registrazione è andata a buon fine.

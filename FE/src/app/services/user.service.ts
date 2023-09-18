@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { GetUserDataResponse } from '../dtos/response/GetUserDataResponse';
 import { UpdateUserDataRequest } from '../dtos/request/UpdateUserDataRequest';
 import { DeleteUserResponse } from '../dtos/response/DeleteUserResponse';
+import { OrganizzatoreResponse } from '../dtos/response/OrganizzatoreResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,12 @@ export class UserService {
     const header = this.getHeader();
 
     return this.http.delete<DeleteUserResponse>(this.backendUrl + 'adminDelete/' + username, { headers: header });
+  }
+
+  getAllOrganizzatori(): Observable<OrganizzatoreResponse[]> {
+    const header = this.getHeader();
+
+    return this.http.get<OrganizzatoreResponse[]>(this.backendUrl + 'getAllOrganizzatori', { headers: header });
   }
 
   //creo l'header con il token da mandare al backend
