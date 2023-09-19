@@ -361,6 +361,7 @@ public class UserServiceImpl implements UserService {
         //Per ogni utente, aggiungo all'array di risposta i dati dell'utente.
         for(User organizzatore: organizzatori.get()) {
             response.add(new OrganizzatoreResponse(
+                organizzatore.getUserId(),
                 organizzatore.getNome(),
                 organizzatore.getCognome(),
                 organizzatore.getDataCreazione(),

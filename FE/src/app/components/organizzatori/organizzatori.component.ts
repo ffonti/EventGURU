@@ -14,6 +14,7 @@ export class OrganizzatoriComponent implements OnInit {
   protected cercaPerNome: string = '';
   protected modoOrdine: string = '';
   protected attributoOrdine: string = '';
+  protected showModalEventiOrganizzatore: boolean = false;
 
   constructor(private toastr: ToastrService, private userService: UserService) { }
 
@@ -85,8 +86,12 @@ export class OrganizzatoriComponent implements OnInit {
   }
 
   checkFilters(organizzatore: any): boolean {
-    return organizzatore.nome.toLowerCase().trim().includes(this.cercaPerNome.toLowerCase().trim())
-    //&& (organizzatore.stato.toString().trim().toUpperCase() == this.cercaPerStato.toString().trim().toUpperCase() ||
-    //   this.cercaPerStato.toString().toLowerCase() == '');
+    return organizzatore.nome.toLowerCase().trim().includes(this.cercaPerNome.toLowerCase().trim());
+  }
+
+  toggleModalEventiOrganizzatore(organizzatoreId: number) {
+    this.showModalEventiOrganizzatore = !this.showModalEventiOrganizzatore;
+    console.log(organizzatoreId);
+    
   }
 }
