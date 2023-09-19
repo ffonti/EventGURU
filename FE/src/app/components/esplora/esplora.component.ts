@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAllEventiByOrganizzatoreResponse';
 import { GetAllEventiResponse } from 'src/app/dtos/response/GetAllEventiResponse';
 import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
@@ -25,12 +26,39 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   protected username: string = '';
   protected showModalMappaFiltro: boolean = false;
   private map: any;
+  protected organizzatoreId: string = '';
+  protected pathId: boolean = false;
 
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router, private mapService: MapService) { }
 
   ngOnInit(): void {
+    
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
     this.username = localStorage.getItem('username')?.toString().trim().toLowerCase() || '';
+    
+    this.organizzatoreId = this.router.url.split('/homepage/esplora/')[1];
+    if (this.organizzatoreId !== null && this.organizzatoreId !== undefined && this.organizzatoreId !== '') {
+      this.pathId = true;
+      this.eventService.getEventiByOrganizzatoreId(this.organizzatoreId.toString().trim()).subscribe({
+        next: (res: GetAllEventiByOrganizzatoreResponse[]) => {
+          res.forEach(evento => {
+            if (evento.stato == 'FUTURO') {
+              this.allEventi.push(evento);
+            }
+          });
+  
+          this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.allEventi));
+  
+          this.changeFormatDate(this.allEventiWithDateFormatted);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+          this.toastr.error(err.error.message);
+          this.router.navigateByUrl('/homepage/organizzatori');
+        }
+      });
+      return;
+    }
 
     this.eventService.getAllEventi().subscribe({
       next: (res: GetAllEventiResponse[]) => {

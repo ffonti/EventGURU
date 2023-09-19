@@ -17,5 +17,5 @@ public class OrganizzatoreResponse {
 
     private LocalDateTime dataCreazioneAccount;
 
-    private Integer numeroEventiOrganizzati;
+    private Long numeroEventiOrganizzati;
 }

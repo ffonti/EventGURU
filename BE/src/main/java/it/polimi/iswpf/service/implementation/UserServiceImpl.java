@@ -5,6 +5,7 @@ import it.polimi.iswpf.dto.response.OrganizzatoreResponse;
 import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.exception.*;
 import it.polimi.iswpf.model.Ruolo;
+import it.polimi.iswpf.model.Stato;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.UserService;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -365,7 +367,9 @@ public class UserServiceImpl implements UserService {
                 organizzatore.getNome(),
                 organizzatore.getCognome(),
                 organizzatore.getDataCreazione(),
-                organizzatore.getEventi().size()
+                organizzatore.getEventi().stream()
+                        .filter(evento -> evento.getDataInizio().isAfter(LocalDateTime.now()))
+                        .count()
             ));
         }
 

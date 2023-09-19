@@ -51,7 +51,7 @@
               </div>
 
               <div>
-                <button class="btn-submit" (click)="toggleModalEventiOrganizzatore(organizzatore.organizzatoreId)">Visualizza eventi</button>
+                <button class="btn-submit" (click)="goToEventiOrganizzatore(organizzatore.organizzatoreId)">Visualizza eventi</button>
               </div>
             </div>
           </ng-container>
@@ -66,24 +66,3 @@
     <p class="font-bold text-2xl">Non sono presenti organizzatori! :(</p>
   </div>
 </ng-template>
-
-<!-- Modal partecipanti -->
-<ng-container *ngIf="showModalEventiOrganizzatore">
-  <div
-    class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
-    <button (click)="toggleModalEventiOrganizzatore(0)">
-      <span class="font-extrabold text-3xl text-red-600 absolute right-[35.5%] top-[24%] material-icons">
-        close
-      </span>
-    </button>
-    <div class="relative mx-auto w-[25%] h-[50%]">
-      <div
-        class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
-        <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
-
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="opacity-25 fixed inset-0 z-40 bg-black"></div>
-</ng-container>

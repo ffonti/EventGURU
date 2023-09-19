@@ -51,6 +51,12 @@ export class EventService {
     return this.http.get<GetAllEventiByOrganizzatoreResponse[]>(this.backendUrl + 'getByOrganizzatore/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
+  getEventiByOrganizzatoreId(organizzatoreId: string): Observable<GetAllEventiByOrganizzatoreResponse[]> {
+    const header = this.getHeader();
+
+    return this.http.get<GetAllEventiByOrganizzatoreResponse[]>(this.backendUrl + 'getByOrganizzatore/' + organizzatoreId, { headers: header });
+  }
+
   getAllEventi(): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
 

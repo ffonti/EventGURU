@@ -18,7 +18,9 @@ const routes: Routes = [
   {
     path: 'homepage', component: HomepageComponent, children: [
       { path: '', redirectTo: '/homepage/esplora', pathMatch: 'full' },
-      { path: 'esplora', component: EsploraComponent },
+      { path: 'esplora', component: EsploraComponent, children: [
+        { path: ':organizzatoreId', component: EsploraComponent }
+      ] },
       { path: 'eventi', component: IscrizioneEventiComponent },
       { path: 'eventiOrganizzati', component: EventsComponent },
       { path: 'admin', component: AdminPageComponent },

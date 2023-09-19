@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { OrganizzatoreResponse } from 'src/app/dtos/response/OrganizzatoreResponse';
 import { UserService } from 'src/app/services/user.service';
@@ -14,9 +15,8 @@ export class OrganizzatoriComponent implements OnInit {
   protected cercaPerNome: string = '';
   protected modoOrdine: string = '';
   protected attributoOrdine: string = '';
-  protected showModalEventiOrganizzatore: boolean = false;
 
-  constructor(private toastr: ToastrService, private userService: UserService) { }
+  constructor(private toastr: ToastrService, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.userService.getAllOrganizzatori().subscribe({
@@ -34,8 +34,6 @@ export class OrganizzatoriComponent implements OnInit {
 
           organizzatore.dataCreazioneAccount = giorno + '/' + mese + '/' + anno + ' ' + ore + ':' + minuti;
         });
-        console.log(this.organizzatori);
-
       },
       error: (err: HttpErrorResponse) => {
         this.toastr.error(err.error.message);
@@ -54,8 +52,8 @@ export class OrganizzatoriComponent implements OnInit {
         this.organizzatori =
           this.organizzatori.sort(
             (a: any, b: any) => {
-              if (a.nometoLowerCase() > b.nometoLowerCase()) return 1;
-              if (a.nometoLowerCase() < b.nometoLowerCase()) return -1;
+              if (a.nome.toLowerCase() > b.nome.toLowerCase()) return 1;
+              if (a.nome.toLowerCase() < b.nome.toLowerCase()) return -1;
               return 0;
             });
         break;
@@ -89,9 +87,7 @@ export class OrganizzatoriComponent implements OnInit {
     return organizzatore.nome.toLowerCase().trim().includes(this.cercaPerNome.toLowerCase().trim());
   }
 
-  toggleModalEventiOrganizzatore(organizzatoreId: number) {
-    this.showModalEventiOrganizzatore = !this.showModalEventiOrganizzatore;
-    console.log(organizzatoreId);
-    
+  goToEventiOrganizzatore(organizzatoreId: number) {
+    this.router.navigateByUrl('homepage/esplora/' + organizzatoreId.toString().trim());
   }
 }

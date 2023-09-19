@@ -11,5 +11,11 @@ export interface GetAllEventiResponse {
     nomeLuogo: string;
     lat: string;
     lng: string;
+    isRecensioneInviata: boolean;
+    recensioni: {
+        usernameTurista: string;
+        voto: number;
+        testo: string;
+    }[];
     usernameTuristi: string[];
 }
