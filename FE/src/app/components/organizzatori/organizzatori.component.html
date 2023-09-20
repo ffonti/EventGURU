@@ -58,7 +58,8 @@
                 </ng-container>
                 <ng-template #giaSegue>
                   <button class="btn-red-submit"
-                    (click)="smettiSeguireOrganizzatore(organizzatore.organizzatoreId)">Smetti di seguire</button>
+                    (click)="smettiSeguireOrganizzatore(organizzatore.organizzatoreId, organizzatore.username)">Smetti
+                    di seguire</button>
                 </ng-template>
                 <ng-container *ngIf="organizzatore.numeroEventiOrganizzati">
                   <button class="btn-submit" (click)="goToEventiOrganizzatore(organizzatore.organizzatoreId)">

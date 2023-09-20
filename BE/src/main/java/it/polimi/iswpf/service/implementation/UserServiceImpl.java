@@ -408,6 +408,11 @@ public class UserServiceImpl implements UserService {
             throw new ForbiddenException("L'utente non ha i permessi adatti");
         }
 
+        //Controllo che il turista non segua già l'organizzatore.
+        if(turista.getSeguiti().contains(organizzatore)) {
+            throw new BadRequestException("Il turista segue già l'organizzatore");
+        }
+
         //Aggiungo l'organizzatore alla lista dei seguiti del turista.
         turista.getSeguiti().add(organizzatore);
 
@@ -451,5 +456,47 @@ public class UserServiceImpl implements UserService {
 
         //Ritorno il DTO.
         return response;
+    }
+
+    /**
+     * Metodo che permette a un turista di smettere di seguire un organizzatore.
+     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    @Override
+    public void smettiSeguireOrganizzatore(Long organizzatoreId, Long turistaId) {
+
+        //L'id autoincrement parte da 1.
+        if(organizzatoreId < 1 || turistaId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo gli utenti dal db con quell'id.
+        Optional<User> organizzatoreExists = userRepository.findByUserId(organizzatoreId);
+        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
+        if(organizzatoreExists.isEmpty() || turistaExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        User organizzatore = organizzatoreExists.get();
+        User turista = turistaExists.get();
+
+        //Controllo il ruolo di turista e organizzatore.
+        if(!organizzatore.getRuolo().equals(Ruolo.ORGANIZZATORE) || !turista.getRuolo().equals(Ruolo.TURISTA)) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
+
+        //Controllo che il turista segua l'organizzatore.
+        if(!turista.getSeguiti().contains(organizzatore)) {
+            throw new BadRequestException("Il turista non segue l'organizzatore");
+        }
+
+        //Aggiungo l'organizzatore alla lista dei seguiti del turista.
+        turista.getSeguiti().remove(organizzatore);
+
+        //Aggiorno i dati sul database.
+        userRepository.save(turista);
     }
 }

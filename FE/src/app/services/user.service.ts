@@ -72,6 +72,12 @@ export class UserService {
     return this.http.get(this.backendUrl + 'seguiOrganizzatore/' + organizzatoreId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
+  smettiSeguireOrganizzatore(organizzatoreId: string): Observable<any> {
+    const header = this.getHeader();
+
+    return this.http.get(this.backendUrl + 'smettiSeguireOrganizzatore/' + organizzatoreId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+  }
+
   getAllOrganizzatoriSeguiti(): Observable<GetOrganizzatoriSeguiti[]> {
     const header = this.getHeader();
 

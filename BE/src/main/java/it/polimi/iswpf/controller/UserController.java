@@ -169,4 +169,21 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .body(userService.getOrganizzatoriSeguiti(Long.parseLong(turistaId)));
     }
+
+    /**
+     * Metodo che permette a un turista di smettere di seguire un organizzatore.
+     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     * @return DTO con messaggio di successo -> {@link SeguiOrganizzatoreResponse}.
+     */
+    @GetMapping("smettiSeguireOrganizzatore/{organizzatoreId}/{turistaId}")
+    public ResponseEntity<SeguiOrganizzatoreResponse> smettiSeguireOrganizzatore(
+            @PathVariable String organizzatoreId, @PathVariable String turistaId) {
+
+        userService.smettiSeguireOrganizzatore(Long.parseLong(organizzatoreId), Long.parseLong(turistaId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new SeguiOrganizzatoreResponse("Hai smesso di seguire l'organizzatore"));
+    }
 }

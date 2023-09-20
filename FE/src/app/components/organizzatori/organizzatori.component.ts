@@ -119,10 +119,13 @@ export class OrganizzatoriComponent implements OnInit {
     })
   }
 
-  smettiSeguireOrganizzatore(organizzatoreId: number): void {
-    this.userService.seguiOrganizzatore(organizzatoreId.toString().trim()).subscribe({
+  smettiSeguireOrganizzatore(organizzatoreId: number, organizzatoreUsername: string): void {
+    this.userService.smettiSeguireOrganizzatore(organizzatoreId.toString().trim()).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
+        this.usernameOrganizzatoriSeguiti = this.usernameOrganizzatoriSeguiti.filter((username) => {
+          return username != organizzatoreUsername;
+        });
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);

@@ -83,4 +83,11 @@ public interface UserService {
      * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoriSeguitiResponse}.
      */
     List<OrganizzatoriSeguitiResponse> getOrganizzatoriSeguiti(Long turistaId);
+
+    /**
+     * Metodo che permette a un turista di smettere di seguire un organizzatore.
+     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    void smettiSeguireOrganizzatore(Long organizzatoreId, Long turistaId);
 }
