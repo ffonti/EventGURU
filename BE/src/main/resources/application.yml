@@ -17,6 +17,17 @@ spring:
     generate-ddl: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: eventguru.service@gmail.com
+    password: ktpz weaz pwjh iuxv
+    properties:
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
 server:
   port: 8080
   error:
