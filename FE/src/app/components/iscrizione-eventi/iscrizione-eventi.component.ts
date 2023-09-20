@@ -13,7 +13,7 @@ import { RecensioneService } from 'src/app/services/recensione.service';
 })
 export class IscrizioneEventiComponent implements OnInit {
   protected allEventi: GetAllEventiByOrganizzatoreResponse[] = [];
-  protected allEventiWithDateFormatted: any[] = [];
+  protected allEventiWithDateFormatted: any = [];
   protected showModalEliminaEvento: boolean = false;
   protected eventoIdDaEliminare: number = 0;
   protected cercaPerTitolo: string = '';
@@ -43,7 +43,7 @@ export class IscrizioneEventiComponent implements OnInit {
 
         this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.allEventi));
 
-        this.changeFormatDate(this.allEventiWithDateFormatted);
+        this.changeFormatDate(this.allEventiWithDateFormatted);       
       },
       error: (err: any) => {
         console.log(err);
@@ -53,10 +53,10 @@ export class IscrizioneEventiComponent implements OnInit {
     });
   }
 
-  changeFormatDate(eventi: any[]): void {
+  changeFormatDate(eventi: any): void {
     let giorno: string, mese: string, anno: string, ore: string, minuti: string;
 
-    eventi.forEach(evento => {
+    eventi.forEach((evento: any) => {
       let dataInizio: string = evento.dataInizio.toString();
 
       anno = dataInizio.slice(0, 4);
@@ -164,7 +164,7 @@ export class IscrizioneEventiComponent implements OnInit {
   }
 
   iscrizioneEvento(eventoId: number): void {
-    this.allEventiWithDateFormatted.forEach((evento) => {
+    this.allEventiWithDateFormatted.forEach((evento: any) => {
       if (evento.eventoId == eventoId && this.username) {
         evento.usernameTuristi.push(this.username);
       }
@@ -182,7 +182,7 @@ export class IscrizioneEventiComponent implements OnInit {
   }
 
   annullaIscrizione(eventoId: number): void {
-    this.allEventiWithDateFormatted.forEach((evento) => {
+    this.allEventiWithDateFormatted.forEach((evento: any) => {
       if (evento.eventoId == eventoId) {
         evento.usernameTuristi.pop(this.username);
       }
@@ -231,23 +231,28 @@ export class IscrizioneEventiComponent implements OnInit {
     this.showModalRecensione = !this.showModalRecensione;
   }
 
-  ratingUno(): void {
-    this.rating = 1;
+  doRating(n: number): void {
+    this.rating = n;
   }
 
-  ratingDue(): void {
-    this.rating = 2;
-  }
+  nonAncoraRecensito(eventoId: number): boolean {
+    let isRecensito: boolean = false;
+    const usernameLogged: string | null = localStorage.getItem('username');
+    const evento = this.allEventiWithDateFormatted.filter((evento: any) => {
+      return evento.eventoId == eventoId;
+    })[0];
+    
+    let usernameRecensioniFilter: any = [];
 
-  ratingTre(): void {
-    this.rating = 3;
-  }
+    evento.recensioni.forEach((recensione: any) => {
+      usernameRecensioniFilter.push(recensione.usernameTurista);
+    });
 
-  ratingQuattro(): void {
-    this.rating = 4;
-  }
-
-  ratingCinque(): void {
-    this.rating = 5;
+    if(usernameLogged) {
+      usernameRecensioniFilter.forEach((username: string) => {
+        if(usernameLogged == username) isRecensito = true;
+      });
+    }
+    return !isRecensito;
   }
 }
