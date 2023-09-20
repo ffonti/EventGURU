@@ -2,6 +2,7 @@ package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.dto.response.OrganizzatoreResponse;
+import it.polimi.iswpf.dto.response.OrganizzatoriSeguitiResponse;
 import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.exception.*;
 import it.polimi.iswpf.model.Ruolo;
@@ -364,6 +365,7 @@ public class UserServiceImpl implements UserService {
         for(User organizzatore: organizzatori.get()) {
             response.add(new OrganizzatoreResponse(
                 organizzatore.getUserId(),
+                organizzatore.getUsername(),
                 organizzatore.getNome(),
                 organizzatore.getCognome(),
                 organizzatore.getDataCreazione(),
@@ -373,6 +375,81 @@ public class UserServiceImpl implements UserService {
             ));
         }
 
+        return response;
+    }
+
+    /**
+     * Metodo che permette a un turista di seguire un organizzatore, e quindi essere notificati alla creazione di un evento.
+     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    @Override
+    public void seguiOrganizzatore(Long organizzatoreId, Long turistaId) {
+
+        //L'id autoincrement parte da 1.
+        if(organizzatoreId < 1 || turistaId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo gli utenti dal db con quell'id.
+        Optional<User> organizzatoreExists = userRepository.findByUserId(organizzatoreId);
+        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
+        if(organizzatoreExists.isEmpty() || turistaExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        User organizzatore = organizzatoreExists.get();
+        User turista = turistaExists.get();
+
+        //Controllo il ruolo di turista e organizzatore.
+        if(!organizzatore.getRuolo().equals(Ruolo.ORGANIZZATORE) || !turista.getRuolo().equals(Ruolo.TURISTA)) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
+
+        //Aggiungo l'organizzatore alla lista dei seguiti del turista.
+        turista.getSeguiti().add(organizzatore);
+
+        //Aggiorno i dati sul database.
+        userRepository.save(turista);
+    }
+
+    /**
+     * Metodo che, dato un turista, restituisce gli username degli organizzatori seguiti.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoriSeguitiResponse}.
+     */
+    @Override
+    public List<OrganizzatoriSeguitiResponse> getOrganizzatoriSeguiti(Long turistaId) {
+
+        //L'id autoincrement parte da 1.
+        if(turistaId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'utente dal db con quell'id.
+        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
+        if(turistaExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        //Controllo il ruolo di turista.
+        if(!turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
+
+        //Inizializzo l'array di risposta.
+        List<OrganizzatoriSeguitiResponse> response = new ArrayList<>();
+
+        //Aggiungo i dati al DTO.
+        for(User organizzatoreSeguito : turistaExists.get().getSeguiti()) {
+            response.add(new OrganizzatoriSeguitiResponse(organizzatoreSeguito.getUsername()));
+        }
+
+        //Ritorno il DTO.
         return response;
     }
 }

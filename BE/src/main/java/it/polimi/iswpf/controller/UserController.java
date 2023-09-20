@@ -1,9 +1,7 @@
 package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
-import it.polimi.iswpf.dto.response.DeleteUserResponse;
-import it.polimi.iswpf.dto.response.OrganizzatoreResponse;
-import it.polimi.iswpf.dto.response.UserResponse;
+import it.polimi.iswpf.dto.response.*;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service._interface.UserService;
 import lombok.RequiredArgsConstructor;
@@ -139,5 +137,36 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.getAllOrganizzatori());
+    }
+
+    /**
+     * Metodo che permette a un turista di seguire un organizzatore, e quindi essere notificati alla creazione di un evento.
+     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    @GetMapping("seguiOrganizzatore/{organizzatoreId}/{turistaId}")
+    public ResponseEntity<SeguiOrganizzatoreResponse> seguiOrganizzatore(
+            @PathVariable String organizzatoreId,
+            @PathVariable String turistaId) {
+
+        userService.seguiOrganizzatore(Long.parseLong(organizzatoreId), Long.parseLong(turistaId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new SeguiOrganizzatoreResponse("Organizzatore seguito con successo"));
+    }
+
+    /**
+     * Metodo che, dato un turista, restituisce gli username degli organizzatori seguiti.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoriSeguitiResponse}.
+     */
+    @GetMapping("getOrganizzatoriSeguiti/{turistaId}")
+    public ResponseEntity<List<OrganizzatoriSeguitiResponse>> getOrganizzatoriSeguiti(
+            @PathVariable String turistaId) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getOrganizzatoriSeguiti(Long.parseLong(turistaId)));
     }
 }

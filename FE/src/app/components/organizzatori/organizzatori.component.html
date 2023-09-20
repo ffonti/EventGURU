@@ -47,14 +47,25 @@
 
               <!-- Nome luogo -->
               <div class="flex justify-start">
-                <p class="font-normal text-gray-700">Numero eventi disponibili: {{organizzatore.numeroEventiOrganizzati}}</p>
+                <p class="font-normal text-gray-700">Numero eventi disponibili:
+                  {{organizzatore.numeroEventiOrganizzati}}</p>
               </div>
 
-              <ng-container *ngIf="organizzatore.numeroEventiOrganizzati">
-                <div>
-                  <button class="btn-submit" (click)="goToEventiOrganizzatore(organizzatore.organizzatoreId)">Visualizza eventi</button>
-                </div>
-              </ng-container>
+              <div class="flex-center gap-2">
+                <ng-container *ngIf="checkGiaSegue(organizzatore.username); else giaSegue">
+                  <button class="btn-submit"
+                    (click)="seguiOrganizzatore(organizzatore.organizzatoreId, organizzatore.username)">Segui</button>
+                </ng-container>
+                <ng-template #giaSegue>
+                  <button class="btn-red-submit"
+                    (click)="smettiSeguireOrganizzatore(organizzatore.organizzatoreId)">Smetti di seguire</button>
+                </ng-template>
+                <ng-container *ngIf="organizzatore.numeroEventiOrganizzati">
+                  <button class="btn-submit" (click)="goToEventiOrganizzatore(organizzatore.organizzatoreId)">
+                    Visualizza eventi
+                  </button>
+                </ng-container>
+              </div>
             </div>
           </ng-container>
         </ng-container>

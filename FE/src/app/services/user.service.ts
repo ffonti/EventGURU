@@ -5,6 +5,7 @@ import { GetUserDataResponse } from '../dtos/response/GetUserDataResponse';
 import { UpdateUserDataRequest } from '../dtos/request/UpdateUserDataRequest';
 import { DeleteUserResponse } from '../dtos/response/DeleteUserResponse';
 import { OrganizzatoreResponse } from '../dtos/response/OrganizzatoreResponse';
+import { GetOrganizzatoriSeguiti } from '../dtos/response/GetOrganizzatoriSeguiti';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,18 @@ export class UserService {
     const header = this.getHeader();
 
     return this.http.get<OrganizzatoreResponse[]>(this.backendUrl + 'getAllOrganizzatori', { headers: header });
+  }
+
+  seguiOrganizzatore(organizzatoreId: string): Observable<any> {
+    const header = this.getHeader();
+
+    return this.http.get(this.backendUrl + 'seguiOrganizzatore/' + organizzatoreId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+  }
+
+  getAllOrganizzatoriSeguiti(): Observable<GetOrganizzatoriSeguiti[]> {
+    const header = this.getHeader();
+
+    return this.http.get<GetOrganizzatoriSeguiti[]>(this.backendUrl + 'getOrganizzatoriSeguiti/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
   //creo l'header con il token da mandare al backend

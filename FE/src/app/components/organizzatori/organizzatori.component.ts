@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { GetOrganizzatoriSeguiti } from 'src/app/dtos/response/GetOrganizzatoriSeguiti';
 import { OrganizzatoreResponse } from 'src/app/dtos/response/OrganizzatoreResponse';
 import { UserService } from 'src/app/services/user.service';
 
@@ -15,6 +16,8 @@ export class OrganizzatoriComponent implements OnInit {
   protected cercaPerNome: string = '';
   protected modoOrdine: string = '';
   protected attributoOrdine: string = '';
+  protected usernameOrganizzatoriSeguiti: string[] = [];
+  protected username?: string = localStorage.getItem('username')?.toString().toLowerCase().trim();
 
   constructor(private toastr: ToastrService, private userService: UserService, private router: Router) { }
 
@@ -40,13 +43,25 @@ export class OrganizzatoriComponent implements OnInit {
         console.log(err);
       }
     })
+
+    this.userService.getAllOrganizzatoriSeguiti().subscribe({
+      next: (res: GetOrganizzatoriSeguiti[]) => {
+        res.forEach((username: any) => {
+          this.usernameOrganizzatoriSeguiti.push(username.usernameOrganizzatore);
+        });
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toastr.error(err.error.message);
+        console.log(err);
+      }
+    })
   }
 
   resetFiltri(): void {
     this.cercaPerNome = '';
   }
 
-  onChangeOrdinaPer(value: string) {
+  onChangeOrdinaPer(value: string): void {
     switch (value) {
       case 'NOME':
         this.organizzatori =
@@ -79,7 +94,7 @@ export class OrganizzatoriComponent implements OnInit {
     this.modoOrdine = 'CRESCENTE';
   }
 
-  onChangeModoOrdine(value: string) {
+  onChangeModoOrdine(value: string): void {
     this.organizzatori = this.organizzatori.reverse();
   }
 
@@ -87,7 +102,44 @@ export class OrganizzatoriComponent implements OnInit {
     return organizzatore.nome.toLowerCase().trim().includes(this.cercaPerNome.toLowerCase().trim());
   }
 
-  goToEventiOrganizzatore(organizzatoreId: number) {
+  goToEventiOrganizzatore(organizzatoreId: number): void {
     this.router.navigateByUrl('homepage/esplora/' + organizzatoreId.toString().trim());
+  }
+
+  seguiOrganizzatore(organizzatoreId: number, organizzatoreUsername: string): void {
+    this.userService.seguiOrganizzatore(organizzatoreId.toString().trim()).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message);
+        this.usernameOrganizzatoriSeguiti.push(organizzatoreUsername);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
+      }
+    })
+  }
+
+  smettiSeguireOrganizzatore(organizzatoreId: number): void {
+    this.userService.seguiOrganizzatore(organizzatoreId.toString().trim()).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
+      }
+    })
+  }
+
+  checkGiaSegue(usernameOrganizzatore: string): boolean {
+    let giaSegue: boolean = false;
+
+    this.usernameOrganizzatoriSeguiti.forEach((username: string) => {
+      if (username == usernameOrganizzatore) {
+        giaSegue = true;
+      }
+    });
+
+    return !giaSegue;
   }
 }

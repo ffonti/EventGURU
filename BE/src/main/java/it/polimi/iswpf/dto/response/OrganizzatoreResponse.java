@@ -11,6 +11,8 @@ public class OrganizzatoreResponse {
 
     private Long organizzatoreId;
 
+    private String username;
+
     private String nome;
 
     private String cognome;
