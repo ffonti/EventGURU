@@ -26,6 +26,10 @@ export class AuthService {
     return this.http.post<RegisterResponse>(this.backendUrl + 'register', request);
   }
 
+  recuperaPassword(email: string): Observable<any> {
+    return this.http.get(this.backendUrl + 'recuperaPassword/' + email);
+  }
+
   //per il logout pulisco il localstorage
   logout(): Observable<void> {
     this.router.navigateByUrl('login');

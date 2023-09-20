@@ -4,6 +4,7 @@ import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     //Si cercano tutti gli utenti aventi un dato ruolo.
     Optional<List<User>> findAllByRuolo(Ruolo ruolo);
+
+    Optional<User> findByEmail(String email);
 }

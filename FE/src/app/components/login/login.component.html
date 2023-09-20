@@ -45,11 +45,19 @@
                 [ngClass]="loginForm.valid ? 'btn-submit cursor-pointer' : 'btn-submit opacity-60 cursor-default'">Accedi</button>
             </div>
 
-            <div>
-              <p class="label-form">
-                Non hai un account?
-                <a routerLink="/register" class="font-medium hover:underline text-avrblue">Registrati</a>
-              </p>
+            <div class="flex-col justify-center items-start">
+              <div>
+                <p class="label-form">
+                  Non hai un account?
+                  <a routerLink="/register" class="font-medium hover:underline text-avrblue">Registrati</a>
+                </p>
+              </div>
+              <div>
+                <p class="label-form">
+                  Password dimenticata?
+                  <a routerLink="/recuperaPassword" class="font-medium hover:underline text-avrblue">Recuperala</a>
+                </p>
+              </div>
             </div>
           </div>
         </form>

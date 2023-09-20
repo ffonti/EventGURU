@@ -18,6 +18,7 @@ import { AdminPageComponent } from './components/admin-page/admin-page.component
 import { CreaEventoComponent } from './components/crea-evento/crea-evento.component';
 import { OrganizzatoriComponent } from './components/organizzatori/organizzatori.component';
 import { IscrizioneEventiComponent } from './components/iscrizione-eventi/iscrizione-eventi.component';
+import { RecoveryPasswordComponent } from './components/recovery-password/recovery-password.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { IscrizioneEventiComponent } from './components/iscrizione-eventi/iscriz
     AdminPageComponent,
     CreaEventoComponent,
     OrganizzatoriComponent,
-    IscrizioneEventiComponent
+    IscrizioneEventiComponent,
+    RecoveryPasswordComponent
   ],
   imports: [
     FormsModule,

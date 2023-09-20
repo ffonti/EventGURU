@@ -4,8 +4,10 @@ import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
 import it.polimi.iswpf.dto.response.LogoutResponse;
+import it.polimi.iswpf.dto.response.RecuperaPasswordResponse;
 import it.polimi.iswpf.dto.response.RegisterResponse;
 import it.polimi.iswpf.service._interface.AuthenticationService;
+import it.polimi.iswpf.service._interface.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final EmailService emailService;
 
     /**
      * Metodo per la registrazione. Chiama il service che chiamerà
@@ -67,5 +70,20 @@ public class AuthenticationController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new LogoutResponse("Logout effettuato"));
+    }
+
+    /**
+     * Metodo per recuperare la password dimenticata dall'utente.
+     * @param email Email a cui mandare la nuova password, passata in modo dinamico tramite l'endpoint.
+     * @return Messaggio di successo.
+     */
+    @GetMapping("/recuperaPassword/{email}")
+    public ResponseEntity<RecuperaPasswordResponse> recuperaPassword(@PathVariable String email) {
+
+        emailService.recuperaPassword(email);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new RecuperaPasswordResponse("Password modificata con successo"));
     }
 }

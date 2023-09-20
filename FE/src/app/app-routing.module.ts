@@ -10,17 +10,21 @@ import { AdminPageComponent } from './components/admin-page/admin-page.component
 import { CreaEventoComponent } from './components/crea-evento/crea-evento.component';
 import { OrganizzatoriComponent } from './components/organizzatori/organizzatori.component';
 import { IscrizioneEventiComponent } from './components/iscrizione-eventi/iscrizione-eventi.component';
+import { RecoveryPasswordComponent } from './components/recovery-password/recovery-password.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'recuperaPassword', component: RecoveryPasswordComponent },
   {
     path: 'homepage', component: HomepageComponent, children: [
       { path: '', redirectTo: '/homepage/esplora', pathMatch: 'full' },
-      { path: 'esplora', component: EsploraComponent, children: [
-        { path: ':organizzatoreId', component: EsploraComponent }
-      ] },
+      {
+        path: 'esplora', component: EsploraComponent, children: [
+          { path: ':organizzatoreId', component: EsploraComponent }
+        ]
+      },
       { path: 'eventi', component: IscrizioneEventiComponent },
       { path: 'eventiOrganizzati', component: EventsComponent },
       { path: 'admin', component: AdminPageComponent },
