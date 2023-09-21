@@ -19,6 +19,7 @@ import { CreaEventoComponent } from './components/crea-evento/crea-evento.compon
 import { OrganizzatoriComponent } from './components/organizzatori/organizzatori.component';
 import { IscrizioneEventiComponent } from './components/iscrizione-eventi/iscrizione-eventi.component';
 import { RecoveryPasswordComponent } from './components/recovery-password/recovery-password.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { RecoveryPasswordComponent } from './components/recovery-password/recove
     CreaEventoComponent,
     OrganizzatoriComponent,
     IscrizioneEventiComponent,
-    RecoveryPasswordComponent
+    RecoveryPasswordComponent,
+    SpinnerComponent
   ],
   imports: [
     FormsModule,

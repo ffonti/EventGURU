@@ -6,6 +6,7 @@ import { RegisterRequest } from '../dtos/request/RegisterRequest';
 import { LoginResponse } from '../dtos/response/LoginResponse';
 import { RegisterResponse } from '../dtos/response/RegisterResponse';
 import { Router } from '@angular/router';
+import { SpinnerService } from './spinner.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AuthService {
   private backendUrl: string = 'http://localhost:8080/api/v1/auth/';
 
   //costruttore dove istanzio le classi con cui interagire
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService) { }
 
   //chiamo il backend per il login, gli mando un dto con i dati per la request e riceverò un dto con l'utente e il token
   login(request: LoginRequest): Observable<LoginResponse> {
@@ -27,6 +28,7 @@ export class AuthService {
   }
 
   recuperaPassword(email: string): Observable<any> {
+    this.spinnerService.requestStarted();
     return this.http.get(this.backendUrl + 'recuperaPassword/' + email);
   }
 
