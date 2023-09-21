@@ -27,12 +27,12 @@ public class EmailServiceImpl implements EmailService {
     private static final Integer LUNGHEZZA_PASSWORD = 20;
 
     @Override
-    public void inviaEmail(String destinatario, InviaEmailRequest request) {
+    public void inviaEmail(InviaEmailRequest request) {
 
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setFrom("eventguru.service@gmail.com");
-        message.setTo(destinatario);
+        message.setTo(request.getEmailDestinatario());
         message.setSubject(request.getOggetto());
         message.setText(request.getTesto());
 
@@ -42,7 +42,6 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void recuperaPassword(String email) {
 
-        SimpleMailMessage message = new SimpleMailMessage();
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder();
 
@@ -67,12 +66,11 @@ public class EmailServiceImpl implements EmailService {
 
         userRepository.save(user);
 
-        message.setFrom("eventguru.service@gmail.com");
-        message.setTo(email);
-        message.setSubject("Nuova password EventGURU");
-        message.setText("Ciao!\nÈ stata appena richiesta una nuova password.\nPuoi accedere di nuovo copiando la seguente password: "
-                + password + "\n\nCi vediamo sulla nostra piattaforma!\nIl team EventGURU");
-
-        emailSender.send(message);
+        inviaEmail(new InviaEmailRequest(
+                email,
+                "Nuova password EventGURU",
+                "Ciao " + user.getNome() + "!\nÈ stata appena richiesta una nuova password." +
+                "\nAdesso puoi accedere con la seguente password: "
+                + password + "\n\nCi vediamo sulla nostra piattaforma!\nIl team EventGURU"));
     }
 }

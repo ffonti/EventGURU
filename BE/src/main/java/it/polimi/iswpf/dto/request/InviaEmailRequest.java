@@ -7,6 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class InviaEmailRequest {
 
+    private String emailDestinatario;
+
     private String oggetto;
 
     private String testo;
