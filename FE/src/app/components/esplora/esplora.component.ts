@@ -24,7 +24,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   protected attributoOrdine: string = '';
   protected ruolo: string | undefined = '';
   protected username: string = '';
-  protected showMappaFiltro: boolean = false;
+  protected showMappaFiltro: boolean = true;
   protected organizzatoreId: string = '';
   protected pathId: boolean = false;
 
@@ -82,6 +82,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.showMappaFiltro = false;
     this.mapDraw = this.mapService.initMapDraw(this.mapDraw);
   }
 

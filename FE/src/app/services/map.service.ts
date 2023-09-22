@@ -79,9 +79,7 @@ export class MapService {
             fillOpacity: 0.1,
           },
         },
-        marker: {
-          icon: iconDefault
-        },
+        marker: false
       },
       edit: {
         featureGroup: drawFeatures,

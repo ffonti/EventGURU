@@ -135,21 +135,24 @@
   <div class="opacity-25 fixed inset-0 z-40 bg-black"></div>
 </ng-container>
 
-<!-- Modale mappa filtro -->
-<!-- <ng-container *ngIf="showMappaFiltro"> -->
-<section class="flex-center h-full w-full">
+<!-- Mappa filtro -->
+<section class="flex justify-center h-screen w-screen">
 
-  <div class="modal mt-[5%]">
+  <div class="modal">
 
-    <div class="flex-center w-full h-full">
+    <div class="w-full h-full">
 
-      <div>
+      <div class="flex-center flex-col w-full gap-5">
         <p class="font-bold text-lg">Disegna un'area per visualizzare solo gli eventi all'interno</p>
-        <button class="btn-submit" (click)="toggleMappaFiltro()">Torna a eventi</button>
+        <div class="flex-center gap-3 w-full">
+          <button class="btn-submit" (click)="toggleMappaFiltro()">Torna a eventi</button>
+          <button class="btn-submit" (click)="toggleMappaFiltro()">Filtra eventi</button>
+        </div>
       </div>
 
       <div class="h-full w-full">
-        <div class="map-containerDraw rounded-sm bg-slate-700 col-span-5">
+        <div
+          [ngClass]="showMappaFiltro ? 'map-containerDraw rounded-sm bg-slate-700 col-span-5': 'map-containerDraw rounded-sm bg-slate-700 col-span-5 hidden'">
           <div class="map-frameDraw rounded-sm">
             <div id="mapDraw" class="rounded-sm"></div>
           </div>
@@ -158,4 +161,3 @@
     </div>
   </div>
 </section>
-<!-- </ng-container> -->

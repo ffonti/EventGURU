@@ -5,17 +5,17 @@
 
   .modal {
     @apply flex justify-center items-center px-6 py-12 lg:px-8 ring-2 ring-inset ring-[#005cb9]
-    rounded-lg w-[70%] shadow bg-white;
+    rounded-lg w-[42%] h-[75%] mt-[4%] shadow bg-white;
 }
 
 .map-containerDraw {
   position: absolute;
-  top: 25%;
-  right: 0;
+  top: 36%;
+  right: 28%;
   bottom: 0;
   margin: 30px;
-  height: 63.5%;
-  width: 63.1%;
+  height: 50%;
+  width: 40%;
 }
 
 .map-frameDraw {
