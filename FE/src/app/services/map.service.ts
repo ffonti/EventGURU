@@ -2,20 +2,21 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import * as L from 'leaflet';
-import { icon, Marker } from 'leaflet';
 import 'leaflet-draw';
 import { ToastrService } from 'ngx-toastr';
 
 const iconUrl = 'assets/marker_icon.png';
-const iconDefault = icon({
+const iconDefault = L.icon({
   iconUrl,
-  iconSize: [40, 40],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41],
+  iconSize: [12, 20],
+  iconAnchor: [5, 20],
+  shadowUrl: '',
+  popupAnchor: [0, -20],
+  tooltipAnchor: [0, 0],
+  shadowSize: [41, 41]
 });
-Marker.prototype.options.icon = iconDefault;
+
+L.Marker.prototype.options.icon = iconDefault;
 
 @Injectable({
   providedIn: 'root'
@@ -26,13 +27,14 @@ export class MapService {
   markers: string[] = [];
   hasPoligono: boolean = false;
   layer: any = undefined;
-  map: any;
+  mapDraw: any;
+  mapMarker: any;
   visualizzaMarkers: boolean = false;
 
   constructor(private http: HttpClient, private toastr: ToastrService) { }
 
-  initMap(map: any): any {
-    map = L.map('map', {
+  initMapDraw(mapDraw: any): any {
+    mapDraw = L.map('mapDraw', {
       center: [41.9027835, 12.4963655], //Coordinate di Roma
       zoom: 10,
     });
@@ -47,10 +49,10 @@ export class MapService {
       }
     );
 
-    tiles.addTo(map);
+    tiles.addTo(mapDraw);
 
     const drawFeatures = new L.FeatureGroup();
-    map.addLayer(drawFeatures);
+    mapDraw.addLayer(drawFeatures);
 
     const drawControl = new L.Control.Draw({
       draw: {
@@ -70,14 +72,17 @@ export class MapService {
             fillOpacity: 0.1,
           },
         },
+        marker: {
+          icon: iconDefault
+        },
       },
       edit: {
         featureGroup: drawFeatures,
       },
     });
-    map.addControl(drawControl);
+    mapDraw.addControl(drawControl);
 
-    map.on('draw:created', (e: any) => {
+    mapDraw.on('draw:created', (e: any) => {
       this.layer = e.layer;
 
       if (e.layerType === 'marker') {
@@ -88,26 +93,26 @@ export class MapService {
           this.currentLat = e.layer._latlng.lat.toString();
           this.currentLng = e.layer._latlng.lng.toString();
           const marker = L.marker([+this.currentLat, +this.currentLng]);
-          marker.addTo(map);
+          marker.addTo(mapDraw);
           marker.on('click', (e: any) => {
             this.markers = [];
             marker.remove();
           });
         }
       } else if (drawFeatures.getLayers().length) {
-        map.removeLayer(e.layer);
+        mapDraw.removeLayer(e.layer);
         this.toastr.warning('Non possono esistere più poligoni!');
       } else {
         drawFeatures.addLayer(this.layer);
       }
     });
 
-    this.map = map;
-    return map;
+    this.mapDraw = mapDraw;
+    return mapDraw;
   }
 
-  initMapFilter(map: any): any {
-    map = L.map('mapFilter', {
+  initMapMarker(mapMarker: any): any {
+    mapMarker = L.map('mapMarker', {
       center: [41.9027835, 12.4963655], //Coordinate di Roma
       zoom: 10,
     });
@@ -122,38 +127,36 @@ export class MapService {
       }
     );
 
-    tiles.addTo(map);
+    tiles.addTo(mapMarker);
 
     const drawFeatures = new L.FeatureGroup();
-    map.addLayer(drawFeatures);
+    mapMarker.addLayer(drawFeatures);
 
     const drawControl = new L.Control.Draw({
       draw: {
         rectangle: false,
         circlemarker: false,
         polyline: false,
-        polygon: {
-          allowIntersection: false,
-          shapeOptions: {
-            color: '#145DA0',
-            fillOpacity: 0.1,
-          },
+        circle: false,
+        polygon: false,
+        marker: {
+          icon: iconDefault
         },
-        circle: {
-          shapeOptions: {
-            color: '#145DA0',
-            fillOpacity: 0.1,
-          },
-        },
-      },
-      edit: {
-        featureGroup: drawFeatures,
-      },
+      }
     });
-    map.addControl(drawControl);
+    mapMarker.addControl(drawControl);
 
-    this.map = map;
-    return map;
+    mapMarker.on('draw:created', (e: any) => {
+      this.layer = e.layer;
+
+      if (e.layerType === 'marker') {
+        this.toastr.warning('Inserire un solo marker alla volta');
+        this.toastr.info('Puoi rimuovere un marker cliccandolo');
+      }
+    });
+
+    this.mapMarker = mapMarker;
+    return mapMarker;
   }
 
   getCurrentLat(): string {
@@ -164,14 +167,14 @@ export class MapService {
     return this.currentLng;
   }
 
-  addMarker(map: any, lat: number, lng: number): any {
+  addMarker(mapMarker: any, lat: number, lng: number): any {
     const marker = L.marker([lat, lng]);
-    marker.addTo(map);
+    marker.addTo(mapMarker);
     marker.on('click', (e: any) => {
       this.markers = [];
       marker.remove();
     });
-    this.map = map;
-    return map;
+    this.mapMarker = mapMarker;
+    return mapMarker;
   }
 }

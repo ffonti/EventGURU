@@ -136,28 +136,26 @@
 </ng-container>
 
 <!-- Modale mappa filtro -->
-<ng-container *ngIf="showMappaFiltro">
-  <section class="flex-center h-full w-full">
+<!-- <ng-container *ngIf="showMappaFiltro"> -->
+<section class="flex-center h-full w-full">
 
-    <!-- Modale -->
-    <div class="modal mt-[5%]">
+  <div class="modal mt-[5%]">
 
-      <div class="flex-center w-full h-full">
+    <div class="flex-center w-full h-full">
 
-        <div>
-          <p class="font-bold text-lg">Disegna un'area per visualizzare solo gli eventi all'interno</p>
-          <button class="btn-submit" (click)="toggleMappaFiltro()">Torna a eventi</button>
-        </div>
+      <div>
+        <p class="font-bold text-lg">Disegna un'area per visualizzare solo gli eventi all'interno</p>
+        <button class="btn-submit" (click)="toggleMappaFiltro()">Torna a eventi</button>
+      </div>
 
-        <!-- Mappa -->
-        <div class="h-full w-full">
-          <div class="map-containerFilter rounded-sm bg-slate-700 col-span-5">
-            <div class="map-frameFilter rounded-sm">
-              <div id="mapFilter" class="rounded-sm"></div>
-            </div>
+      <div class="h-full w-full">
+        <div class="map-containerDraw rounded-sm bg-slate-700 col-span-5">
+          <div class="map-frameDraw rounded-sm">
+            <div id="mapDraw" class="rounded-sm"></div>
           </div>
         </div>
       </div>
     </div>
-  </section>
-</ng-container>
+  </div>
+</section>
+<!-- </ng-container> -->

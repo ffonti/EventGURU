@@ -8,7 +8,7 @@
     rounded-lg w-[70%] shadow bg-white;
 }
 
-.map-containerFilter {
+.map-containerDraw {
   position: absolute;
   top: 25%;
   right: 0;
@@ -18,12 +18,12 @@
   width: 63.1%;
 }
 
-.map-frameFilter {
+.map-frameDraw {
   border: 2px solid black;
   height: 100%;
   width: 100%;
 }
 
-#mapFilter {
+#mapDraw {
   height: 100%;
 }

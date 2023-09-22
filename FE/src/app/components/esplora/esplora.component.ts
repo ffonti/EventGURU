@@ -7,28 +7,12 @@ import { GetAllEventiResponse } from 'src/app/dtos/response/GetAllEventiResponse
 import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
 
-import * as L from 'leaflet';
-import { icon, Marker } from 'leaflet';
-import 'leaflet-draw';
-
-const iconUrl = 'assets/marker_icon.png';
-const iconDefault = icon({
-  iconUrl,
-  iconSize: [40, 40],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41],
-});
-Marker.prototype.options.icon = iconDefault;
-
 @Component({
   selector: 'app-esplora',
   templateUrl: './esplora.component.html',
   styleUrls: ['./esplora.component.css']
 })
 export class EsploraComponent implements OnInit, AfterViewInit {
-  private map: any;
   protected allEventi: GetAllEventiResponse[] = [];
   protected allEventiWithDateFormatted: any[] = [];
   protected showModalEliminaEvento: boolean = false;
@@ -43,6 +27,8 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   protected showMappaFiltro: boolean = false;
   protected organizzatoreId: string = '';
   protected pathId: boolean = false;
+
+  mapDraw: any;
 
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router, private mapService: MapService) { }
 
@@ -96,7 +82,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.map = this.mapService.initMapFilter(this.map);
+    this.mapDraw = this.mapService.initMapDraw(this.mapDraw);
   }
 
   changeFormatDate(eventi: any[]): void {

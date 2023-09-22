@@ -17,7 +17,7 @@
     rounded-lg w-[70%] shadow bg-white;
 }
 
-.map-container {
+.map-containerMarker {
     position: absolute;
     z-index: 0;
     top: 20%;
@@ -27,13 +27,13 @@
     margin: 30px;
   }
   
-  .map-frame {
+  .map-frameMarker {
     border: 2px solid black;
     height: 100%;
     width: 100%;
   }
   
-  #map {
+  #mapMarker {
     height: 100%;
   }
   

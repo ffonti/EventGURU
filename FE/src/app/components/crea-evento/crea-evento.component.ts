@@ -13,7 +13,6 @@ import { MapService } from 'src/app/services/map.service';
   styleUrls: ['./crea-evento.component.css']
 })
 export class CreaEventoComponent implements OnInit, AfterViewInit {
-  private map: any;
   protected titolo: string = '';
   protected descrizione: string = '';
   protected nomeLuogo: string = '';
@@ -23,6 +22,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
   private campiIniziali!: GetEventoByIdResponse;
   protected ruolo: string | undefined = '';
   protected usernameOrganizzatore: string = '';
+  private mapMarker: any;
 
   constructor(
     private toastr: ToastrService,
@@ -50,7 +50,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.map = this.mapService.initMap(this.map);
+    this.mapMarker = this.mapService.initMapMarker(this.mapMarker);
   }
 
   //Inizializza i campi del form
@@ -158,7 +158,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
     this.dataInizio = res.dataInizio;
     this.dataFine = res.dataFine;
     this.nomeLuogo = res.nomeLuogo;
-    this.map = this.mapService.addMarker(this.map, +res.lat, +res.lng);
+    this.mapMarker = this.mapService.addMarker(this.mapMarker, +res.lat, +res.lng);
     this.usernameOrganizzatore = res.usernameOrganizzatore;
   }
 }
