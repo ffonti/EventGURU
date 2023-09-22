@@ -106,6 +106,56 @@ export class MapService {
     return map;
   }
 
+  initMapFilter(map: any): any {
+    map = L.map('mapFilter', {
+      center: [41.9027835, 12.4963655], //Coordinate di Roma
+      zoom: 10,
+    });
+
+    const tiles = L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        maxZoom: 18,
+        minZoom: 3,
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }
+    );
+
+    tiles.addTo(map);
+
+    const drawFeatures = new L.FeatureGroup();
+    map.addLayer(drawFeatures);
+
+    const drawControl = new L.Control.Draw({
+      draw: {
+        rectangle: false,
+        circlemarker: false,
+        polyline: false,
+        polygon: {
+          allowIntersection: false,
+          shapeOptions: {
+            color: '#145DA0',
+            fillOpacity: 0.1,
+          },
+        },
+        circle: {
+          shapeOptions: {
+            color: '#145DA0',
+            fillOpacity: 0.1,
+          },
+        },
+      },
+      edit: {
+        featureGroup: drawFeatures,
+      },
+    });
+    map.addControl(drawControl);
+
+    this.map = map;
+    return map;
+  }
+
   getCurrentLat(): string {
     return this.currentLat;
   }

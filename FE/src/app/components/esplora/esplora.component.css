@@ -3,22 +3,27 @@
     ring-inset ring-[#005cb9] rounded-lg shadow bg-white;
   }
 
-.map-container {
+  .modal {
+    @apply flex justify-center items-center px-6 py-12 lg:px-8 ring-2 ring-inset ring-[#005cb9]
+    rounded-lg w-[70%] shadow bg-white;
+}
+
+.map-containerFilter {
   position: absolute;
-  z-index: 50;
-  top: 20%;
-  left: 50%;
+  top: 25%;
   right: 0;
   bottom: 0;
   margin: 30px;
+  height: 63.5%;
+  width: 63.1%;
 }
 
-.map-frame {
+.map-frameFilter {
   border: 2px solid black;
   height: 100%;
   width: 100%;
 }
 
-#map {
+#mapFilter {
   height: 100%;
 }

@@ -7,12 +7,28 @@ import { GetAllEventiResponse } from 'src/app/dtos/response/GetAllEventiResponse
 import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
 
+import * as L from 'leaflet';
+import { icon, Marker } from 'leaflet';
+import 'leaflet-draw';
+
+const iconUrl = 'assets/marker_icon.png';
+const iconDefault = icon({
+  iconUrl,
+  iconSize: [40, 40],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41],
+});
+Marker.prototype.options.icon = iconDefault;
+
 @Component({
   selector: 'app-esplora',
   templateUrl: './esplora.component.html',
   styleUrls: ['./esplora.component.css']
 })
 export class EsploraComponent implements OnInit, AfterViewInit {
+  private map: any;
   protected allEventi: GetAllEventiResponse[] = [];
   protected allEventiWithDateFormatted: any[] = [];
   protected showModalEliminaEvento: boolean = false;
@@ -24,18 +40,17 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   protected attributoOrdine: string = '';
   protected ruolo: string | undefined = '';
   protected username: string = '';
-  protected showModalMappaFiltro: boolean = false;
-  private map: any;
+  protected showMappaFiltro: boolean = false;
   protected organizzatoreId: string = '';
   protected pathId: boolean = false;
 
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router, private mapService: MapService) { }
 
   ngOnInit(): void {
-    
+
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
     this.username = localStorage.getItem('username')?.toString().trim().toLowerCase() || '';
-    
+
     this.organizzatoreId = this.router.url.split('/homepage/esplora/')[1];
     if (this.organizzatoreId !== null && this.organizzatoreId !== undefined && this.organizzatoreId !== '') {
       this.pathId = true;
@@ -46,9 +61,9 @@ export class EsploraComponent implements OnInit, AfterViewInit {
               this.allEventi.push(evento);
             }
           });
-  
+
           this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.allEventi));
-  
+
           this.changeFormatDate(this.allEventiWithDateFormatted);
         },
         error: (err: HttpErrorResponse) => {
@@ -81,7 +96,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.map = this.mapService.initMap(this.map);
+    this.map = this.mapService.initMapFilter(this.map);
   }
 
   changeFormatDate(eventi: any[]): void {
@@ -213,9 +228,12 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   }
 
   annullaIscrizione(eventoId: number): void {
+
     this.allEventiWithDateFormatted.forEach((evento) => {
       if (evento.eventoId == eventoId && this.username) {
-        evento.usernameTuristi.pop(this.username);
+        evento.usernameTuristi = evento.usernameTuristi.filter((username: string) => {
+          return username !== this.username;
+        });
       }
     });
 
@@ -230,7 +248,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     });
   }
 
-  toggleModalMappaFiltro(): void {
-    this.showModalMappaFiltro = !this.showModalMappaFiltro;
+  toggleMappaFiltro(): void {
+    this.showMappaFiltro = !this.showMappaFiltro;
   }
 }

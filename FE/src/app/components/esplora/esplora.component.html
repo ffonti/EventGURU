@@ -1,109 +1,106 @@
-<ng-container *ngIf="allEventiWithDateFormatted.length; else noEventi">
-    <div class="flex-center">
-      <div class="flex-center flex-col w-[90%]">
-  
-        <!-- Filtri -->
-        <div class="w-full">
-          <div class="mt-[3%] w-[80%] flex justify-start gap-4">
-            <input type="text" class="input-form" [(ngModel)]="cercaPerTitolo" placeholder="Cerca per titolo">
-  
-            <input type="text" class="input-form" [(ngModel)]="cercaPerLuogo" placeholder="Cerca per luogo">
-  
-            <ng-container *ngIf="ruolo == 'ADMIN'">
-              <select class="input-form" [(ngModel)]="cercaPerStato">
-                <option value="" selected>Cerca per stato</option>
-                <option value="PRESENTE">In corso</option>
-                <option value="PASSATO">Passati</option>
-                <option value="FUTURO">Futuri</option>
-              </select>
-            </ng-container>
-  
-            <button (click)="toggleModalMappaFiltro()" class="btn-submit">Filtra con mappa</button>
-  
-            <button (click)="resetFiltri()" class="btn-submit">Reset filtri</button>
-  
-            <select class="input-form" [(ngModel)]="attributoOrdine" (ngModelChange)="onChangeOrdinaPer($event)">
-              <option value="" selected>Ordina per</option>
-              <option value="DATA">Data</option>
-              <option value="TITOLO">Titolo</option>
-              <option value="LUOGO">Luogo</option>
+<ng-container *ngIf="allEventiWithDateFormatted.length && !showMappaFiltro">
+  <div class="flex-center">
+    <div class="flex-center flex-col w-[90%]">
+
+      <!-- Filtri -->
+      <div class="w-full">
+        <div class="mt-[3%] w-[80%] flex justify-start gap-4">
+          <input type="text" class="input-form" [(ngModel)]="cercaPerTitolo" placeholder="Cerca per titolo">
+
+          <input type="text" class="input-form" [(ngModel)]="cercaPerLuogo" placeholder="Cerca per luogo">
+
+          <ng-container *ngIf="ruolo == 'ADMIN'">
+            <select class="input-form" [(ngModel)]="cercaPerStato">
+              <option value="" selected>Cerca per stato</option>
+              <option value="PRESENTE">In corso</option>
+              <option value="PASSATO">Passati</option>
+              <option value="FUTURO">Futuri</option>
             </select>
-  
-            <select class="input-form" [(ngModel)]="modoOrdine" (ngModelChange)="onChangeModoOrdine()">
-              <option value="" selected>Ordine</option>
-              <option value="CRESCENTE">Crescente</option>
-              <option value="DECRESCENTE">Decrescente</option>
-            </select>
-          </div>
-        </div>
-  
-        <!-- Container cards -->
-        <div class="grid grid-cols-4 w-full gap-4 mt-[2%]">
-  
-          <ng-container *ngFor="let evento of allEventiWithDateFormatted">
-            <ng-container *ngIf="checkFilters(evento)">
-              <!-- Single card -->
-              <div class="card-evento">
-  
-                <!-- Titolo -->
-                <div class="flex-center">
-                  <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                    {{evento.titolo}}
-                  </h2>
-                </div>
-  
-                <!-- Data -->
-                <div class="flex-center">
-                  <p class="mb-3 font-normal text-sm text-gray-400">{{evento.dataInizio}} - {{evento.dataFine}}</p>
-                </div>
-  
-                <!-- Nome luogo -->
-                <div class="flex justify-start">
-                  <p class="font-normal text-gray-700">Luogo: {{evento.nomeLuogo}}</p>
-                </div>
-  
-                <!-- Descrizione -->
-                <div class="flex justify-start">
-                  <p class="mb-3 font-normal text-gray-700">{{evento.descrizione}}</p>
-                </div>
-  
-                <!-- Pulsanti -->
-                <ng-container *ngIf="ruolo == 'ADMIN'; else turista">
-                  <div class="flex gap-3 h-full items-end">
-                    <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
-                      Modifica
-                    </a>
-                    <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
-                      Elimina
-                    </a>
-                  </div>
-                </ng-container>
-                <ng-template #turista>
-                  <div class="flex h-full items-end">
-                    <ng-container *ngIf="!evento.usernameTuristi.includes(username)">
-                      <button class="btn-submit" (click)="iscrizioneEvento(evento.eventoId)">
-                        Iscriviti
-                      </button>
-                    </ng-container>
-                    <ng-container *ngIf="evento.usernameTuristi.includes(username)">
-                      <button class="btn-red-submit" (click)="annullaIscrizione(evento.eventoId)">
-                        Annulla iscrizione
-                      </button>
-                    </ng-container>
-                    <!-- <button class="btn-submit" (click)="iscrizioneEvento(evento.eventoId)">
-                      Iscriviti
-                    </button> -->
-                  </div>
-                </ng-template>
-              </div>
-            </ng-container>
           </ng-container>
+
+          <button (click)="toggleMappaFiltro()" class="btn-submit">Filtra con mappa</button>
+
+          <button (click)="resetFiltri()" class="btn-submit">Reset filtri</button>
+
+          <select class="input-form" [(ngModel)]="attributoOrdine" (ngModelChange)="onChangeOrdinaPer($event)">
+            <option value="" selected>Ordina per</option>
+            <option value="DATA">Data</option>
+            <option value="TITOLO">Titolo</option>
+            <option value="LUOGO">Luogo</option>
+          </select>
+
+          <select class="input-form" [(ngModel)]="modoOrdine" (ngModelChange)="onChangeModoOrdine()">
+            <option value="" selected>Ordine</option>
+            <option value="CRESCENTE">Crescente</option>
+            <option value="DECRESCENTE">Decrescente</option>
+          </select>
         </div>
       </div>
+
+      <!-- Container cards -->
+      <div class="grid grid-cols-4 w-full gap-4 mt-[2%]">
+
+        <ng-container *ngFor="let evento of allEventiWithDateFormatted">
+          <ng-container *ngIf="checkFilters(evento)">
+            <!-- Single card -->
+            <div class="card-evento">
+
+              <!-- Titolo -->
+              <div class="flex-center">
+                <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                  {{evento.titolo}}
+                </h2>
+              </div>
+
+              <!-- Data -->
+              <div class="flex-center">
+                <p class="mb-3 font-normal text-sm text-gray-400">{{evento.dataInizio}} - {{evento.dataFine}}</p>
+              </div>
+
+              <!-- Nome luogo -->
+              <div class="flex justify-start">
+                <p class="font-normal text-gray-700">Luogo: {{evento.nomeLuogo}}</p>
+              </div>
+
+              <!-- Descrizione -->
+              <div class="flex justify-start">
+                <p class="mb-3 font-normal text-gray-700">{{evento.descrizione}}</p>
+              </div>
+
+              <!-- Pulsanti -->
+              <ng-container *ngIf="ruolo == 'ADMIN'; else turista">
+                <div class="flex gap-3 h-full items-end">
+                  <a class="btn-submit" (click)="modificaEvento(evento.eventoId)">
+                    Modifica
+                  </a>
+                  <a class="btn-red-submit" (click)="toggleModalEliminaEvento(evento.eventoId)">
+                    Elimina
+                  </a>
+                </div>
+              </ng-container>
+              <ng-template #turista>
+                <div class="flex h-full items-end">
+                  <ng-container *ngIf="!evento.usernameTuristi.includes(username)">
+                    <button class="btn-submit" (click)="iscrizioneEvento(evento.eventoId)">
+                      Iscriviti
+                    </button>
+                  </ng-container>
+                  <ng-container *ngIf="evento.usernameTuristi.includes(username)">
+                    <button class="btn-red-submit" (click)="annullaIscrizione(evento.eventoId)">
+                      Annulla iscrizione
+                    </button>
+                  </ng-container>
+                </div>
+              </ng-template>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
     </div>
+  </div>
 </ng-container>
 
-<ng-template #noEventi>
+<ng-container *ngIf="!allEventiWithDateFormatted.length">
   <div class="flex-center flex-col mt-[5%] w-full h-full">
     <p class="font-bold text-2xl">Non sono presenti eventi! :(</p>
     <ng-container *ngIf="ruolo == 'ADMIN'">
@@ -112,7 +109,7 @@
       </div>
     </ng-container>
   </div>
-</ng-template>
+</ng-container>
 
 <!-- Modale elimina evento -->
 <ng-container *ngIf="showModalEliminaEvento">
@@ -139,35 +136,28 @@
 </ng-container>
 
 <!-- Modale mappa filtro -->
-<ng-container *ngIf="showModalMappaFiltro">
-  <div
-    class="overflow-x-hidden overflow-y-auto fixed inset-0 z-40 outline-none focus:outline-none justify-center items-center flex">
-    <div class="relative mx-auto w-[55%] h-[70%]">
-      <div
-        class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
-        <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
-          <div class="flex-center flex-col space-y-8 mt-5">
-            <div>
-              <p class="font-bold text-lg">Disegna un'area per visualizzare solo gli eventi all'interno</p>
-            </div>
+<ng-container *ngIf="showMappaFiltro">
+  <section class="flex-center h-full w-full">
 
-            <!-- Mappa -->
-            <div class="h-full w-full">
-              <div class="map-container bg-slate-700 w-[31%] h-[56%]">
-                <div class="map-frame">
-                  <div id="map"></div>
-                </div>
-              </div>
-            </div>
+    <!-- Modale -->
+    <div class="modal mt-[5%]">
 
-            <div class="flex items-end justify-end gap-4 w-full">
-              <button class="btn-submit" (click)="toggleModalMappaFiltro()">ANNULLA</button>
-              <button class="btn-red-submit" (click)="eliminaEvento()">ELIMINA</button>
+      <div class="flex-center w-full h-full">
+
+        <div>
+          <p class="font-bold text-lg">Disegna un'area per visualizzare solo gli eventi all'interno</p>
+          <button class="btn-submit" (click)="toggleMappaFiltro()">Torna a eventi</button>
+        </div>
+
+        <!-- Mappa -->
+        <div class="h-full w-full">
+          <div class="map-containerFilter rounded-sm bg-slate-700 col-span-5">
+            <div class="map-frameFilter rounded-sm">
+              <div id="mapFilter" class="rounded-sm"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="opacity-25 fixed inset-0 z-30 bg-black"></div>
+  </section>
 </ng-container>
