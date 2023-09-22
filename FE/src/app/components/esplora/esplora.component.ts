@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAllEventiByOrganizzatoreResponse';
 import { GetAllEventiResponse } from 'src/app/dtos/response/GetAllEventiResponse';
+import { MarkerCoordinatesResponse } from 'src/app/dtos/response/MarkerCoordinatesResponse';
 import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
 
@@ -27,6 +28,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   protected showMappaFiltro: boolean = true;
   protected organizzatoreId: string = '';
   protected pathId: boolean = false;
+  protected allMarkerCoordinates: MarkerCoordinatesResponse[] = [];
 
   mapDraw: any;
 
@@ -77,6 +79,17 @@ export class EsploraComponent implements OnInit, AfterViewInit {
         console.log(err);
         this.toastr.error('Errore nella visualizzazione degli eventi');
         this.router.navigateByUrl('homepage/admin');
+      }
+    });
+
+    this.mapService.getAllMarkerCoordinates().subscribe({
+      next: (res: MarkerCoordinatesResponse[]) => {
+        this.allMarkerCoordinates = res;
+        this.mapDraw = this.mapService.placeMarkers(this.mapDraw, this.allMarkerCoordinates);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
       }
     });
   }

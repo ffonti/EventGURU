@@ -1,6 +1,7 @@
 package it.polimi.iswpf.repository;
 
 import it.polimi.iswpf.model.Evento;
+import it.polimi.iswpf.model.Luogo;
 import it.polimi.iswpf.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

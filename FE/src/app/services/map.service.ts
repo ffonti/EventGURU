@@ -1,9 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import * as L from 'leaflet';
 import 'leaflet-draw';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
+import { MarkerCoordinatesResponse } from '../dtos/response/MarkerCoordinatesResponse';
 
 const iconUrl = 'assets/marker_icon.png';
 const iconDefault = L.icon({
@@ -35,6 +37,8 @@ export class MapService {
   hasPoligono: boolean = false;
   layer: any = undefined;
   visualizzaMarkers: boolean = false;
+
+  private backendUrl: string = 'http://localhost:8080/api/v1/luogo/';
 
   constructor(private http: HttpClient, private toastr: ToastrService) {
     this.counterMarkersMarker = 0;
@@ -90,25 +94,16 @@ export class MapService {
     mapDraw.on('draw:created', (e: any) => {
       this.layer = e.layer;
 
-      if (e.layerType === 'marker') {
-        if (this.markers.length) {
-          this.toastr.warning('Inserire un solo marker alla volta');
-          this.toastr.info('Puoi rimuovere un marker cliccandolo');
-        } else {
-          this.currentLat = e.layer._latlng.lat.toString();
-          this.currentLng = e.layer._latlng.lng.toString();
-          const marker = L.marker([+this.currentLat, +this.currentLng]);
-          marker.addTo(mapDraw);
-          marker.on('click', (e: any) => {
-            this.markers = [];
-            marker.remove();
-          });
-        }
-      } else if (drawFeatures.getLayers().length) {
+      if (drawFeatures.getLayers().length) {
         mapDraw.removeLayer(e.layer);
         this.toastr.warning('Non possono esistere più poligoni!');
       } else {
         drawFeatures.addLayer(this.layer);
+        if (this.layer._latlng === undefined) {
+          console.log("poligono");
+        } else if (this.layer._latlngs === undefined) {
+          console.log("cerchio");
+        }
       }
     });
 
@@ -159,7 +154,6 @@ export class MapService {
       } else {
         this.currentLatMarker = e.layer._latlng.lat.toString();
         this.currentLngMarker = e.layer._latlng.lng.toString();
-        console.log(this.currentLatMarker, this.currentLngMarker);
 
         const marker = L.marker([+this.currentLatMarker, +this.currentLngMarker]);
         marker.addTo(mapMarker);
@@ -201,5 +195,31 @@ export class MapService {
     });
     this.mapMarker = mapMarker;
     return mapMarker;
+  }
+
+  getAllMarkerCoordinates(): Observable<MarkerCoordinatesResponse[]> {
+    const header = this.getHeader();
+
+    return this.http.get<MarkerCoordinatesResponse[]>(this.backendUrl + 'getAllMarkerCoordinates', { headers: header });
+  }
+
+  placeMarkers(mapMarker: any, allMarkerCoordinates: MarkerCoordinatesResponse[]): any {
+
+    allMarkerCoordinates.forEach((coordinate: MarkerCoordinatesResponse) => {
+      let marker = L.marker([+coordinate.lat, +coordinate.lng]);
+      marker.bindPopup(L.popup().setContent(coordinate.titoloEvento));
+      marker.addTo(mapMarker);
+    });
+
+    this.mapMarker = mapMarker;
+    return mapMarker;
+  }
+
+  private getHeader(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': localStorage.getItem('token') ? `${localStorage.getItem('token')}` : '',
+      id: localStorage.getItem('id') ? `${localStorage.getItem('id')}` : '',
+      ruolo: localStorage.getItem('ruolo') ? `${localStorage.getItem('ruolo')}` : ''
+    });
   }
 }
