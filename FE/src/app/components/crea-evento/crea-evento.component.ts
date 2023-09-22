@@ -77,7 +77,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
     if (this.eventoId !== null && this.eventoId !== undefined && this.eventoId !== '') {
 
       if (this.ruolo === 'ORGANIZZATORE') {
-        this.eventService.modificaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo, this.eventoId).subscribe({
+        this.eventService.modificaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo, this.eventoId).subscribe({
           next: (res: CreaModificaEventoResponse) => {
             this.toastr.success(res.message);
             if (localStorage.getItem('ruolo') == 'ADMIN') {
@@ -93,7 +93,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
         });
         return;
       } else {
-        this.eventService.adminModificaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo, this.eventoId, this.usernameOrganizzatore).subscribe({
+        this.eventService.adminModificaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo, this.eventoId, this.usernameOrganizzatore).subscribe({
           next: (res: CreaModificaEventoResponse) => {
             this.toastr.success(res.message);
             if (localStorage.getItem('ruolo') == 'ADMIN') {
@@ -112,13 +112,13 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
 
 
     } else {
-      if (!this.mapService.getCurrentLat() || !this.mapService.getCurrentLng()) {
+      if (!this.mapService.getCurrentLatMarker() || !this.mapService.getCurrentLngMarker()) {
         this.toastr.warning('Selezionare prima un punto sulla mappa');
         return;
       }
       //TODO controllare che tutti i campi siano stati compilati (con bordo rosso)
       if (this.ruolo === 'ORGANIZZATORE') {
-        this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo).subscribe({
+        this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo).subscribe({
           next: (res: CreaModificaEventoResponse) => {
             this.toastr.success(res.message);
             if (localStorage.getItem('ruolo') == 'ADMIN') {
@@ -134,7 +134,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
         });
         return;
       } else {
-        this.eventService.adminCreaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLat(), this.mapService.getCurrentLng(), this.nomeLuogo, this.usernameOrganizzatore).subscribe({
+        this.eventService.adminCreaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo, this.usernameOrganizzatore).subscribe({
           next: (res: CreaModificaEventoResponse) => {
             this.toastr.success(res.message);
             if (localStorage.getItem('ruolo') == 'ADMIN') {

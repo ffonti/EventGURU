@@ -8,11 +8,11 @@ import { ToastrService } from 'ngx-toastr';
 const iconUrl = 'assets/marker_icon.png';
 const iconDefault = L.icon({
   iconUrl,
-  iconSize: [12, 20],
-  iconAnchor: [5, 20],
+  iconSize: [40, 40],
+  iconAnchor: [12, 41],
   shadowUrl: '',
-  popupAnchor: [0, -20],
-  tooltipAnchor: [0, 0],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
   shadowSize: [41, 41]
 });
 
@@ -25,13 +25,20 @@ export class MapService {
   currentLat: string = '';
   currentLng: string = '';
   markers: string[] = [];
+  mapDraw: any;
+
+  currentLatMarker: string = '';
+  currentLngMarker: string = '';
+  counterMarkersMarker: number = 0;
+  mapMarker: any;
+
   hasPoligono: boolean = false;
   layer: any = undefined;
-  mapDraw: any;
-  mapMarker: any;
   visualizzaMarkers: boolean = false;
 
-  constructor(private http: HttpClient, private toastr: ToastrService) { }
+  constructor(private http: HttpClient, private toastr: ToastrService) {
+    this.counterMarkersMarker = 0;
+  }
 
   initMapDraw(mapDraw: any): any {
     mapDraw = L.map('mapDraw', {
@@ -126,7 +133,6 @@ export class MapService {
           '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }
     );
-
     tiles.addTo(mapMarker);
 
     const drawFeatures = new L.FeatureGroup();
@@ -147,11 +153,24 @@ export class MapService {
     mapMarker.addControl(drawControl);
 
     mapMarker.on('draw:created', (e: any) => {
-      this.layer = e.layer;
-
-      if (e.layerType === 'marker') {
+      if (this.counterMarkersMarker) {
         this.toastr.warning('Inserire un solo marker alla volta');
         this.toastr.info('Puoi rimuovere un marker cliccandolo');
+        return;
+
+      } else {
+        this.currentLatMarker = e.layer._latlng.lat.toString();
+        this.currentLngMarker = e.layer._latlng.lng.toString();
+        console.log(this.currentLatMarker, this.currentLngMarker);
+
+        const marker = L.marker([+this.currentLatMarker, +this.currentLngMarker]);
+        marker.addTo(mapMarker);
+
+        this.counterMarkersMarker++;
+        marker.on('click', (e: any) => {
+          marker.remove();
+          this.counterMarkersMarker--;
+        });
       }
     });
 
@@ -165,6 +184,14 @@ export class MapService {
 
   getCurrentLng(): string {
     return this.currentLng;
+  }
+
+  getCurrentLatMarker(): string {
+    return this.currentLatMarker;
+  }
+
+  getCurrentLngMarker(): string {
+    return this.currentLngMarker;
   }
 
   addMarker(mapMarker: any, lat: number, lng: number): any {
