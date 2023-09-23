@@ -37,7 +37,7 @@ public class LuogoController {
 
     @PostMapping("/coordinateDentroCirconferenza")
     public ResponseEntity<List<MarkerCoordinatesResponse>> coordinateDentroCirconferenza(
-            @RequestBody List<DatiCirconferenza> request) {
+            @RequestBody DatiCirconferenza request) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)

@@ -12,5 +12,5 @@ public interface LuogoService {
 
     List<MarkerCoordinatesResponse> coordinateDentroPoligono(List<PuntoPoligono> request);
 
-    List<MarkerCoordinatesResponse> coordinateDentroCirconferenza(List<DatiCirconferenza> request);
+    List<MarkerCoordinatesResponse> coordinateDentroCirconferenza(DatiCirconferenza request);
 }

@@ -49,13 +49,37 @@ public class LuogoServiceImpl implements LuogoService {
                 Float.parseFloat(evento.getLuogo().getLat()),
                 Float.parseFloat(evento.getLuogo().getLng()),
                 request)) {
-                    response.add(new MarkerCoordinatesResponse(
-                            evento.getEventoId(),
-                            evento.getTitolo(),
-                            evento.getLuogo().getNome(),
-                            evento.getLuogo().getLat(),
-                            evento.getLuogo().getLng()
-                    ));
+                response.add(new MarkerCoordinatesResponse(
+                        evento.getEventoId(),
+                        evento.getTitolo(),
+                        evento.getLuogo().getNome(),
+                        evento.getLuogo().getLat(),
+                        evento.getLuogo().getLng()
+                ));
+            }
+        }
+
+        return response;
+    }
+
+    @Override
+    public List<MarkerCoordinatesResponse> coordinateDentroCirconferenza(DatiCirconferenza request) {
+
+        List<Evento> eventi = eventoRepository.findAll();
+        List<MarkerCoordinatesResponse> response = new ArrayList<>();
+
+        for(Evento evento : eventi) {
+            if(isMarkerInsideCircumference(
+                Float.parseFloat(evento.getLuogo().getLat()),
+                Float.parseFloat(evento.getLuogo().getLng()),
+                request)) {
+                response.add(new MarkerCoordinatesResponse(
+                        evento.getEventoId(),
+                        evento.getTitolo(),
+                        evento.getLuogo().getNome(),
+                        evento.getLuogo().getLat(),
+                        evento.getLuogo().getLng()
+                ));
             }
         }
 
@@ -84,8 +108,36 @@ public class LuogoServiceImpl implements LuogoService {
         return isInside;
     }
 
-    @Override
-    public List<MarkerCoordinatesResponse> coordinateDentroCirconferenza(List<DatiCirconferenza> request) {
-        return null;
+    private boolean isMarkerInsideCircumference(float lat, float lng, DatiCirconferenza request) {
+
+        float distanzaDalCentroAlMarker = distanceInKmBetweenEarthCoordinates(
+                lat, lng, Float.parseFloat(request.getCentroLat()), Float.parseFloat(request.getCentroLng()));
+
+        return distanzaDalCentroAlMarker <= Float.parseFloat(request.getRaggio());
+    }
+
+    private float distanceInKmBetweenEarthCoordinates(float markerLat, float markerLng, float centroLat, float centroLng) {
+        final float RAGGIO_TERRA_METRI = 6371000;
+
+        var dLat = degreesToRadians(centroLat - markerLat);
+        var dLon = degreesToRadians(centroLng - markerLng);
+
+        markerLat = degreesToRadians(markerLat);
+        centroLat = degreesToRadians(centroLat);
+
+        var a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.sin(dLon / 2) *
+                                Math.sin(dLon / 2) *
+                                Math.cos(markerLat) *
+                                Math.cos(centroLat);
+
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return (float) (RAGGIO_TERRA_METRI * c);
+    }
+
+    private float degreesToRadians(float gradi) {
+        return (float) ((gradi * Math.PI) / 180);
     }
 }
