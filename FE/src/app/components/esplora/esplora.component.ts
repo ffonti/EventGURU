@@ -251,4 +251,11 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   toggleMappaFiltro(): void {
     this.showMappaFiltro = !this.showMappaFiltro;
   }
+
+  filtraEventi(): void {
+    this.allEventiWithDateFormatted = this.mapService.markersAggiornati();
+    this.showMappaFiltro = !this.showMappaFiltro;
+    console.log(this.allEventiWithDateFormatted);
+
+  }
 }

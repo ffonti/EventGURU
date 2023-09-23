@@ -30,6 +30,7 @@ export class MapService {
   currentLng: string = '';
   markers: string[] = [];
   mapDraw: any;
+  markersAftersDraw: MarkerCoordinatesResponse[] = [];
 
   currentLatMarker: string = '';
   currentLngMarker: string = '';
@@ -106,6 +107,7 @@ export class MapService {
         this.layer.on('remove', (e: any) => {
           this.getAllMarkerCoordinates().subscribe({
             next: (res: MarkerCoordinatesResponse[]) => {
+              this.markersAftersDraw = res;
               this.mapDraw = this.placeMarkers(this.mapDraw, res);
             },
             error: (err: HttpErrorResponse) => {
@@ -119,7 +121,8 @@ export class MapService {
 
           this.markersInsidePolygon(this.layer._latlngs[0]).subscribe({
             next: (res: MarkerCoordinatesResponse[]) => {
-              this.placeMarkers(mapDraw, res);
+              this.markersAftersDraw = res;
+              this.placeMarkers(this.mapDraw, res);
             },
             error: (err: HttpErrorResponse) => {
               console.log(err);
@@ -135,6 +138,7 @@ export class MapService {
 
           this.markersInsideCircle(centroLat, centroLng, raggio).subscribe({
             next: (res: MarkerCoordinatesResponse[]) => {
+              this.markersAftersDraw = res;
               this.placeMarkers(mapDraw, res);
             },
             error: (err: HttpErrorResponse) => {
@@ -277,6 +281,10 @@ export class MapService {
 
     this.mapMarker = mapMarker;
     return mapMarker;
+  }
+
+  markersAggiornati(): MarkerCoordinatesResponse[] {
+    return this.markersAftersDraw;
   }
 
   private getHeader(): HttpHeaders {

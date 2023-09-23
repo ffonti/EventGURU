@@ -10,6 +10,7 @@ import it.polimi.iswpf.service._interface.LuogoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +27,15 @@ public class LuogoServiceImpl implements LuogoService {
         List<MarkerCoordinatesResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
-            response.add(new MarkerCoordinatesResponse(
-                    evento.getEventoId(),
-                    evento.getTitolo(),
-                    evento.getLuogo().getNome(),
-                    evento.getLuogo().getLat(),
-                    evento.getLuogo().getLng()
-            ));
+            if(evento.getDataInizio().isAfter(LocalDateTime.now())) {
+                response.add(new MarkerCoordinatesResponse(
+                        evento.getEventoId(),
+                        evento.getTitolo(),
+                        evento.getLuogo().getNome(),
+                        evento.getLuogo().getLat(),
+                        evento.getLuogo().getLng()
+                ));
+            }
         }
 
         return response;
@@ -48,7 +51,8 @@ public class LuogoServiceImpl implements LuogoService {
             if(isMarkerInsidePolygon(
                 Float.parseFloat(evento.getLuogo().getLat()),
                 Float.parseFloat(evento.getLuogo().getLng()),
-                request)) {
+                request) &&
+                evento.getDataInizio().isAfter(LocalDateTime.now())) {
                 response.add(new MarkerCoordinatesResponse(
                         evento.getEventoId(),
                         evento.getTitolo(),
@@ -72,7 +76,8 @@ public class LuogoServiceImpl implements LuogoService {
             if(isMarkerInsideCircumference(
                 Float.parseFloat(evento.getLuogo().getLat()),
                 Float.parseFloat(evento.getLuogo().getLng()),
-                request)) {
+                request) &&
+                evento.getDataInizio().isAfter(LocalDateTime.now())) {
                 response.add(new MarkerCoordinatesResponse(
                         evento.getEventoId(),
                         evento.getTitolo(),

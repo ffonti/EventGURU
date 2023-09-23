@@ -136,28 +136,32 @@
 </ng-container>
 
 <!-- Mappa filtro -->
-<section class="flex justify-center h-screen w-screen">
+<ng-container *ngIf="showMappaFiltro">
+  <section class="flex justify-center h-screen w-screen">
 
-  <div class="modal">
+    <div class="modal">
 
-    <div class="w-full h-full">
+      <div class="w-full h-full">
 
-      <div class="flex-center flex-col w-full gap-5">
-        <p class="font-bold text-xl">Disegna un'area per visualizzare solo gli eventi all'interno</p>
-        <div class="flex-center gap-3 w-full">
-          <button class="btn-submit" (click)="toggleMappaFiltro()">Torna a eventi</button>
-          <button class="btn-submit" (click)="toggleMappaFiltro()">Filtra eventi</button>
-        </div>
-      </div>
-
-      <div class="h-full w-full">
-        <div
-          [ngClass]="showMappaFiltro ? 'map-containerDraw rounded-sm bg-slate-700 col-span-5': 'map-containerDraw rounded-sm bg-slate-700 col-span-5 hidden'">
-          <div class="map-frameDraw rounded-sm">
-            <div id="mapDraw" class="rounded-sm"></div>
+        <div class="flex-center flex-col w-full gap-5">
+          <p class="font-bold text-xl">Disegna un'area per visualizzare solo gli eventi all'interno</p>
+          <div class="flex-center gap-3 w-full">
+            <button class="btn-submit" (click)="toggleMappaFiltro()">Torna a eventi</button>
+            <button class="btn-submit" (click)="filtraEventi()">Filtra eventi</button>
           </div>
+        </div>
+
+        <div class="h-full w-full">
+
         </div>
       </div>
     </div>
+  </section>
+</ng-container>
+
+<div
+  [ngClass]="showMappaFiltro ? 'map-containerDraw rounded-sm bg-slate-700 col-span-5': 'map-containerDraw rounded-sm bg-slate-700 col-span-5 hidden'">
+  <div class="map-frameDraw rounded-sm">
+    <div id="mapDraw" class="rounded-sm"></div>
   </div>
-</section>
+</div>
