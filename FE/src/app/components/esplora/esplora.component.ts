@@ -28,7 +28,10 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   protected showMappaFiltro: boolean = true;
   protected organizzatoreId: string = '';
   protected pathId: boolean = false;
-  protected allMarkerCoordinates: MarkerCoordinatesResponse[] = [];
+  protected allMarkerCoordinates: GetAllEventiResponse[] = [];
+  protected allEventiFiltered: GetAllEventiResponse[] = [];
+  protected allEventiWithDateFormattedFiltered: any[] = [];
+  protected temp: any = [];
 
   mapDraw: any;
 
@@ -83,7 +86,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     });
 
     this.mapService.getAllMarkerCoordinates().subscribe({
-      next: (res: MarkerCoordinatesResponse[]) => {
+      next: (res: GetAllEventiResponse[]) => {
         this.allMarkerCoordinates = res;
         this.mapDraw = this.mapService.placeMarkers(this.mapDraw, this.allMarkerCoordinates);
       },
@@ -166,6 +169,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     this.cercaPerLuogo = '';
     this.cercaPerTitolo = '';
     this.cercaPerStato = '';
+    this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.temp));
   }
 
   onChangeOrdinaPer(value: string): void {
@@ -250,12 +254,18 @@ export class EsploraComponent implements OnInit, AfterViewInit {
 
   toggleMappaFiltro(): void {
     this.showMappaFiltro = !this.showMappaFiltro;
+    this.mapDraw = this.mapService.removeLayers(this.mapDraw);
   }
 
   filtraEventi(): void {
-    this.allEventiWithDateFormatted = this.mapService.markersAggiornati();
+    this.allEventiFiltered = this.mapService.markersAggiornati();
     this.showMappaFiltro = !this.showMappaFiltro;
-    console.log(this.allEventiWithDateFormatted);
 
+    this.allEventiWithDateFormattedFiltered = JSON.parse(JSON.stringify(this.allEventiFiltered));
+    this.changeFormatDate(this.allEventiWithDateFormattedFiltered);
+
+    this.temp = JSON.parse(JSON.stringify(this.allEventiWithDateFormatted));
+
+    this.allEventiWithDateFormatted = this.allEventiWithDateFormattedFiltered;
   }
 }

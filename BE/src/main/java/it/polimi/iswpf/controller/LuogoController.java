@@ -2,6 +2,7 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.DatiCirconferenza;
 import it.polimi.iswpf.dto.request.PuntoPoligono;
+import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.MarkerCoordinatesResponse;
 import it.polimi.iswpf.service._interface.LuogoService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class LuogoController {
     private final LuogoService luogoService;
 
     @GetMapping("/getAllMarkerCoordinates")
-    public ResponseEntity<List<MarkerCoordinatesResponse>> getAllMarkerCoordinates() {
+    public ResponseEntity<List<AllEventiResponse>> getAllMarkerCoordinates() {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -27,7 +28,7 @@ public class LuogoController {
     }
 
     @PostMapping("/coordinateDentroPoligono")
-    public ResponseEntity<List<MarkerCoordinatesResponse>> coordinateDentroPoligono(
+    public ResponseEntity<List<AllEventiResponse>> coordinateDentroPoligono(
             @RequestBody List<PuntoPoligono> request) {
 
         return ResponseEntity
@@ -36,7 +37,7 @@ public class LuogoController {
     }
 
     @PostMapping("/coordinateDentroCirconferenza")
-    public ResponseEntity<List<MarkerCoordinatesResponse>> coordinateDentroCirconferenza(
+    public ResponseEntity<List<AllEventiResponse>> coordinateDentroCirconferenza(
             @RequestBody DatiCirconferenza request) {
 
         return ResponseEntity

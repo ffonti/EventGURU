@@ -2,9 +2,10 @@ package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.dto.request.DatiCirconferenza;
 import it.polimi.iswpf.dto.request.PuntoPoligono;
+import it.polimi.iswpf.dto.response.AllEventiResponse;
 import it.polimi.iswpf.dto.response.MarkerCoordinatesResponse;
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.Luogo;
+import it.polimi.iswpf.dto.response.RecensioneResponse;
+import it.polimi.iswpf.model.*;
 import it.polimi.iswpf.repository.EventoRepository;
 import it.polimi.iswpf.service._interface.LuogoService;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +22,45 @@ public class LuogoServiceImpl implements LuogoService {
     private final EventoRepository eventoRepository;
 
     @Override
-    public List<MarkerCoordinatesResponse> getAllMarkerCoordinates() {
+    public List<AllEventiResponse> getAllMarkerCoordinates() {
 
         List<Evento> eventi = eventoRepository.findAll();
-        List<MarkerCoordinatesResponse> response = new ArrayList<>();
+        List<RecensioneResponse> recensioni;
+        List<String> usernameTuristi;
+        List<AllEventiResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             if(evento.getDataInizio().isAfter(LocalDateTime.now())) {
-                response.add(new MarkerCoordinatesResponse(
+
+                usernameTuristi = new ArrayList<>();
+                recensioni = new ArrayList<>();
+
+                for(User turista : evento.getIscritti()) {
+                    usernameTuristi.add(turista.getUsername());
+                }
+
+                for(Recensione recensione : evento.getRecensioni()) {
+                    recensioni.add(new RecensioneResponse(
+                            recensione.getUser().getUsername(),
+                            recensione.getVoto(),
+                            recensione.getTesto()
+                    ));
+                }
+
+                response.add(new AllEventiResponse(
                         evento.getEventoId(),
                         evento.getTitolo(),
-                        evento.getLuogo().getNome(),
+                        evento.getDescrizione(),
+                        evento.getDataInizio(),
+                        evento.getDataFine(),
+                        evento.getDataCreazione(),
+                        getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
                         evento.getLuogo().getLat(),
-                        evento.getLuogo().getLng()
+                        evento.getLuogo().getLng(),
+                        evento.getLuogo().getNome(),
+                        evento.getOrganizzatore().getUsername(),
+                        usernameTuristi,
+                        recensioni
                 ));
             }
         }
@@ -42,10 +69,12 @@ public class LuogoServiceImpl implements LuogoService {
     }
 
     @Override
-    public List<MarkerCoordinatesResponse> coordinateDentroPoligono(List<PuntoPoligono> request) {
+    public List<AllEventiResponse> coordinateDentroPoligono(List<PuntoPoligono> request) {
 
         List<Evento> eventi = eventoRepository.findAll();
-        List<MarkerCoordinatesResponse> response = new ArrayList<>();
+        List<RecensioneResponse> recensioni;
+        List<String> usernameTuristi;
+        List<AllEventiResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             if(isMarkerInsidePolygon(
@@ -53,12 +82,36 @@ public class LuogoServiceImpl implements LuogoService {
                 Float.parseFloat(evento.getLuogo().getLng()),
                 request) &&
                 evento.getDataInizio().isAfter(LocalDateTime.now())) {
-                response.add(new MarkerCoordinatesResponse(
+
+                usernameTuristi = new ArrayList<>();
+                recensioni = new ArrayList<>();
+
+                for(User turista : evento.getIscritti()) {
+                    usernameTuristi.add(turista.getUsername());
+                }
+
+                for(Recensione recensione : evento.getRecensioni()) {
+                    recensioni.add(new RecensioneResponse(
+                            recensione.getUser().getUsername(),
+                            recensione.getVoto(),
+                            recensione.getTesto()
+                    ));
+                }
+
+                response.add(new AllEventiResponse(
                         evento.getEventoId(),
                         evento.getTitolo(),
-                        evento.getLuogo().getNome(),
+                        evento.getDescrizione(),
+                        evento.getDataInizio(),
+                        evento.getDataFine(),
+                        evento.getDataCreazione(),
+                        getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
                         evento.getLuogo().getLat(),
-                        evento.getLuogo().getLng()
+                        evento.getLuogo().getLng(),
+                        evento.getLuogo().getNome(),
+                        evento.getOrganizzatore().getUsername(),
+                        usernameTuristi,
+                        recensioni
                 ));
             }
         }
@@ -67,10 +120,12 @@ public class LuogoServiceImpl implements LuogoService {
     }
 
     @Override
-    public List<MarkerCoordinatesResponse> coordinateDentroCirconferenza(DatiCirconferenza request) {
+    public List<AllEventiResponse> coordinateDentroCirconferenza(DatiCirconferenza request) {
 
         List<Evento> eventi = eventoRepository.findAll();
-        List<MarkerCoordinatesResponse> response = new ArrayList<>();
+        List<RecensioneResponse> recensioni;
+        List<String> usernameTuristi;
+        List<AllEventiResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             if(isMarkerInsideCircumference(
@@ -78,12 +133,36 @@ public class LuogoServiceImpl implements LuogoService {
                 Float.parseFloat(evento.getLuogo().getLng()),
                 request) &&
                 evento.getDataInizio().isAfter(LocalDateTime.now())) {
-                response.add(new MarkerCoordinatesResponse(
+
+                usernameTuristi = new ArrayList<>();
+                recensioni = new ArrayList<>();
+
+                for(User turista : evento.getIscritti()) {
+                    usernameTuristi.add(turista.getUsername());
+                }
+
+                for(Recensione recensione : evento.getRecensioni()) {
+                    recensioni.add(new RecensioneResponse(
+                            recensione.getUser().getUsername(),
+                            recensione.getVoto(),
+                            recensione.getTesto()
+                    ));
+                }
+
+                response.add(new AllEventiResponse(
                         evento.getEventoId(),
                         evento.getTitolo(),
-                        evento.getLuogo().getNome(),
+                        evento.getDescrizione(),
+                        evento.getDataInizio(),
+                        evento.getDataFine(),
+                        evento.getDataCreazione(),
+                        getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
                         evento.getLuogo().getLat(),
-                        evento.getLuogo().getLng()
+                        evento.getLuogo().getLng(),
+                        evento.getLuogo().getNome(),
+                        evento.getOrganizzatore().getUsername(),
+                        usernameTuristi,
+                        recensioni
                 ));
             }
         }
@@ -144,5 +223,15 @@ public class LuogoServiceImpl implements LuogoService {
 
     private float degreesToRadians(float gradi) {
         return (float) ((gradi * Math.PI) / 180);
+    }
+
+    private Stato getStatoEvento(LocalDateTime dataInizio, LocalDateTime dataFine) {
+        if(dataInizio.isAfter(LocalDateTime.now())) {
+            return Stato.FUTURO;
+        } else if(dataFine.isBefore(LocalDateTime.now())) {
+            return Stato.PASSATO;
+        } else {
+            return Stato.PRESENTE;
+        }
     }
 }

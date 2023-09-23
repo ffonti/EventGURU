@@ -2,15 +2,15 @@ package it.polimi.iswpf.service._interface;
 
 import it.polimi.iswpf.dto.request.DatiCirconferenza;
 import it.polimi.iswpf.dto.request.PuntoPoligono;
-import it.polimi.iswpf.dto.response.MarkerCoordinatesResponse;
+import it.polimi.iswpf.dto.response.AllEventiResponse;
 
 import java.util.List;
 
 public interface LuogoService {
 
-    List<MarkerCoordinatesResponse> getAllMarkerCoordinates();
+    List<AllEventiResponse> getAllMarkerCoordinates();
 
-    List<MarkerCoordinatesResponse> coordinateDentroPoligono(List<PuntoPoligono> request);
+    List<AllEventiResponse> coordinateDentroPoligono(List<PuntoPoligono> request);
 
-    List<MarkerCoordinatesResponse> coordinateDentroCirconferenza(DatiCirconferenza request);
+    List<AllEventiResponse> coordinateDentroCirconferenza(DatiCirconferenza request);
 }

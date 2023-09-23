@@ -5,9 +5,9 @@ import * as L from 'leaflet';
 import 'leaflet-draw';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { MarkerCoordinatesResponse } from '../dtos/response/MarkerCoordinatesResponse';
 import { PuntoPoligono } from '../dtos/request/PuntoPoligono';
 import { DatiCirconferenza } from '../dtos/request/DatiCirconferenza';
+import { GetAllEventiResponse } from '../dtos/response/GetAllEventiResponse';
 
 const iconUrl = 'assets/marker_icon.png';
 const iconDefault = L.icon({
@@ -30,7 +30,7 @@ export class MapService {
   currentLng: string = '';
   markers: string[] = [];
   mapDraw: any;
-  markersAftersDraw: MarkerCoordinatesResponse[] = [];
+  markersAftersDraw: GetAllEventiResponse[] = [];
 
   currentLatMarker: string = '';
   currentLngMarker: string = '';
@@ -106,7 +106,7 @@ export class MapService {
 
         this.layer.on('remove', (e: any) => {
           this.getAllMarkerCoordinates().subscribe({
-            next: (res: MarkerCoordinatesResponse[]) => {
+            next: (res: GetAllEventiResponse[]) => {
               this.markersAftersDraw = res;
               this.mapDraw = this.placeMarkers(this.mapDraw, res);
             },
@@ -120,7 +120,7 @@ export class MapService {
         if (this.layer._latlng === undefined) {
 
           this.markersInsidePolygon(this.layer._latlngs[0]).subscribe({
-            next: (res: MarkerCoordinatesResponse[]) => {
+            next: (res: GetAllEventiResponse[]) => {
               this.markersAftersDraw = res;
               this.placeMarkers(this.mapDraw, res);
             },
@@ -137,7 +137,7 @@ export class MapService {
           const raggio: string = this.layer._mRadius.toString().trim();
 
           this.markersInsideCircle(centroLat, centroLng, raggio).subscribe({
-            next: (res: MarkerCoordinatesResponse[]) => {
+            next: (res: GetAllEventiResponse[]) => {
               this.markersAftersDraw = res;
               this.placeMarkers(mapDraw, res);
             },
@@ -154,7 +154,7 @@ export class MapService {
     return mapDraw;
   }
 
-  markersInsidePolygon(punti: any): Observable<MarkerCoordinatesResponse[]> {
+  markersInsidePolygon(punti: any): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
     const request: PuntoPoligono[] = [];
     punti.forEach((punto: PuntoPoligono) => {
@@ -163,14 +163,14 @@ export class MapService {
       request.push({ lat, lng });
     })
 
-    return this.http.post<MarkerCoordinatesResponse[]>(this.backendUrl + 'coordinateDentroPoligono', request, { headers: header });
+    return this.http.post<GetAllEventiResponse[]>(this.backendUrl + 'coordinateDentroPoligono', request, { headers: header });
   }
 
-  markersInsideCircle(centroLat: string, centroLng: string, raggio: string): Observable<MarkerCoordinatesResponse[]> {
+  markersInsideCircle(centroLat: string, centroLng: string, raggio: string): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
     const request: DatiCirconferenza = { centroLat, centroLng, raggio };
 
-    return this.http.post<MarkerCoordinatesResponse[]>(this.backendUrl + 'coordinateDentroCirconferenza', request, { headers: header });
+    return this.http.post<GetAllEventiResponse[]>(this.backendUrl + 'coordinateDentroCirconferenza', request, { headers: header });
   }
 
   initMapMarker(mapMarker: any): any {
@@ -259,13 +259,13 @@ export class MapService {
     return mapMarker;
   }
 
-  getAllMarkerCoordinates(): Observable<MarkerCoordinatesResponse[]> {
+  getAllMarkerCoordinates(): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
 
-    return this.http.get<MarkerCoordinatesResponse[]>(this.backendUrl + 'getAllMarkerCoordinates', { headers: header });
+    return this.http.get<GetAllEventiResponse[]>(this.backendUrl + 'getAllMarkerCoordinates', { headers: header });
   }
 
-  placeMarkers(mapMarker: any, allMarkerCoordinates: MarkerCoordinatesResponse[]): any {
+  placeMarkers(mapMarker: any, allMarkerCoordinates: GetAllEventiResponse[]): any {
 
     mapMarker.eachLayer((layer: any) => {
       if (layer instanceof L.Marker) {
@@ -273,9 +273,9 @@ export class MapService {
       }
     });
 
-    allMarkerCoordinates.forEach((coordinate: MarkerCoordinatesResponse) => {
+    allMarkerCoordinates.forEach((coordinate: GetAllEventiResponse) => {
       let marker = L.marker([+coordinate.lat, +coordinate.lng]);
-      marker.bindPopup(L.popup().setContent(coordinate.titoloEvento));
+      marker.bindPopup(L.popup().setContent(coordinate.titolo));
       marker.addTo(mapMarker);
     });
 
@@ -283,8 +283,18 @@ export class MapService {
     return mapMarker;
   }
 
-  markersAggiornati(): MarkerCoordinatesResponse[] {
+  markersAggiornati(): GetAllEventiResponse[] {
     return this.markersAftersDraw;
+  }
+
+  removeLayers(map: any): any {
+    map.eachLayer((layer: any) => {
+      if (layer instanceof L.Polygon || layer instanceof L.Circle) {
+        map.removeLayer(layer);
+      }
+    });
+    this.mapDraw = map;
+    return map;
   }
 
   private getHeader(): HttpHeaders {
