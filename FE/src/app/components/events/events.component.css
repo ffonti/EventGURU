@@ -2,3 +2,27 @@
     @apply flex flex-col py-4 px-6 ring-2 h-72 space-y-[4%] w-full
     ring-inset ring-[#005cb9] rounded-lg shadow bg-white;
   }
+  .modal {
+    @apply flex justify-center items-center px-6 py-12 lg:px-8 ring-2 ring-inset ring-[#005cb9]
+    rounded-lg w-[42%] h-[75%] mt-[4%] shadow bg-white;
+}
+
+.map-containerDraw {
+  position: absolute;
+  top: 36%;
+  right: 28%;
+  bottom: 0;
+  margin: 30px;
+  height: 50%;
+  width: 40%;
+}
+
+.map-frameDraw {
+  border: 2px solid black;
+  height: 100%;
+  width: 100%;
+}
+
+#mapDraw {
+  height: 100%;
+}

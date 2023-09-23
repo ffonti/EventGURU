@@ -1,11 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAllEventiByOrganizzatoreResponse';
+import { GetAllEventiResponse } from 'src/app/dtos/response/GetAllEventiResponse';
 import { RecensioneDettagliataResponse } from 'src/app/dtos/response/RecensioneDettagliataResponse';
 import { RecensioneResponse } from 'src/app/dtos/response/RecensioneResponse';
 import { EventService } from 'src/app/services/event.service';
+import { MapService } from 'src/app/services/map.service';
 import { RecensioneService } from 'src/app/services/recensione.service';
 
 @Component({
@@ -13,7 +15,7 @@ import { RecensioneService } from 'src/app/services/recensione.service';
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.css']
 })
-export class EventsComponent implements OnInit {
+export class EventsComponent implements OnInit, AfterViewInit {
   protected allEventiByOrganizzatore: GetAllEventiByOrganizzatoreResponse[] = [];
   protected allEventiByOrganizzatoreWithDateFormatted: any[] = [];
   protected showModalEliminaEvento: boolean = false;
@@ -34,11 +36,19 @@ export class EventsComponent implements OnInit {
   protected singolaRecensione!: RecensioneResponse;
   protected eventoIdPerSingolaRecensione: number = 0;
   protected recensioneDettagliata: any;
+  protected allMarkerCoordinates: GetAllEventiResponse[] = [];
+  protected allEventiFiltered: GetAllEventiResponse[] = [];
+  protected allEventiWithDateFormattedFiltered: any[] = [];
+  protected temp: any = [];
+  protected showMappaFiltro: boolean = true;
+
+  mapDraw: any;
 
   constructor(private eventService: EventService,
     private toastr: ToastrService,
     private router: Router,
-    private recensioneService: RecensioneService) { }
+    private recensioneService: RecensioneService,
+    private mapService: MapService) { }
 
   ngOnInit(): void {
     this.eventService.getEventiByOrganizzatore().subscribe({
@@ -57,6 +67,22 @@ export class EventsComponent implements OnInit {
         this.router.navigateByUrl('homepage/creaEvento');
       }
     });
+
+    this.mapService.getAllMarkerCoordinates().subscribe({
+      next: (res: GetAllEventiResponse[]) => {
+        this.allMarkerCoordinates = res;
+        this.mapDraw = this.mapService.placeMarkers(this.mapDraw, this.allMarkerCoordinates);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.toastr.error(err.error.message);
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.showMappaFiltro = false;
+    this.mapDraw = this.mapService.initMapDraw(this.mapDraw);
   }
 
   changeFormatDate(eventi: any[]): void {
@@ -126,6 +152,7 @@ export class EventsComponent implements OnInit {
     this.cercaPerLuogo = '';
     this.cercaPerTitolo = '';
     this.cercaPerStato = '';
+    this.allEventiByOrganizzatoreWithDateFormatted = JSON.parse(JSON.stringify(this.temp));
   }
 
   onChangeOrdinaPer(value: string) {
@@ -285,5 +312,22 @@ export class EventsComponent implements OnInit {
         }
       })
     }
+  }
+
+  toggleMappaFiltro(): void {
+    this.showMappaFiltro = !this.showMappaFiltro;
+    this.mapDraw = this.mapService.removeLayers(this.mapDraw);
+  }
+
+  filtraEventi(): void {
+    this.allEventiFiltered = this.mapService.markersAggiornati();
+    this.showMappaFiltro = !this.showMappaFiltro;
+
+    this.allEventiWithDateFormattedFiltered = JSON.parse(JSON.stringify(this.allEventiFiltered));
+    this.changeFormatDate(this.allEventiWithDateFormattedFiltered);
+
+    this.temp = JSON.parse(JSON.stringify(this.allEventiByOrganizzatoreWithDateFormatted));
+
+    this.allEventiByOrganizzatoreWithDateFormatted = this.allEventiWithDateFormattedFiltered;
   }
 }
