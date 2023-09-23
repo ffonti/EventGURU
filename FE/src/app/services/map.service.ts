@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import * as L from 'leaflet';
@@ -6,6 +6,8 @@ import 'leaflet-draw';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { MarkerCoordinatesResponse } from '../dtos/response/MarkerCoordinatesResponse';
+import { PuntoPoligono } from '../dtos/request/PuntoPoligono';
+import { DatiCirconferenza } from '../dtos/request/DatiCirconferenza';
 
 const iconUrl = 'assets/marker_icon.png';
 const iconDefault = L.icon({
@@ -97,18 +99,74 @@ export class MapService {
       if (drawFeatures.getLayers().length) {
         mapDraw.removeLayer(e.layer);
         this.toastr.warning('Non possono esistere più poligoni!');
+
       } else {
         drawFeatures.addLayer(this.layer);
+
+        this.layer.on('remove', (e: any) => {
+          this.getAllMarkerCoordinates().subscribe({
+            next: (res: MarkerCoordinatesResponse[]) => {
+              this.mapDraw = this.placeMarkers(this.mapDraw, res);
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err);
+              this.toastr.error(err.error.message);
+            }
+          });
+        });
+
         if (this.layer._latlng === undefined) {
-          console.log("poligono");
+
+          this.markersInsidePolygon(this.layer._latlngs[0]).subscribe({
+            next: (res: MarkerCoordinatesResponse[]) => {
+              this.placeMarkers(mapDraw, res);
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err);
+              this.toastr.error(err.error.message);
+            }
+          });
+
         } else if (this.layer._latlngs === undefined) {
-          console.log("cerchio");
+
+          const centroLat: string = this.layer._latlng.lat.toString().trim();
+          const centroLng: string = this.layer._latlng.lng.toString().trim();
+          const raggio: string = this.layer._mRadius.toString().trim();
+
+          this.markersInsideCircle(centroLat, centroLng, raggio).subscribe({
+            next: (res: MarkerCoordinatesResponse[]) => {
+              this.placeMarkers(mapDraw, res);
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err);
+              this.toastr.error(err.error.message);
+            }
+          });
         }
       }
     });
 
     this.mapDraw = mapDraw;
     return mapDraw;
+  }
+
+  markersInsidePolygon(punti: any): Observable<MarkerCoordinatesResponse[]> {
+    const header = this.getHeader();
+    const request: PuntoPoligono[] = [];
+    punti.forEach((punto: PuntoPoligono) => {
+      let lat: string = punto.lat.toString();
+      let lng: string = punto.lng.toString();
+      request.push({ lat, lng });
+    })
+
+    return this.http.post<MarkerCoordinatesResponse[]>(this.backendUrl + 'coordinateDentroPoligono', request, { headers: header });
+  }
+
+  markersInsideCircle(centroLat: string, centroLng: string, raggio: string): Observable<MarkerCoordinatesResponse[]> {
+    const header = this.getHeader();
+    const request: DatiCirconferenza = { centroLat, centroLng, raggio };
+
+    return this.http.post<MarkerCoordinatesResponse[]>(this.backendUrl + 'coordinateDentroCirconferenza', request, { headers: header });
   }
 
   initMapMarker(mapMarker: any): any {
@@ -204,6 +262,12 @@ export class MapService {
   }
 
   placeMarkers(mapMarker: any, allMarkerCoordinates: MarkerCoordinatesResponse[]): any {
+
+    mapMarker.eachLayer((layer: any) => {
+      if (layer instanceof L.Marker) {
+        mapMarker.removeLayer(layer);
+      }
+    });
 
     allMarkerCoordinates.forEach((coordinate: MarkerCoordinatesResponse) => {
       let marker = L.marker([+coordinate.lat, +coordinate.lng]);

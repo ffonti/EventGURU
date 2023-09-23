@@ -7,6 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MarkerCoordinatesResponse {
 
+    private Long eventoId;
+
     private String titoloEvento;
 
     private String nomeLuogo;
