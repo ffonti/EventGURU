@@ -68,7 +68,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.mapService.getAllMarkerCoordinates().subscribe({
+    this.mapService.getAllMarkerCoordinatesByOrganizzatore().subscribe({
       next: (res: GetAllEventiResponse[]) => {
         this.allMarkerCoordinates = res;
         this.mapDraw = this.mapService.placeMarkers(this.mapDraw, this.allMarkerCoordinates);
