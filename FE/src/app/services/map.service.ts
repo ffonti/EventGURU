@@ -154,6 +154,113 @@ export class MapService {
     return mapDraw;
   }
 
+  initMapDrawOrganizzatore(mapDraw: any): any {
+    mapDraw = L.map('mapDraw', {
+      center: [41.9027835, 12.4963655], //Coordinate di Roma
+      zoom: 10,
+    });
+
+    const tiles = L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        maxZoom: 18,
+        minZoom: 3,
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }
+    );
+
+    tiles.addTo(mapDraw);
+
+    const drawFeatures = new L.FeatureGroup();
+    mapDraw.addLayer(drawFeatures);
+
+    const drawControl = new L.Control.Draw({
+      draw: {
+        rectangle: false,
+        circlemarker: false,
+        polyline: false,
+        polygon: {
+          allowIntersection: false,
+          shapeOptions: {
+            color: '#145DA0',
+            fillOpacity: 0.1,
+          },
+        },
+        circle: {
+          shapeOptions: {
+            color: '#145DA0',
+            fillOpacity: 0.1,
+          },
+        },
+        marker: false
+      },
+      edit: {
+        featureGroup: drawFeatures,
+      },
+    });
+    mapDraw.addControl(drawControl);
+
+    mapDraw.on('draw:created', (e: any) => {
+      this.layer = e.layer;
+
+      if (drawFeatures.getLayers().length) {
+        mapDraw.removeLayer(e.layer);
+        this.toastr.warning('Non possono esistere più poligoni!');
+
+      } else {
+        drawFeatures.addLayer(this.layer);
+
+        this.layer.on('remove', (e: any) => {
+          this.getAllMarkerCoordinatesByOrganizzatore().subscribe({
+            next: (res: GetAllEventiResponse[]) => {
+              this.markersAftersDraw = res;
+              this.mapDraw = this.placeMarkers(this.mapDraw, res);
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err);
+              this.toastr.error(err.error.message);
+            }
+          });
+        });
+
+        if (this.layer._latlng === undefined) {
+
+          this.markersInsidePolygonByOrganizzatore(this.layer._latlngs[0]).subscribe({
+            next: (res: GetAllEventiResponse[]) => {
+              this.markersAftersDraw = res;
+              this.placeMarkers(this.mapDraw, res);
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err);
+              this.toastr.error(err.error.message);
+            }
+          });
+
+        } else if (this.layer._latlngs === undefined) {
+
+          const centroLat: string = this.layer._latlng.lat.toString().trim();
+          const centroLng: string = this.layer._latlng.lng.toString().trim();
+          const raggio: string = this.layer._mRadius.toString().trim();
+
+          this.markersInsideCircleByOrganizzatore(centroLat, centroLng, raggio).subscribe({
+            next: (res: GetAllEventiResponse[]) => {
+              this.markersAftersDraw = res;
+              this.placeMarkers(mapDraw, res);
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err);
+              this.toastr.error(err.error.message);
+            }
+          });
+        }
+      }
+    });
+
+    this.mapDraw = mapDraw;
+    return mapDraw;
+  }
+
   markersInsidePolygon(punti: any): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
     const request: PuntoPoligono[] = [];
@@ -295,6 +402,31 @@ export class MapService {
     });
     this.mapDraw = map;
     return map;
+  }
+
+  getAllMarkerCoordinatesByOrganizzatore(): Observable<GetAllEventiResponse[]> {
+    const header = this.getHeader();
+
+    return this.http.get<GetAllEventiResponse[]>(this.backendUrl + 'getAllMarkerCoordinates/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+  }
+
+  markersInsidePolygonByOrganizzatore(punti: any): Observable<GetAllEventiResponse[]> {
+    const header = this.getHeader();
+    const request: PuntoPoligono[] = [];
+    punti.forEach((punto: PuntoPoligono) => {
+      let lat: string = punto.lat.toString();
+      let lng: string = punto.lng.toString();
+      request.push({ lat, lng });
+    })
+
+    return this.http.post<GetAllEventiResponse[]>(this.backendUrl + 'coordinateDentroPoligono/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
+  }
+
+  markersInsideCircleByOrganizzatore(centroLat: string, centroLng: string, raggio: string): Observable<GetAllEventiResponse[]> {
+    const header = this.getHeader();
+    const request: DatiCirconferenza = { centroLat, centroLng, raggio };
+
+    return this.http.post<GetAllEventiResponse[]>(this.backendUrl + 'coordinateDentroCirconferenza/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
   }
 
   private getHeader(): HttpHeaders {

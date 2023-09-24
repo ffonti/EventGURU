@@ -3,7 +3,6 @@ package it.polimi.iswpf.service.implementation;
 import it.polimi.iswpf.dto.request.DatiCirconferenza;
 import it.polimi.iswpf.dto.request.PuntoPoligono;
 import it.polimi.iswpf.dto.response.AllEventiResponse;
-import it.polimi.iswpf.dto.response.MarkerCoordinatesResponse;
 import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.model.*;
 import it.polimi.iswpf.repository.EventoRepository;
@@ -25,44 +24,26 @@ public class LuogoServiceImpl implements LuogoService {
     public List<AllEventiResponse> getAllMarkerCoordinates() {
 
         List<Evento> eventi = eventoRepository.findAll();
-        List<RecensioneResponse> recensioni;
-        List<String> usernameTuristi;
         List<AllEventiResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             if(evento.getDataInizio().isAfter(LocalDateTime.now())) {
 
-                usernameTuristi = new ArrayList<>();
-                recensioni = new ArrayList<>();
-
-                for(User turista : evento.getIscritti()) {
-                    usernameTuristi.add(turista.getUsername());
-                }
-
-                for(Recensione recensione : evento.getRecensioni()) {
-                    recensioni.add(new RecensioneResponse(
-                            recensione.getUser().getUsername(),
-                            recensione.getVoto(),
-                            recensione.getTesto()
-                    ));
-                }
-
-                response.add(new AllEventiResponse(
-                        evento.getEventoId(),
-                        evento.getTitolo(),
-                        evento.getDescrizione(),
-                        evento.getDataInizio(),
-                        evento.getDataFine(),
-                        evento.getDataCreazione(),
-                        getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
-                        evento.getLuogo().getLat(),
-                        evento.getLuogo().getLng(),
-                        evento.getLuogo().getNome(),
-                        evento.getOrganizzatore().getUsername(),
-                        usernameTuristi,
-                        recensioni
-                ));
+                buildCoordinatesResponse(response, evento);
             }
+        }
+
+        return response;
+    }
+
+    @Override
+    public List<AllEventiResponse> getAllMarkerCoordinatesByOrganizzatore(Long organizzatoreId) {
+
+        List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
+        List<AllEventiResponse> response = new ArrayList<>();
+
+        for(Evento evento : eventi) {
+            buildCoordinatesResponse(response, evento);
         }
 
         return response;
@@ -72,8 +53,6 @@ public class LuogoServiceImpl implements LuogoService {
     public List<AllEventiResponse> coordinateDentroPoligono(List<PuntoPoligono> request) {
 
         List<Evento> eventi = eventoRepository.findAll();
-        List<RecensioneResponse> recensioni;
-        List<String> usernameTuristi;
         List<AllEventiResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
@@ -83,36 +62,26 @@ public class LuogoServiceImpl implements LuogoService {
                 request) &&
                 evento.getDataInizio().isAfter(LocalDateTime.now())) {
 
-                usernameTuristi = new ArrayList<>();
-                recensioni = new ArrayList<>();
+                buildCoordinatesResponse(response, evento);
+            }
+        }
 
-                for(User turista : evento.getIscritti()) {
-                    usernameTuristi.add(turista.getUsername());
-                }
+        return response;
+    }
 
-                for(Recensione recensione : evento.getRecensioni()) {
-                    recensioni.add(new RecensioneResponse(
-                            recensione.getUser().getUsername(),
-                            recensione.getVoto(),
-                            recensione.getTesto()
-                    ));
-                }
+    @Override
+    public List<AllEventiResponse> coordinateDentroPoligonoByOrganizzatore(List<PuntoPoligono> request, Long organizzatoreId) {
 
-                response.add(new AllEventiResponse(
-                        evento.getEventoId(),
-                        evento.getTitolo(),
-                        evento.getDescrizione(),
-                        evento.getDataInizio(),
-                        evento.getDataFine(),
-                        evento.getDataCreazione(),
-                        getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
-                        evento.getLuogo().getLat(),
-                        evento.getLuogo().getLng(),
-                        evento.getLuogo().getNome(),
-                        evento.getOrganizzatore().getUsername(),
-                        usernameTuristi,
-                        recensioni
-                ));
+        List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
+        List<AllEventiResponse> response = new ArrayList<>();
+
+        for(Evento evento : eventi) {
+            if(isMarkerInsidePolygon(
+                    Float.parseFloat(evento.getLuogo().getLat()),
+                    Float.parseFloat(evento.getLuogo().getLng()),
+                    request)) {
+
+                buildCoordinatesResponse(response, evento);
             }
         }
 
@@ -123,8 +92,6 @@ public class LuogoServiceImpl implements LuogoService {
     public List<AllEventiResponse> coordinateDentroCirconferenza(DatiCirconferenza request) {
 
         List<Evento> eventi = eventoRepository.findAll();
-        List<RecensioneResponse> recensioni;
-        List<String> usernameTuristi;
         List<AllEventiResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
@@ -134,40 +101,65 @@ public class LuogoServiceImpl implements LuogoService {
                 request) &&
                 evento.getDataInizio().isAfter(LocalDateTime.now())) {
 
-                usernameTuristi = new ArrayList<>();
-                recensioni = new ArrayList<>();
-
-                for(User turista : evento.getIscritti()) {
-                    usernameTuristi.add(turista.getUsername());
-                }
-
-                for(Recensione recensione : evento.getRecensioni()) {
-                    recensioni.add(new RecensioneResponse(
-                            recensione.getUser().getUsername(),
-                            recensione.getVoto(),
-                            recensione.getTesto()
-                    ));
-                }
-
-                response.add(new AllEventiResponse(
-                        evento.getEventoId(),
-                        evento.getTitolo(),
-                        evento.getDescrizione(),
-                        evento.getDataInizio(),
-                        evento.getDataFine(),
-                        evento.getDataCreazione(),
-                        getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
-                        evento.getLuogo().getLat(),
-                        evento.getLuogo().getLng(),
-                        evento.getLuogo().getNome(),
-                        evento.getOrganizzatore().getUsername(),
-                        usernameTuristi,
-                        recensioni
-                ));
+                buildCoordinatesResponse(response, evento);
             }
         }
 
         return response;
+    }
+
+    @Override
+    public List<AllEventiResponse> coordinateDentroCirconferenzaByOrganizzatore(DatiCirconferenza request, Long organizzatoreId) {
+
+        List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
+        List<AllEventiResponse> response = new ArrayList<>();
+
+        for(Evento evento : eventi) {
+            if(isMarkerInsideCircumference(
+                    Float.parseFloat(evento.getLuogo().getLat()),
+                    Float.parseFloat(evento.getLuogo().getLng()),
+                    request)) {
+
+                buildCoordinatesResponse(response, evento);
+            }
+        }
+
+        return response;
+    }
+
+    private void buildCoordinatesResponse(List<AllEventiResponse> response, Evento evento) {
+        List<String> usernameTuristi;
+        List<RecensioneResponse> recensioni;
+        usernameTuristi = new ArrayList<>();
+        recensioni = new ArrayList<>();
+
+        for(User turista : evento.getIscritti()) {
+            usernameTuristi.add(turista.getUsername());
+        }
+
+        for(Recensione recensione : evento.getRecensioni()) {
+            recensioni.add(new RecensioneResponse(
+                    recensione.getUser().getUsername(),
+                    recensione.getVoto(),
+                    recensione.getTesto()
+            ));
+        }
+
+        response.add(new AllEventiResponse(
+                evento.getEventoId(),
+                evento.getTitolo(),
+                evento.getDescrizione(),
+                evento.getDataInizio(),
+                evento.getDataFine(),
+                evento.getDataCreazione(),
+                getStatoEvento(evento.getDataInizio(), evento.getDataFine()),
+                evento.getLuogo().getLat(),
+                evento.getLuogo().getLng(),
+                evento.getLuogo().getNome(),
+                evento.getOrganizzatore().getUsername(),
+                usernameTuristi,
+                recensioni
+        ));
     }
 
     private boolean isMarkerInsidePolygon(float lat, float lng, List<PuntoPoligono> request) {

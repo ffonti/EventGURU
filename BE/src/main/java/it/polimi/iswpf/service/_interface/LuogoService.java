@@ -10,7 +10,13 @@ public interface LuogoService {
 
     List<AllEventiResponse> getAllMarkerCoordinates();
 
+    List<AllEventiResponse> getAllMarkerCoordinatesByOrganizzatore(Long organizzatoreId);
+
     List<AllEventiResponse> coordinateDentroPoligono(List<PuntoPoligono> request);
 
+    List<AllEventiResponse> coordinateDentroPoligonoByOrganizzatore(List<PuntoPoligono> request, Long organizzatoreId);
+
     List<AllEventiResponse> coordinateDentroCirconferenza(DatiCirconferenza request);
+
+    List<AllEventiResponse> coordinateDentroCirconferenzaByOrganizzatore(DatiCirconferenza request, Long organizzatoreId);
 }

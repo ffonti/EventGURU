@@ -82,7 +82,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.showMappaFiltro = false;
-    this.mapDraw = this.mapService.initMapDraw(this.mapDraw);
+    this.mapDraw = this.mapService.initMapDrawOrganizzatore(this.mapDraw);
   }
 
   changeFormatDate(eventi: any[]): void {
