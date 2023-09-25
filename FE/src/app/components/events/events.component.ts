@@ -41,6 +41,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
   protected allEventiWithDateFormattedFiltered: any[] = [];
   protected temp: any = [];
   protected showMappaFiltro: boolean = true;
+  protected ruolo: any;
 
   mapDraw: any;
 
@@ -51,6 +52,8 @@ export class EventsComponent implements OnInit, AfterViewInit {
     private mapService: MapService) { }
 
   ngOnInit(): void {
+    this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
+
     this.eventService.getEventiByOrganizzatore().subscribe({
       next: (res: GetAllEventiByOrganizzatoreResponse[]) => {
         res.forEach(evento => {

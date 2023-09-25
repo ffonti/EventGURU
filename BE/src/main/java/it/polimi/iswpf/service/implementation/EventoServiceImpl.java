@@ -4,6 +4,7 @@ import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.LuogoBuilder;
 import it.polimi.iswpf.dto.request.AdminCreaModificaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
+import it.polimi.iswpf.dto.request.IscrizioneEventoRequest;
 import it.polimi.iswpf.dto.response.EventoResponse;
 import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.exception.BadRequestException;
@@ -580,23 +581,22 @@ public class EventoServiceImpl implements EventoService {
 
     /**
      * Metodo per iscrivere un turista a un evento.
-     * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
-     * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
+     * @param request DTO con gli id univoci dell'evento e del turista.
      */
     @Override
-    public void iscrizioneEvento(Long eventoId, Long turistaId) {
+    public void iscrizioneEvento(IscrizioneEventoRequest request) {
 
         //L'id autoincrement parte da 1.
-        if(eventoId < 1) {
+        if(request.getEventoId() < 1) {
             throw new BadRequestException("Id dell'evento non valido");
         }
 
-        if(turistaId < 1) {
+        if(request.getTuristaId() < 1) {
             throw new BadRequestException("Id del turista non valido");
         }
 
         //Prendo l'evento dal db con quell'id.
-        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+        Optional<Evento> eventoExists = eventoRepository.findById(request.getEventoId());
 
         //Se non esiste un evento con quell'id, lancio un'eccezione.
         if(eventoExists.isEmpty()) {
@@ -604,7 +604,7 @@ public class EventoServiceImpl implements EventoService {
         }
 
         //Prendo l'evento dal db con quell'id.
-        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+        Optional<User> turistaExists = userRepository.findByUserId(request.getTuristaId());
 
         //Se non esiste un evento con quell'id, lancio un'eccezione.
         if(turistaExists.isEmpty()) {
@@ -641,23 +641,21 @@ public class EventoServiceImpl implements EventoService {
 
     /**
      * Metodo per annullare l'iscrizione di un turista a un evento.
-     * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
-     * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
      */
     @Override
-    public void annullaIscrizione(Long eventoId, Long turistaId) {
+    public void annullaIscrizione(IscrizioneEventoRequest request) {
 
         //L'id autoincrement parte da 1.
-        if(eventoId < 1) {
+        if(request.getEventoId() < 1) {
             throw new BadRequestException("Id dell'evento non valido");
         }
 
-        if(turistaId < 1) {
+        if(request.getTuristaId() < 1) {
             throw new BadRequestException("Id del turista non valido");
         }
 
         //Prendo l'evento dal db con quell'id.
-        Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
+        Optional<Evento> eventoExists = eventoRepository.findById(request.getEventoId());
 
         //Se non esiste un evento con quell'id, lancio un'eccezione.
         if(eventoExists.isEmpty()) {
@@ -665,7 +663,7 @@ public class EventoServiceImpl implements EventoService {
         }
 
         //Prendo il turista dal db con quell'id.
-        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+        Optional<User> turistaExists = userRepository.findByUserId(request.getTuristaId());
 
         //Se non esiste un evento con quell'id, lancio un'eccezione.
         if(turistaExists.isEmpty()) {

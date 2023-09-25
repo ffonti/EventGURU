@@ -39,13 +39,6 @@ public interface UserService {
     UserResponse adminUpdateUserData(String username, UpdateUserDataRequest request);
 
     /**
-     * Dato un ruolo ritorna una lista di utenti con quel ruolo.
-     * @param ruolo Ruolo preso dall'endpoint.
-     * @return Lista di utenti presa dal db.
-     */
-    List<UserResponse> getAll(String ruolo);
-
-    /**
      * Elimina l'utente dal database dopo aver fatto diversi controlli.
      * @param userId Id dell'utente da eliminare.
      */

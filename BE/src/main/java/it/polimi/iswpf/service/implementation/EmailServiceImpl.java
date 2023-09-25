@@ -49,7 +49,7 @@ public class EmailServiceImpl implements EmailService {
             throw new BadRequestException("Email non valida");
         }
 
-        Optional<User> userExists = userRepository.findByEmail(email);
+        Optional<User> userExists = userRepository.findFirstByEmail(email);
 
         if(userExists.isEmpty()) {
             throw new NotFoundException("L'email non è associata ad alcun utente");

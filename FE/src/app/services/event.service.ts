@@ -7,6 +7,7 @@ import { CreaModificaEventoRequest } from '../dtos/request/CreaModificaEventoReq
 import { GetAllEventiResponse } from '../dtos/response/GetAllEventiResponse';
 import { AdminCreaEventoRequest } from '../dtos/request/AdminCreaEventoRequest';
 import { MessageResponse } from '../dtos/response/MessageResponse';
+import { IscrizioneEventoRequest } from '../dtos/request/IscrizioneEventoRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -75,16 +76,20 @@ export class EventService {
     return this.http.get<GetEventoByIdResponse>(this.backendUrl + 'getEventoById/' + eventoId.toString().trim(), { headers: header });
   }
 
-  iscrizioneEvento(eventoId: string): Observable<MessageResponse> {
+  iscrizioneEvento(eventoId: number): Observable<MessageResponse> {
     const header = this.getHeader();
+    let turistaId = +(localStorage.getItem('id') || -1);
+    const request: IscrizioneEventoRequest = { eventoId, turistaId };
 
-    return this.http.get<MessageResponse>(this.backendUrl + 'iscrizione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+    return this.http.post<MessageResponse>(this.backendUrl + 'iscrizione', request, { headers: header });
   }
 
-  annullaIscrizione(eventoId: string): Observable<MessageResponse> {
+  annullaIscrizione(eventoId: number): Observable<MessageResponse> {
     const header = this.getHeader();
+    let turistaId = +(localStorage.getItem('id') || -1);
+    const request: IscrizioneEventoRequest = { eventoId, turistaId };
 
-    return this.http.get<MessageResponse>(this.backendUrl + 'annullaIscrizione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+    return this.http.post<MessageResponse>(this.backendUrl + 'annullaIscrizione', request, { headers: header });
   }
 
   getEventiByTurista(usernameTurista: string): Observable<GetAllEventiByOrganizzatoreResponse[]> {

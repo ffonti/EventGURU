@@ -201,51 +201,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Dato un ruolo ritorna una lista di utenti con quel ruolo.
-     * @param ruolo Ruolo preso dall'endpoint.
-     * @return Lista di DTO con i dati degli utenti con quel ruolo -> {@link UserResponse}.
-     */
-    @Override
-    public List<UserResponse> getAll(String ruolo) {
-
-        Optional<List<User>> utenti;
-
-        //Chiamo la repository passando nella query il ruolo richiesto.
-        if(ruolo.equals("TURISTA")) {
-            utenti = userRepository.findAllByRuolo(Ruolo.TURISTA);
-        } else if(ruolo.equals("ORGANIZZATORE")) {
-            utenti = userRepository.findAllByRuolo(Ruolo.ORGANIZZATORE);
-        } else {
-            //Qualsiasi altro ruolo non è valido.
-            throw new BadRequestException("Ruolo non valido");
-        }
-
-        //Se non è presente nessun utente lancio un'eccezione.
-        if(utenti.isEmpty())  {
-            throw new NotFoundException("Utenti non trovati");
-        }
-
-        //Se non sono presenti utenti, ritorno un array vuoto.
-        List<UserResponse> response = new ArrayList<>();
-
-        //Per ogni utente, aggiungo all'array di risposta i dati dell'utente.
-        for(User user: utenti.get()) {
-            response.add(new UserResponse(
-                    user.getUserId(),
-                    user.getNome(),
-                    user.getCognome(),
-                    user.getEmail(),
-                    user.getUsername(),
-                    user.getPassword(),
-                    user.getRuolo(),
-                    user.isIscrittoNewsletter()
-            ));
-        }
-
-        return response;
-    }
-
-    /**
      * Elimina l'utente dal database dopo aver fatto diversi controlli.
      * @param userId Id dell'utente da eliminare.
      */

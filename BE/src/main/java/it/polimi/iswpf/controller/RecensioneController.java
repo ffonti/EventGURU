@@ -25,7 +25,7 @@ public class RecensioneController {
     /**
      * Metodo per salvare una recensione di un turista. Chiama il service che farà
      * opportuni controlli prima di salvare la recensione sul database.
-     * @param request DTO con i dati della recensione -> {@link InviaRecensioneRequest}.
+     * @param request DTO con i dati della recensione.
      * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
      * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
      * @return Messaggio di risposta al client.
@@ -46,10 +46,10 @@ public class RecensioneController {
     /**
      * Metodo per prendere tutte le recensioni di un dato evento.
      * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
-     * @return Lista di DTO con i dati delle recensioni -> {@link RecensioneResponse}.
+     * @return Lista di DTO con i dati delle recensioni.
      */
     @GetMapping("getByEvento/{eventoId}")
-    public ResponseEntity<List<RecensioneResponse>> getByEvento(@PathVariable String eventoId) {
+    public ResponseEntity<List<RecensioneResponse>> getAllByEvento(@PathVariable String eventoId) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -61,7 +61,7 @@ public class RecensioneController {
      * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
      * @param usernameTurista Username univoco del turista che ha recensito l'evento,
      * passato in modo dinamico tramite l'endpoint.
-     * @return DTO con i dati della recensione -> {@link RecensioneDettagliataResponse}.
+     * @return DTO con i dati della recensione.
      */
     @GetMapping("get/{eventoId}/{usernameTurista}")
     public ResponseEntity<RecensioneDettagliataResponse> getRecensione(

@@ -2,6 +2,7 @@ package it.polimi.iswpf.service._interface;
 
 import it.polimi.iswpf.dto.request.AdminCreaModificaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
+import it.polimi.iswpf.dto.request.IscrizioneEventoRequest;
 import it.polimi.iswpf.dto.response.EventoResponse;
 import it.polimi.iswpf.service.implementation.EventoServiceImpl;
 
@@ -68,17 +69,16 @@ public interface EventoService {
 
     /**
      * Metodo per iscrivere un turista a un evento.
-     * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
-     * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
+     * @param request DTO con gli id univoci dell'evento e del turista.
      */
-    void iscrizioneEvento(Long eventoId, Long turistaId);
+    void iscrizioneEvento(IscrizioneEventoRequest request);
 
     /**
      * Metodo per annullare l'iscrizione di un turista a un evento.
      * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
      * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
      */
-    void annullaIscrizione(Long eventoId, Long turistaId);
+    void annullaIscrizione(IscrizioneEventoRequest request);
 
     /**
      * Metodo per prendere tutti gli eventi a cui è iscritto un turista.

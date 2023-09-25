@@ -40,5 +40,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param email Email dell'utente.
      * @return Un probabile utente con quella email.
      */
-    Optional<User> findByEmail(String email);
+    Optional<User> findFirstByEmail(String email);
 }

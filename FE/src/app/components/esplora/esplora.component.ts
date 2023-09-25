@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAllEventiByOrganizzatoreResponse';
 import { GetAllEventiResponse } from 'src/app/dtos/response/GetAllEventiResponse';
 import { MarkerCoordinatesResponse } from 'src/app/dtos/response/MarkerCoordinatesResponse';
+import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
 
@@ -220,8 +221,8 @@ export class EsploraComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.eventService.iscrizioneEvento(eventoId.toString().trim()).subscribe({
-      next: (res: any) => {
+    this.eventService.iscrizioneEvento(+eventoId).subscribe({
+      next: (res: MessageResponse) => {
         this.toastr.success(res.message);
       },
       error: (err: HttpErrorResponse) => {
@@ -241,8 +242,8 @@ export class EsploraComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.eventService.annullaIscrizione(eventoId.toString().trim()).subscribe({
-      next: (res: any) => {
+    this.eventService.annullaIscrizione(+eventoId).subscribe({
+      next: (res: MessageResponse) => {
         this.toastr.success(res.message);
       },
       error: (err: HttpErrorResponse) => {

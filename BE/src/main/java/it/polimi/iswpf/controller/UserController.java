@@ -24,7 +24,7 @@ public class UserController {
     /**
      * Metodo che ritorna i dati di uno specifico utente.
      * @param userId Id dell'utente, passato in modo dinamico con l'endpoint.
-     * @return DTO con tutti i dati dell'utente richiesto -> {@link UserResponse}.
+     * @return DTO con tutti i dati dell'utente richiesto.
      */
     @GetMapping("/getUserData/{userId}")
     public ResponseEntity<UserResponse> getUserData(@PathVariable String userId) {
@@ -36,9 +36,9 @@ public class UserController {
 
     /**
      * Metodo che modifica i dati di uno specifico utente.
-     * @param request DTO con tutti i nuovi dati da sovrascrivere -> {@link UpdateUserDataRequest}.
+     * @param request DTO con tutti i nuovi dati da sovrascrivere.
      * @param userId Id dell'utente, passato in modo dinamico con l'endpoint.
-     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
+     * @return DTO con i dati dell'utente modificati.
      */
     @PutMapping("/updateUserData/{userId}")
     public ResponseEntity<UserResponse> updateUserData(
@@ -52,9 +52,9 @@ public class UserController {
 
     /**
      * Metodo che permette all'admin di modificare i dati di un utente.
-     * @param request DTO con tutti i nuovi dati da sovrascrivere -> {@link UpdateUserDataRequest}.
+     * @param request DTO con tutti i nuovi dati da sovrascrivere.
      * @param username Username dell'utente da modificare, passato in modo dinamico con l'endpoint.
-     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
+     * @return DTO con i dati dell'utente modificati.
      */
     @PutMapping("/adminUpdateUserData/{username}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -65,20 +65,6 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.adminUpdateUserData(username, request));
-    }
-
-    /**
-     * Metodo che ritorna tutti gli utenti di uno specifico ruolo. Solo l'admin può accederci.
-     * @param ruolo Ruolo passato in modo dinamico con l'endpoint.
-     * @return Lista di DTO con i dati degli utenti con quel ruolo -> {@link UserResponse}.
-     */
-    @GetMapping("/getAll/{ruolo}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserResponse>> getAll(@PathVariable String ruolo) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.getAll(ruolo));
     }
 
     /**
@@ -99,7 +85,7 @@ public class UserController {
     /**
      * Dato un username in modo dinamico tramite l'endpoint, viene restituito al client l'utente con quell'username.
      * @param username Username dell'utente di cui si vogliono i dati.
-     * @return DTO con i dati dell'utente richiesto -> {@link UserResponse}.
+     * @return DTO con i dati dell'utente richiesto.
      */
     @GetMapping("getAdminUserData/{username}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -128,7 +114,7 @@ public class UserController {
 
     /**
      * Metodo per prendere tutti gli organizzatori presenti sul database.
-     * @return Lista di DTO con i dati di ogni organizzatore -> {@link OrganizzatoreResponse}.
+     * @return Lista di DTO con i dati di ogni organizzatore.
      */
     @GetMapping("getAllOrganizzatori")
     public ResponseEntity<List<OrganizzatoreResponse>> getAllOrganizzatori() {
@@ -142,6 +128,7 @@ public class UserController {
      * Metodo che permette a un turista di seguire un organizzatore, e quindi essere notificati alla creazione di un evento.
      * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     * @return Messaggio di avvenuto follow.
      */
     @GetMapping("seguiOrganizzatore/{organizzatoreId}/{turistaId}")
     public ResponseEntity<MessageResponse> seguiOrganizzatore(
@@ -158,7 +145,7 @@ public class UserController {
     /**
      * Metodo che, dato un turista, restituisce gli username degli organizzatori seguiti.
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
-     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoreSeguitoResponse}.
+     * @return Lista di DTO con gli username degli organizzatori.
      */
     @GetMapping("getOrganizzatoriSeguiti/{turistaId}")
     public ResponseEntity<List<OrganizzatoreSeguitoResponse>> getOrganizzatoriSeguiti(

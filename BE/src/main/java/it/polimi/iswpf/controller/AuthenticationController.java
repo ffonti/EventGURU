@@ -25,7 +25,7 @@ public class AuthenticationController {
     /**
      * Metodo per la registrazione. Chiama il service che chiamerà
      * la repository col fine di registrare l'utente sul database.
-     * @param request DTO con i dati per la registrazione -> {@link RegisterRequest}.
+     * @param request DTO con i dati per la registrazione.
      * @return Messaggio di avvenuta registrazione.
      */
     @PostMapping("/register")
@@ -40,8 +40,8 @@ public class AuthenticationController {
 
     /**
      * Metodo per il login. Chiama il service che chiamerà la repository col fine di autenticare l'utente.
-     * @param request DTO con i dati per il login -> {@link LoginRequest}.
-     * @return {@link LoginResponse} DTO con l'utente autenticato e un messaggio di avvenuta registrazione.
+     * @param request DTO con i dati per il login.
+     * @return DTO con l'utente autenticato e un messaggio di avvenuta registrazione.
      * Nell'header la stringa jwt.
      */
     @PostMapping("/login")

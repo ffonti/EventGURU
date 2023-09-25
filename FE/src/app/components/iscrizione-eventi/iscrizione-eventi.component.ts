@@ -43,7 +43,7 @@ export class IscrizioneEventiComponent implements OnInit {
 
         this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.allEventi));
 
-        this.changeFormatDate(this.allEventiWithDateFormatted);       
+        this.changeFormatDate(this.allEventiWithDateFormatted);
       },
       error: (err: any) => {
         console.log(err);
@@ -170,7 +170,7 @@ export class IscrizioneEventiComponent implements OnInit {
       }
     });
 
-    this.eventService.iscrizioneEvento(eventoId.toString().trim()).subscribe({
+    this.eventService.iscrizioneEvento(+eventoId).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
       },
@@ -194,7 +194,7 @@ export class IscrizioneEventiComponent implements OnInit {
 
     console.log(this.allEventiWithDateFormatted);
 
-    this.eventService.annullaIscrizione(eventoId.toString().trim()).subscribe({
+    this.eventService.annullaIscrizione(+eventoId).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
       },
@@ -241,16 +241,16 @@ export class IscrizioneEventiComponent implements OnInit {
     const evento = this.allEventiWithDateFormatted.filter((evento: any) => {
       return evento.eventoId == eventoId;
     })[0];
-    
+
     let usernameRecensioniFilter: any = [];
 
     evento.recensioni.forEach((recensione: any) => {
       usernameRecensioniFilter.push(recensione.usernameTurista);
     });
 
-    if(usernameLogged) {
+    if (usernameLogged) {
       usernameRecensioniFilter.forEach((username: string) => {
-        if(usernameLogged == username) isRecensito = true;
+        if (usernameLogged == username) isRecensito = true;
       });
     }
     return !isRecensito;
