@@ -27,7 +27,6 @@ public class UserBuilder {
     private LocalDateTime dataCreazione;
     private List<Evento> eventi;
     private List<Recensione> recensioni;
-    private List<Messaggio> messaggi;
     private List<User> seguiti;
     private List<Evento> iscrizioni;
 
@@ -143,17 +142,7 @@ public class UserBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param messaggi Messaggi inviati dall'utente.
-     * @return Un'istanza della classe stessa.
-     */
-    public UserBuilder messaggi(List<Messaggio> messaggi) {
-        this.messaggi = messaggi;
-        return this;
-    }
-
-    /**
-     * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param seguiti Organizzatori seguiti dal turista.
+     * @param seguiti Lista di organizzatori seguiti dal turista.
      * @return Un'istanza della classe stessa.
      */
     public UserBuilder seguiti(List<User> seguiti) {
@@ -163,7 +152,7 @@ public class UserBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param iscrizioni Eventi a cui il turista si è iscritto.
+     * @param iscrizioni Eventi a cui il turista è iscritto.
      * @return Un'istanza della classe stessa.
      */
     public UserBuilder iscrizioni(List<Evento> iscrizioni) {

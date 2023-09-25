@@ -74,7 +74,7 @@ public class LuogoBuilder {
 
     /**
      * Metodo che costruisce l'oggetto {@link Luogo} con tutti i dati settati in precedenza.
-     * @return Un'istanza di Recensione a cui viene passato, tramite il costruttore, l'istanza di questa classe.
+     * @return Un'istanza di Luogo a cui viene passato, tramite il costruttore, l'istanza di questa classe.
      */
     public Luogo build() {
         return new Luogo(this);

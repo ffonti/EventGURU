@@ -94,6 +94,13 @@ export class MapService {
     });
     mapDraw.addControl(drawControl);
 
+    mapDraw.eachLayer((layer: any) => {
+      if (layer instanceof L.Marker) {
+        mapDraw.removeLayer(layer);
+      }
+    });
+    this.counterMarkersMarker = 0;
+
     mapDraw.on('draw:created', (e: any) => {
       this.layer = e.layer;
 
@@ -200,6 +207,13 @@ export class MapService {
       },
     });
     mapDraw.addControl(drawControl);
+
+    mapDraw.eachLayer((layer: any) => {
+      if (layer instanceof L.Marker) {
+        mapDraw.removeLayer(layer);
+      }
+    });
+    this.counterMarkersMarker = 0;
 
     mapDraw.on('draw:created', (e: any) => {
       this.layer = e.layer;
@@ -313,6 +327,13 @@ export class MapService {
       }
     });
     mapMarker.addControl(drawControl);
+
+    mapMarker.eachLayer((layer: any) => {
+      if (layer instanceof L.Marker) {
+        mapMarker.removeLayer(layer);
+      }
+    });
+    this.counterMarkersMarker = 0;
 
     mapMarker.on('draw:created', (e: any) => {
       if (this.counterMarkersMarker) {

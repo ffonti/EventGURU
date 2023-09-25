@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,13 +25,16 @@ public class EventoController {
     /**
      * Metodo per creare un evento. Chiama il service che controllerà la validità
      * dei dati prima di salvarli sul database.
-     * @param request DTO con i dati per la creazione dell'evento -> {@link CreaModificaEventoRequest}
+     * @param request DTO con i dati per la creazione dell'evento -> {@link CreaModificaEventoRequest}.
+     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'ednpoint.
      * @return Messaggio di avvenuta creazione.
      */
-    @PostMapping("/crea")
-    public ResponseEntity<CreaModificaEventoResponse> creaEvento(@RequestBody CreaModificaEventoRequest request) {
+    @PostMapping("/crea/{organizzatoreId}")
+    public ResponseEntity<CreaModificaEventoResponse> creaEvento(
+            @RequestBody CreaModificaEventoRequest request,
+            @PathVariable String organizzatoreId) {
 
-        eventoService.creaEvento(request);
+        eventoService.creaEvento(request, Long.parseLong(organizzatoreId));
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

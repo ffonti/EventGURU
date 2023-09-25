@@ -42,13 +42,6 @@ export class NavbarComponent implements OnInit {
 
   //pulisco il localstorage e mando l'utente al login
   logout(): void {
-    this.authService.logout().subscribe({
-      next: (res: void) => {
-        this.toastr.success('Logout effettuato');
-      },
-      error: (err: HttpErrorResponse) => {
-        this.toastr.error('Errore nel logout');
-      }
-    });
+    this.authService.logout();
   }
 }

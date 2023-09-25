@@ -19,7 +19,7 @@ public interface EventoService {
      * Metodo per creare un evento. Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
      * @param request DTO con i dati dell'evento da creare -> {@link CreaModificaEventoRequest}.
      */
-    void creaEvento(CreaModificaEventoRequest request);
+    void creaEvento(CreaModificaEventoRequest request, Long organizzatoreId);
 
     /**
      * Metodo per prendere tutti gli eventi di un organizzatore.

@@ -21,7 +21,7 @@ export class EventService {
     const header = this.getHeader();
     const request: CreaModificaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
 
-    return this.http.post<CreaModificaEventoResponse>(this.backendUrl + 'crea', request, { headers: header });
+    return this.http.post<CreaModificaEventoResponse>(this.backendUrl + 'crea/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
   }
 
   adminCreaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, usernameOrganizzatore: string): Observable<CreaModificaEventoResponse> {

@@ -3,7 +3,6 @@ package it.polimi.iswpf.controller;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
-import it.polimi.iswpf.dto.response.LogoutResponse;
 import it.polimi.iswpf.dto.response.RecuperaPasswordResponse;
 import it.polimi.iswpf.dto.response.RegisterResponse;
 import it.polimi.iswpf.service._interface.AuthenticationService;
@@ -59,23 +58,9 @@ public class AuthenticationController {
     }
 
     /**
-     * Metodo per il logout. Chiama il service col fine di rimuovere i dati dell'utente dalla sessione.
-     * @return Messaggio di avvenuto logout.
-     */
-    @GetMapping("/logout")
-    public ResponseEntity<LogoutResponse> logout() {
-
-        authenticationService.logout();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new LogoutResponse("Logout effettuato"));
-    }
-
-    /**
      * Metodo per recuperare la password dimenticata dall'utente.
      * @param email Email a cui mandare la nuova password, passata in modo dinamico tramite l'endpoint.
-     * @return Messaggio di successo.
+     * @return Messaggio di avvenuto recupero password.
      */
     @GetMapping("/recuperaPassword/{email}")
     public ResponseEntity<RecuperaPasswordResponse> recuperaPassword(@PathVariable String email) {

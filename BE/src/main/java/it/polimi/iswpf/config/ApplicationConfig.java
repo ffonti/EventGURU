@@ -14,9 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * Bean utili per la configurazione generale dell'applicazione.
+ * Bean utili per la configurazione generale dell'applicazione. Grazie all'annotazione "@Configuration",
+ * il contenuto di questa classe viene eseguito appena il server viene avviato.
  */
-@Configuration //Indica che verrà eseguito appena verrà avviato il server.
+@Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
@@ -34,7 +35,7 @@ public class ApplicationConfig {
     }
 
     /**
-     * DAO che si occupa di prendere l'utente dal db, codificare la password, etc.
+     * Bean con configurazioni di base per l'autenticazione: fetch dell'utente dal db, codificare la password, etc.
      * @return Un oggetto con le configurazioni settate.
      */
     @Bean
@@ -52,22 +53,24 @@ public class ApplicationConfig {
     }
 
     /**
-     * Specifica come gestire l'autenticazione.
+     * Bean che specifica come gestire l'autenticazione.
      * @param config configurazione dell'authenticationManager.
      * @return Un'istanza dell'authenticationManager.
      * @throws Exception Eccezione generale che può essere lanciata durante la configurazione.
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+
         return config.getAuthenticationManager();
     }
 
     /**
-     * Specifico quale metodo utilizzare per codificare la password.
+     * Bean che specifica quale metodo utilizzare per codificare la password.
      * @return Un'istanza dell'encoder.
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 }

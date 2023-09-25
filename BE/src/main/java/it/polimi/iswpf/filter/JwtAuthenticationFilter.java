@@ -18,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * Questa classe viene eseguita ogni volta che arriva una richiesta al server.
+ * Questa classe contiene metodi che vengono eseguiti ogni volta che arriva una richiesta al server.
  * Per configurarla secondo quanto detto, deve estendere la classe OncePerRequestFilter.
  * (Un'altra soluzione è quella d'implementare direttamente l'interfaccia Filter).
  */
@@ -32,18 +32,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /**
      * Questo metodo funziona esattamente come il doFilter classico, ma qui abbiamo la sicurezza che verrà
      * eseguito una sola volta per ogni richiesta all'interno.
-     * @param request è l'effettiva richiesta del client dalla quale possiamo estrarre i dati.
-     * @param response è l'effettiva risposta del server che può contenere eventuali dati.
-     * @param filterChain contiene la lista dei filtri da eseguire. Si tratta del Chain of Responsibility pattern.
-     * @throws ServletException generata quando vi è un errore generico su una servlet.
-     * @throws IOException generata quando si va incontro a problemi di operazioni I/O.
+     * @param request Effettiva richiesta del client dalla quale possiamo estrarre i dati.
+     * @param response Effettiva risposta del server che può contenere eventuali dati.
+     * @param filterChain Contiene la lista dei filtri da eseguire. Si tratta del Chain of Responsibility pattern.
+     * @throws ServletException Generata quando vi è un errore generico su una servlet.
+     * @throws IOException Generata quando si va incontro a problemi di operazioni I/O.
      */
     @Override
     protected void doFilterInternal(
         @NonNull HttpServletRequest request,
         @NonNull HttpServletResponse response,
-        @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+        @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization"); //Prendo il jwt dall'header della richiesta.
         final String jwt;
@@ -58,10 +57,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring("Bearer ".length()); //Estraggo l'effettivo jwt dall'header.
         username = jwtService.extractUsername(jwt); //Estraggo l'username codificato nel jwt.
 
-        /* Se l'attributo univoco esiste e l'utente non è autenticato, controllo
-        se ho un utente sul db con questo username. */
+        /* Se l'attributo univoco esiste e l'utente non è autenticato,
+        controllo se ho un utente sul db con questo username. */
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            //Prendo dal db i dati dell'utente in sessione.
+            //Prendo dal db i dati dell'utente con quell'username.
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             //Controllo se il token è valido.
@@ -74,9 +73,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
 
                 //Setto i dati da codificare.
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 //Sovrascrivo il token in sessione.
                 SecurityContextHolder.getContext().setAuthentication(authToken);

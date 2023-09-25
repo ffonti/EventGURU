@@ -22,23 +22,19 @@ import java.util.List;
         name = "_user", //"user" è una parola riservata in PostgreSQL
         uniqueConstraints = @UniqueConstraint(
                 name = "username_unique",
-                columnNames = "username"
-        )
-)
+                columnNames = "username"))
 public class User implements UserDetails {
 
     /* @SequenceGenerator e @GeneratedValue servono per
-    configurare l'id con l'autoincrement (+1 ogni riga) */
+    configurare l'id con l'autoincrement (+1 ogni riga). */
     @Id
     @SequenceGenerator(
             name = "user_sequence",
             sequenceName = "user_sequence",
-            allocationSize = 1
-    )
+            allocationSize = 1)
     @GeneratedValue(
             generator = "user_sequence",
-            strategy = GenerationType.SEQUENCE
-    )
+            strategy = GenerationType.SEQUENCE)
     @Column(name = "user_id", nullable = false, updatable = false)
     private Long userId;
 
@@ -73,9 +69,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Recensione> recensioni; //Lista di recensioni lasciate dal turista.
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Messaggio> messaggi; //Lista di messaggi lasciati dall'utente.
-
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "segue",
@@ -91,7 +84,6 @@ public class User implements UserDetails {
             inverseJoinColumns = { @JoinColumn(name = "evento_id") }
     )
     private List<Evento> iscrizioni; //Eventi a cui l'utente si è iscritto.
-
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
@@ -110,14 +102,13 @@ public class User implements UserDetails {
         this.dataCreazione = builder.getDataCreazione();
         this.eventi = builder.getEventi();
         this.recensioni = builder.getRecensioni();
-        this.messaggi = builder.getMessaggi();
         this.seguiti = builder.getSeguiti();
         this.iscrizioni = builder.getIscrizioni();
     }
 
     /**
-     * In base al ruolo, viene generata una lista delle funzionalità concesse.
-     * @return le autorità garantite all'utente.
+     * Metodo ereditato da {@link UserDetails}. In base al ruolo, viene generata una lista delle funzionalità concesse.
+     * @return I permessi dell'utente.
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -125,7 +116,8 @@ public class User implements UserDetails {
     }
 
     /**
-     * @return la password dell'utente.
+     * Metodo ereditato da {@link UserDetails}.
+     * @return La password per l'autenticazione.
      */
     @Override
     public String getPassword() {
@@ -133,7 +125,8 @@ public class User implements UserDetails {
     }
 
     /**
-     * @return l'username univoco dell'utente.
+     * Metodo ereditato da {@link UserDetails}.
+     * @return Il valore univoco per l'autenticazione.
      */
     @Override
     public String getUsername() {
@@ -141,7 +134,7 @@ public class User implements UserDetails {
     }
 
     /**
-     * Indica se l'account dell'utente è scaduto. Un account scaduto non può essere autenticato.
+     * Metodo ereditato da {@link UserDetails}. Indica se l'account dell'utente è scaduto. Un account scaduto non può essere autenticato.
      * @return "true" se l'account è valido (non scaduto), "false" se non è valido (scaduto).
      */
     @Override
@@ -150,7 +143,7 @@ public class User implements UserDetails {
     }
 
     /**
-     * Indica se l'account dell'utente è bloccato o meno. Un account bloccato non può essere autenticato.
+     * Metodo ereditato da {@link UserDetails}. Indica se l'account dell'utente è bloccato o meno. Un account bloccato non può essere autenticato.
      * @return "true" se l'account non è bloccato, "false" se l'account è bloccato.
      */
     @Override
@@ -159,7 +152,7 @@ public class User implements UserDetails {
     }
 
     /**
-     * Indica se la password dell'utente è scaduta. La password scaduta non permette l'autenticazione.
+     * Metodo ereditato da {@link UserDetails}. Indica se la password dell'utente è scaduta. La password scaduta non permette l'autenticazione.
      * @return "true" se la password è valida (non scaduta), "false" se non è più valida (scaduta).
      */
     @Override
@@ -168,7 +161,7 @@ public class User implements UserDetails {
     }
 
     /**
-     * Indica se l'utente è abilitato o disabilitato. Un utente disabilitato non può essere autenticato.
+     * Metodo ereditato da {@link UserDetails}. Indica se l'utente è abilitato o disabilitato. Un utente disabilitato non può essere autenticato.
      * @return "true" se l'utente è abilitato, "false" se l'utente non è abilitato.
      */
     @Override

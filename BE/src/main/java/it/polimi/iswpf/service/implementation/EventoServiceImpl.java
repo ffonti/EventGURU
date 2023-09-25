@@ -16,7 +16,6 @@ import it.polimi.iswpf.repository.EventoRepository;
 import it.polimi.iswpf.repository.LuogoRepository;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.EventoService;
-import it.polimi.iswpf.util.SessionManager;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,25 @@ public class EventoServiceImpl implements EventoService {
      * @param request DTO con i dati dell'evento da creare -> {@link CreaModificaEventoRequest}.
      */
     @Override
-    public void creaEvento(@NonNull CreaModificaEventoRequest request) {
+    public void creaEvento(@NonNull CreaModificaEventoRequest request, Long organizzatoreId) {
+
+        //L'id autoincrement parte da 1.
+        if(organizzatoreId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'utente dal db con quell'id.
+        Optional<User> organizzatoreExists = userRepository.findByUserId(organizzatoreId);
+
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
+        if(organizzatoreExists.isEmpty()) {
+            throw new NotFoundException("Organizzatore non trovato");
+        }
+
+        //Verifico se l'utente è effettivamente un organizzatore.
+        if(!organizzatoreExists.get().getRuolo().toString().equals("ORGANIZZATORE")) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
 
         //La data di inizio dell'evento deve essere precedente alla data di fine dell'evento.
         if(request.getDataFine().isBefore(request.getDataInizio()) ||
@@ -65,14 +82,6 @@ public class EventoServiceImpl implements EventoService {
             throw new BadRequestException("Compilare tutti i campi");
         }
 
-        //Prendo i dati dell'utente in sessione.
-        User organizzatore = SessionManager.getInstance().getLoggedUser();
-
-        //Verifico se l'utente è effettivamente un organizzatore.
-        if(!organizzatore.getRuolo().toString().equals("ORGANIZZATORE")) {
-            throw new ForbiddenException("L'utente non ha i permessi adatti");
-        }
-
         //Chiamo il metodo per configurare il luogo dell'evento.
         Luogo luogo = getLuogo(request.getNomeLuogo(), request.getLat(), request.getLng());
 
@@ -83,7 +92,7 @@ public class EventoServiceImpl implements EventoService {
                 .dataInizio(request.getDataInizio())
                 .dataFine(request.getDataFine())
                 .dataCreazione(LocalDateTime.now())
-                .organizzatore(organizzatore)
+                .organizzatore(organizzatoreExists.get())
                 .luogo(luogo)
                 .build();
 

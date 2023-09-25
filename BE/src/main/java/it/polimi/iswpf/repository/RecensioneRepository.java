@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 /**
- * Interfaccia responsabile della comunicazione col database.
+ * Interfaccia responsabile della comunicazione col database per il model {@link Recensione}.
  * Estende l'interfaccia generica JpaRepository, a cui daremo il tipo della classe e il tipo dell'id.
  */
 public interface RecensioneRepository extends JpaRepository<Recensione, Long> {

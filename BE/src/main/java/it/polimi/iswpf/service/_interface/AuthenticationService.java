@@ -34,11 +34,6 @@ public interface AuthenticationService {
     LoginResponse login(@NonNull LoginRequest request);
 
     /**
-     * Metodo per il logout. Chiama il SessionManager che rimuoverà i dati dell'utente salvati in precedenza.
-     */
-    void logout();
-
-    /**
      * Crea un oggetto {@link HttpHeaders} e aggiunge il token, così da mandarlo al client, come da prassi.
      * @param jwt Stringa con il token.
      * @return L'oggetto {@link HttpHeaders} con il token al suo interno.

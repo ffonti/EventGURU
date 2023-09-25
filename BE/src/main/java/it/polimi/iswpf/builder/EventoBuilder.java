@@ -25,7 +25,6 @@ public class EventoBuilder {
     private Stato stato;
     private List<User> iscritti;
     private List<Recensione> recensioni;
-    private List<Messaggio> messaggi;
     private User organizzatore;
     private Luogo luogo;
 
@@ -61,7 +60,7 @@ public class EventoBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param dataCreazione Data di creazione dell'oggetto settata.
+     * @param dataCreazione Data di creazione dell'evento settata.
      * @return Un'istanza della classe stessa.
      */
     public EventoBuilder dataCreazione(LocalDateTime dataCreazione) {
@@ -111,7 +110,7 @@ public class EventoBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param recensioni Lista di stringhe con le recensioni dell'evento.
+     * @param recensioni Lista di recensioni dell'evento.
      * @return Un'istanza della classe stessa.
      */
     public EventoBuilder recensioni(List<Recensione> recensioni) {
@@ -121,17 +120,7 @@ public class EventoBuilder {
 
     /**
      * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param messaggi Messaggi inviati nella chat dell'evento.
-     * @return Un'istanza della classe stessa.
-     */
-    public EventoBuilder messaggi(List<Messaggio> messaggi) {
-        this.messaggi = messaggi;
-        return this;
-    }
-
-    /**
-     * Chiamato prima del metodo build(), per settare l'attributo.
-     * @param organizzatore User organizzatore dell'evento.
+     * @param organizzatore Organizzatore dell'evento.
      * @return Un'istanza della classe stessa.
      */
     public EventoBuilder organizzatore(User organizzatore) {

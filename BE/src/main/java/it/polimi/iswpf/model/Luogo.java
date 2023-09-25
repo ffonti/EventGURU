@@ -17,23 +17,19 @@ import java.util.List;
 @Table(name = "luogo",
         uniqueConstraints = @UniqueConstraint(
         name = "nome_unique",
-        columnNames = "nome"
-    )
-)
+        columnNames = "nome"))
 public class Luogo {
 
     /* @SequenceGenerator e @GeneratedValue servono per
-    configurare l'id con l'autoincrement (+1 ogni riga) */
+    configurare l'id con l'autoincrement (+1 ogni riga). */
     @Id
     @SequenceGenerator(
             name = "newsletter_sequence",
             sequenceName = "newsletter_sequence",
-            allocationSize = 1
-    )
+            allocationSize = 1)
     @GeneratedValue(
             generator = "newsletter_sequence",
-            strategy = GenerationType.SEQUENCE
-    )
+            strategy = GenerationType.SEQUENCE)
     @Column(name = "luogo_id", updatable = false, nullable = false)
     private Long luogoId;
 
@@ -47,7 +43,7 @@ public class Luogo {
     private String lng;
 
     @OneToMany(mappedBy = "luogo", fetch = FetchType.LAZY)
-    private List<Evento> eventi; //Eventi di un dato luogo.
+    private List<Evento> eventi; //Eventi in un dato luogo.
 
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori

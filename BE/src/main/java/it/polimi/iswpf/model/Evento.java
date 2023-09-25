@@ -19,17 +19,15 @@ import java.util.List;
 public class Evento {
 
     /* @SequenceGenerator e @GeneratedValue servono per
-    configurare l'id con l'autoincrement (+1 ogni riga) */
+    configurare l'id con l'autoincrement (+1 ogni riga). */
     @Id
     @SequenceGenerator(
             name = "evento_sequence",
             sequenceName = "evento_sequence",
-            allocationSize = 1
-    )
+            allocationSize = 1)
     @GeneratedValue(
             generator = "evento_sequence",
-            strategy = GenerationType.SEQUENCE
-    )
+            strategy = GenerationType.SEQUENCE)
     @Column(name = "evento_id", updatable = false, nullable = false)
     private Long eventoId;
 
@@ -62,9 +60,6 @@ public class Evento {
     @OneToMany(mappedBy = "evento", fetch = FetchType.LAZY)
     private List<Recensione> recensioni; //Recensioni lasciate all'evento.
 
-    @OneToMany(mappedBy = "evento", fetch = FetchType.LAZY)
-    private List<Messaggio> messaggi; //Messaggi lasciati all'evento.
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User organizzatore; //Organizzatore dell'evento.
@@ -76,7 +71,7 @@ public class Evento {
     /**
      * Design pattern builder. Costruttore dove assegno agli attributi del model i valori
      * settati con il builder (viene eseguito alla chiamata del metodo build() di {@link EventoBuilder}).
-     * @param builder dati appena settati tramite il pattern.
+     * @param builder Dati appena settati tramite il pattern.
      */
     public Evento(@NonNull EventoBuilder builder) {
         this.eventoId = builder.getEventoId();
@@ -88,7 +83,6 @@ public class Evento {
         this.stato = builder.getStato();
         this.iscritti = builder.getIscritti();
         this.recensioni = builder.getRecensioni();
-        this.messaggi = builder.getMessaggi();
         this.organizzatore = builder.getOrganizzatore();
         this.luogo = builder.getLuogo();
     }

@@ -9,7 +9,6 @@ import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.AuthenticationService;
-import it.polimi.iswpf.util.SessionManager;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -116,9 +115,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
 
-        //Salvo in sessione l'utente appena autenticato.
-        SessionManager.getInstance().loginUser(user);
-
         //Codifico i dati dell'utente nel jwt.
         return new LoginResponse(
                 user.getUserId(),
@@ -131,14 +127,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 "Accesso eseguito!",
                 jwtService.generateToken(user)
         );
-    }
-
-    /**
-     * Metodo per il logout. Chiama il SessionManager che rimuoverà i dati dell'utente salvati in precedenza.
-     */
-    @Override
-    public void logout() {
-        SessionManager.getInstance().logoutUser();
     }
 
     /**
