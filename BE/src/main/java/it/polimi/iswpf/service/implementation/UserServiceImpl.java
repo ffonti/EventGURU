@@ -2,11 +2,10 @@ package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.dto.response.OrganizzatoreResponse;
-import it.polimi.iswpf.dto.response.OrganizzatoriSeguitiResponse;
+import it.polimi.iswpf.dto.response.OrganizzatoreSeguitoResponse;
 import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.exception.*;
 import it.polimi.iswpf.model.Ruolo;
-import it.polimi.iswpf.model.Stato;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.UserService;
@@ -423,10 +422,10 @@ public class UserServiceImpl implements UserService {
     /**
      * Metodo che, dato un turista, restituisce gli username degli organizzatori seguiti.
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
-     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoriSeguitiResponse}.
+     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoreSeguitoResponse}.
      */
     @Override
-    public List<OrganizzatoriSeguitiResponse> getOrganizzatoriSeguiti(Long turistaId) {
+    public List<OrganizzatoreSeguitoResponse> getOrganizzatoriSeguiti(Long turistaId) {
 
         //L'id autoincrement parte da 1.
         if(turistaId < 1) {
@@ -447,11 +446,11 @@ public class UserServiceImpl implements UserService {
         }
 
         //Inizializzo l'array di risposta.
-        List<OrganizzatoriSeguitiResponse> response = new ArrayList<>();
+        List<OrganizzatoreSeguitoResponse> response = new ArrayList<>();
 
         //Aggiungo i dati al DTO.
         for(User organizzatoreSeguito : turistaExists.get().getSeguiti()) {
-            response.add(new OrganizzatoriSeguitiResponse(organizzatoreSeguito.getUsername()));
+            response.add(new OrganizzatoreSeguitoResponse(organizzatoreSeguito.getUsername()));
         }
 
         //Ritorno il DTO.

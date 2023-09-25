@@ -2,8 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { DeleteUserResponse } from 'src/app/dtos/response/DeleteUserResponse';
 import { GetUserDataResponse } from 'src/app/dtos/response/GetUserDataResponse';
+import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -139,7 +139,7 @@ export class AccountComponent implements OnInit {
 
     //per eliminare l'account dell'utente stesso
     this.userService.eliminaAccount().subscribe({
-      next: (res: DeleteUserResponse) => {
+      next: (res: MessageResponse) => {
         this.toastr.success(res.message);
         this.router.navigateByUrl('login');
       },
@@ -176,7 +176,7 @@ export class AccountComponent implements OnInit {
   //per far eliminare all'admin un altro account dato un username
   adminEliminaUser(username: string): void {
     this.userService.adminEliminaUser(username).subscribe({
-      next: (res: DeleteUserResponse) => {
+      next: (res: MessageResponse) => {
         this.toastr.success(res.message);
         this.router.navigateByUrl('homepage/admin');
       },

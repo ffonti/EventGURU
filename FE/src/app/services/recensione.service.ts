@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { inviaRecensioneRequest } from '../dtos/request/InviaRecensioneRequest';
 import { RecensioneResponse } from '../dtos/response/RecensioneResponse';
 import { RecensioneDettagliataResponse } from '../dtos/response/RecensioneDettagliataResponse';
+import { MessageResponse } from '../dtos/response/MessageResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,11 @@ export class RecensioneService {
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
 
-  inviaRecensione(eventoId: string, voto: number, testo: string): Observable<any> {
+  inviaRecensione(eventoId: string, voto: number, testo: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: inviaRecensioneRequest = { voto, testo };
 
-    return this.http.post(this.backendUrl + 'inviaRecensione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
+    return this.http.post<MessageResponse>(this.backendUrl + 'inviaRecensione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
   }
 
   getRecensioniByEvento(eventoId: string): Observable<RecensioneResponse[]> {

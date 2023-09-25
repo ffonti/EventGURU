@@ -30,7 +30,7 @@ public class EventoController {
      * @return Messaggio di avvenuta creazione.
      */
     @PostMapping("/crea/{organizzatoreId}")
-    public ResponseEntity<CreaModificaEventoResponse> creaEvento(
+    public ResponseEntity<MessageResponse> creaEvento(
             @RequestBody CreaModificaEventoRequest request,
             @PathVariable String organizzatoreId) {
 
@@ -38,16 +38,16 @@ public class EventoController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new CreaModificaEventoResponse("Evento creato con successo!"));
+                .body(new MessageResponse("Evento creato con successo!"));
     }
 
     /**
      * Metodo per prendere tutti gli eventi dato un organizzatore.
      * @param organizzatoreId Id dell'organizzatore da cui prendere gli eventi, passato in modo dinamico con l'endpoint.
-     * @return Lista di DTO con gli eventi creati dall'organizzatore -> {@link GetEventoResponse}.
+     * @return Lista di DTO con gli eventi creati dall'organizzatore -> {@link EventoResponse}.
      */
     @GetMapping("/getByOrganizzatore/{organizzatoreId}")
-    public ResponseEntity<List<GetEventoResponse>> getEventiByOrganizzatore(@PathVariable String organizzatoreId) {
+    public ResponseEntity<List<EventoResponse>> getEventiByOrganizzatore(@PathVariable String organizzatoreId) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -60,22 +60,22 @@ public class EventoController {
      * @return Messaggio di avvenuta eliminazione.
      */
     @DeleteMapping("/eliminaEvento/{eventoId}")
-    public ResponseEntity<EliminaEventoResponse> creaEvento(@PathVariable String eventoId) {
+    public ResponseEntity<MessageResponse> creaEvento(@PathVariable String eventoId) {
 
         eventoService.eliminaEvento(Long.parseLong(eventoId));
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new EliminaEventoResponse("Evento eliminato con successo!"));
+                .body(new MessageResponse("Evento eliminato con successo!"));
     }
 
     /**
      * Metodo per prendere un evento dato l'id.
      * @param eventoId Id dell'evento, passato in modo dinamico con l'endpoint.
-     * @return DTO con l'evento richiesto -> {@link GetEventoResponse}.
+     * @return DTO con l'evento richiesto -> {@link EventoResponse}.
      */
     @GetMapping("/getEventoById/{eventoId}")
-    public ResponseEntity<GetEventoResponse> getEventoById(@PathVariable String eventoId) {
+    public ResponseEntity<EventoResponse> getEventoById(@PathVariable String eventoId) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -90,7 +90,7 @@ public class EventoController {
      * @return Messaggio di avvenuta modifica.
      */
     @PutMapping("/modifica/{eventoId}")
-    public ResponseEntity<CreaModificaEventoResponse> modificaEvento(
+    public ResponseEntity<MessageResponse> modificaEvento(
             @RequestBody CreaModificaEventoRequest request,
             @PathVariable String eventoId) {
 
@@ -98,15 +98,15 @@ public class EventoController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new CreaModificaEventoResponse("Evento modificato con successo"));
+                .body(new MessageResponse("Evento modificato con successo"));
     }
 
     /**
      * Metodo per prendere tutti gli eventi presenti sul database.
-     * @return Lista di DTO con tutti i dati di ogni evento -> {@link AllEventiResponse}.
+     * @return Lista di DTO con tutti i dati di ogni evento -> {@link EventoResponse}.
      */
     @GetMapping("/getAll")
-    public ResponseEntity<List<AllEventiResponse>> getAllEventi() {
+    public ResponseEntity<List<EventoResponse>> getAllEventi() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventoService.adminGetAllEventi());
@@ -120,14 +120,14 @@ public class EventoController {
      */
     @PostMapping("/adminCrea")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CreaModificaEventoResponse> adminCreaEvento(
+    public ResponseEntity<MessageResponse> adminCreaEvento(
             @RequestBody AdminCreaModificaEventoRequest request) {
 
         eventoService.adminCreaEvento(request);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new CreaModificaEventoResponse("Evento creato con successo"));
+                .body(new MessageResponse("Evento creato con successo"));
     }
 
     /**
@@ -140,7 +140,7 @@ public class EventoController {
      */
     @PutMapping("/adminModifica/{eventoId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CreaModificaEventoResponse> adminModificaEvento(
+    public ResponseEntity<MessageResponse> adminModificaEvento(
             @RequestBody AdminCreaModificaEventoRequest request,
             @PathVariable String eventoId) {
 
@@ -148,11 +148,11 @@ public class EventoController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new CreaModificaEventoResponse("Evento modificato con successo"));
+                .body(new MessageResponse("Evento modificato con successo"));
     }
 
     @GetMapping("iscrizione/{eventoId}/{turistaId}")
-    public ResponseEntity<IscrizioneEventoResponse> iscrizioneEvento(
+    public ResponseEntity<MessageResponse> iscrizioneEvento(
             @PathVariable String eventoId,
             @PathVariable String turistaId) {
 
@@ -160,7 +160,7 @@ public class EventoController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new IscrizioneEventoResponse("Iscrizione avvenuta con successo"));
+                .body(new MessageResponse("Iscrizione avvenuta con successo"));
     }
 
     /**
@@ -169,7 +169,7 @@ public class EventoController {
      * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
      */
     @GetMapping("annullaIscrizione/{eventoId}/{turistaId}")
-    public ResponseEntity<AnnullaIscrizioneResponse> annullaIscrizione(
+    public ResponseEntity<MessageResponse> annullaIscrizione(
             @PathVariable String eventoId,
             @PathVariable String turistaId) {
 
@@ -177,7 +177,7 @@ public class EventoController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new AnnullaIscrizioneResponse("Iscrizione annullata con successo"));
+                .body(new MessageResponse("Iscrizione annullata con successo"));
     }
 
     /**
@@ -186,7 +186,7 @@ public class EventoController {
      * @return Lista di DTO con tutti i dati di ogni evento.
      */
     @GetMapping("getByTurista/{usernameTurista}")
-    public ResponseEntity<List<AllEventiResponse>> getEventiByTurista(@PathVariable String usernameTurista) {
+    public ResponseEntity<List<EventoResponse>> getEventiByTurista(@PathVariable String usernameTurista) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -197,10 +197,10 @@ public class EventoController {
      * Metodo che permette a un organizzatore di rimuovere un turista iscritto a un dato evento.
      * @param usernameTurista Username univoco del turista, passato in modo dinamico tramite l'endpoint.
      * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
-     * @return Messaggio di avvenuta rimozione -> {@link RimuoviTuristaDaEventoResponse}.
+     * @return Messaggio di avvenuta rimozione.
      */
     @DeleteMapping("rimuoviTuristaDaEvento/{usernameTurista}/{eventoId}")
-    public ResponseEntity<RimuoviTuristaDaEventoResponse> rimuoviTuristaDaEvento(
+    public ResponseEntity<MessageResponse> rimuoviTuristaDaEvento(
             @PathVariable String usernameTurista,
             @PathVariable String eventoId) {
 
@@ -208,6 +208,6 @@ public class EventoController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new RimuoviTuristaDaEventoResponse("Turista rimosso con successo"));
+                .body(new MessageResponse("Turista rimosso con successo"));
     }
 }

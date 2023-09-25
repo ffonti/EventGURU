@@ -2,7 +2,7 @@ package it.polimi.iswpf.service._interface;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.dto.response.OrganizzatoreResponse;
-import it.polimi.iswpf.dto.response.OrganizzatoriSeguitiResponse;
+import it.polimi.iswpf.dto.response.OrganizzatoreSeguitoResponse;
 import it.polimi.iswpf.dto.response.UserResponse;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service.implementation.UserServiceImpl;
@@ -80,9 +80,9 @@ public interface UserService {
     /**
      * Metodo che, dato un turista, restituisce gli username degli organizzatori seguiti.
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
-     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoriSeguitiResponse}.
+     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoreSeguitoResponse}.
      */
-    List<OrganizzatoriSeguitiResponse> getOrganizzatoriSeguiti(Long turistaId);
+    List<OrganizzatoreSeguitoResponse> getOrganizzatoriSeguiti(Long turistaId);
 
     /**
      * Metodo che permette a un turista di smettere di seguire un organizzatore.

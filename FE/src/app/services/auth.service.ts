@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { LoginRequest } from '../dtos/request/LoginRequest';
 import { RegisterRequest } from '../dtos/request/RegisterRequest';
 import { LoginResponse } from '../dtos/response/LoginResponse';
-import { RegisterResponse } from '../dtos/response/RegisterResponse';
 import { Router } from '@angular/router';
 import { SpinnerService } from './spinner.service';
 import { ToastrService } from 'ngx-toastr';
+import { MessageResponse } from '../dtos/response/MessageResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -24,13 +24,13 @@ export class AuthService {
   }
 
   //chiamo il backend per la registraione, mando un dto con i dati per la registrazione e riceverò un messaggio di risposta
-  register(request: RegisterRequest): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(this.backendUrl + 'register', request);
+  register(request: RegisterRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(this.backendUrl + 'register', request);
   }
 
-  recuperaPassword(email: string): Observable<any> {
+  recuperaPassword(email: string): Observable<MessageResponse> {
     this.spinnerService.requestStarted();
-    return this.http.get(this.backendUrl + 'recuperaPassword/' + email);
+    return this.http.get<MessageResponse>(this.backendUrl + 'recuperaPassword/' + email);
   }
 
   //per il logout pulisco il localstorage

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class AllEventiResponse {
+public class EventoResponse {
 
     private Long eventoId;
 

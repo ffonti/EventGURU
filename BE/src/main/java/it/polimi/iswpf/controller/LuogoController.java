@@ -2,8 +2,7 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.DatiCirconferenza;
 import it.polimi.iswpf.dto.request.PuntoPoligono;
-import it.polimi.iswpf.dto.response.AllEventiResponse;
-import it.polimi.iswpf.dto.response.MarkerCoordinatesResponse;
+import it.polimi.iswpf.dto.response.EventoResponse;
 import it.polimi.iswpf.service._interface.LuogoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ public class LuogoController {
     private final LuogoService luogoService;
 
     @GetMapping("/getAllMarkerCoordinates")
-    public ResponseEntity<List<AllEventiResponse>> getAllMarkerCoordinates() {
+    public ResponseEntity<List<EventoResponse>> getAllMarkerCoordinates() {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -28,7 +27,7 @@ public class LuogoController {
     }
 
     @GetMapping("/getAllMarkerCoordinates/{organizzatoreId}")
-    public ResponseEntity<List<AllEventiResponse>> getAllMarkerCoordinatesByOrganizzatore(@PathVariable String organizzatoreId) {
+    public ResponseEntity<List<EventoResponse>> getAllMarkerCoordinatesByOrganizzatore(@PathVariable String organizzatoreId) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -36,7 +35,7 @@ public class LuogoController {
     }
 
     @PostMapping("/coordinateDentroPoligono")
-    public ResponseEntity<List<AllEventiResponse>> coordinateDentroPoligono(
+    public ResponseEntity<List<EventoResponse>> coordinateDentroPoligono(
             @RequestBody List<PuntoPoligono> request) {
 
         return ResponseEntity
@@ -45,7 +44,7 @@ public class LuogoController {
     }
 
     @PostMapping("/coordinateDentroPoligono/{organizzatoreId}")
-    public ResponseEntity<List<AllEventiResponse>> coordinateDentroPoligonoByOrganizzatore(
+    public ResponseEntity<List<EventoResponse>> coordinateDentroPoligonoByOrganizzatore(
             @RequestBody List<PuntoPoligono> request,
             @PathVariable String organizzatoreId) {
 
@@ -55,7 +54,7 @@ public class LuogoController {
     }
 
     @PostMapping("/coordinateDentroCirconferenza")
-    public ResponseEntity<List<AllEventiResponse>> coordinateDentroCirconferenza(
+    public ResponseEntity<List<EventoResponse>> coordinateDentroCirconferenza(
             @RequestBody DatiCirconferenza request) {
 
         return ResponseEntity
@@ -64,7 +63,7 @@ public class LuogoController {
     }
 
     @PostMapping("/coordinateDentroCirconferenza/{organizzatoreId}")
-    public ResponseEntity<List<AllEventiResponse>> coordinateDentroCirconferenzaByOrganizzatore(
+    public ResponseEntity<List<EventoResponse>> coordinateDentroCirconferenzaByOrganizzatore(
             @RequestBody DatiCirconferenza request,
             @PathVariable String organizzatoreId) {
 

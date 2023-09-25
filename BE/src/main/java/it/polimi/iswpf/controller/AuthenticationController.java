@@ -3,8 +3,7 @@ package it.polimi.iswpf.controller;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
-import it.polimi.iswpf.dto.response.RecuperaPasswordResponse;
-import it.polimi.iswpf.dto.response.RegisterResponse;
+import it.polimi.iswpf.dto.response.MessageResponse;
 import it.polimi.iswpf.service._interface.AuthenticationService;
 import it.polimi.iswpf.service._interface.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +29,13 @@ public class AuthenticationController {
      * @return Messaggio di avvenuta registrazione.
      */
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<MessageResponse> register(@RequestBody RegisterRequest request) {
 
         authenticationService.register(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new RegisterResponse("Registrazione completata!"));
+                .body(new MessageResponse("Registrazione completata!"));
     }
 
     /**
@@ -63,12 +62,12 @@ public class AuthenticationController {
      * @return Messaggio di avvenuto recupero password.
      */
     @GetMapping("/recuperaPassword/{email}")
-    public ResponseEntity<RecuperaPasswordResponse> recuperaPassword(@PathVariable String email) {
+    public ResponseEntity<MessageResponse> recuperaPassword(@PathVariable String email) {
 
         emailService.recuperaPassword(email);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new RecuperaPasswordResponse("Password modificata con successo"));
+                .body(new MessageResponse("Password modificata con successo"));
     }
 }

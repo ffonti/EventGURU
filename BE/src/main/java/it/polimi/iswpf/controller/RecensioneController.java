@@ -1,7 +1,7 @@
 package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.InviaRecensioneRequest;
-import it.polimi.iswpf.dto.response.InviaRecensioneResponse;
+import it.polimi.iswpf.dto.response.MessageResponse;
 import it.polimi.iswpf.dto.response.RecensioneDettagliataResponse;
 import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.service._interface.RecensioneService;
@@ -31,7 +31,7 @@ public class RecensioneController {
      * @return Messaggio di risposta al client.
      */
     @PostMapping("/inviaRecensione/{eventoId}/{turistaId}")
-    public ResponseEntity<InviaRecensioneResponse> inviaRecensione(
+    public ResponseEntity<MessageResponse> inviaRecensione(
             @RequestBody InviaRecensioneRequest request,
             @PathVariable String eventoId,
             @PathVariable String turistaId) {
@@ -40,7 +40,7 @@ public class RecensioneController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new InviaRecensioneResponse("Recensione inviata con successo"));
+                .body(new MessageResponse("Recensione inviata con successo"));
     }
 
     /**

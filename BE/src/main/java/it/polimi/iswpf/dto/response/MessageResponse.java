@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AnnullaIscrizioneResponse {
+public class MessageResponse {
 
     private String message;
 }

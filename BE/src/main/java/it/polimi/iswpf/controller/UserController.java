@@ -2,7 +2,6 @@ package it.polimi.iswpf.controller;
 
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.dto.response.*;
-import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service._interface.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -88,13 +87,13 @@ public class UserController {
      * @return Messaggio di risposta al client.
      */
     @DeleteMapping("delete/{userId}")
-    public ResponseEntity<DeleteUserResponse> deleteAccount(@PathVariable String userId) {
+    public ResponseEntity<MessageResponse> deleteAccount(@PathVariable String userId) {
 
         userService.deleteAccount(Long.parseLong(userId));
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new DeleteUserResponse("Account eliminato con successo"));
+                .body(new MessageResponse("Account eliminato con successo"));
     }
 
     /**
@@ -118,13 +117,13 @@ public class UserController {
      */
     @DeleteMapping("adminDelete/{username}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<DeleteUserResponse> adminDeleteAccount(@PathVariable String username) {
+    public ResponseEntity<MessageResponse> adminDeleteAccount(@PathVariable String username) {
 
         userService.adminDeleteAccount(username);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new DeleteUserResponse("Account eliminato con successo"));
+                .body(new MessageResponse("Account eliminato con successo"));
     }
 
     /**
@@ -145,7 +144,7 @@ public class UserController {
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
      */
     @GetMapping("seguiOrganizzatore/{organizzatoreId}/{turistaId}")
-    public ResponseEntity<SeguiOrganizzatoreResponse> seguiOrganizzatore(
+    public ResponseEntity<MessageResponse> seguiOrganizzatore(
             @PathVariable String organizzatoreId,
             @PathVariable String turistaId) {
 
@@ -153,16 +152,16 @@ public class UserController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new SeguiOrganizzatoreResponse("Organizzatore seguito con successo"));
+                .body(new MessageResponse("Organizzatore seguito con successo"));
     }
 
     /**
      * Metodo che, dato un turista, restituisce gli username degli organizzatori seguiti.
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
-     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoriSeguitiResponse}.
+     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoreSeguitoResponse}.
      */
     @GetMapping("getOrganizzatoriSeguiti/{turistaId}")
-    public ResponseEntity<List<OrganizzatoriSeguitiResponse>> getOrganizzatoriSeguiti(
+    public ResponseEntity<List<OrganizzatoreSeguitoResponse>> getOrganizzatoriSeguiti(
             @PathVariable String turistaId) {
 
         return ResponseEntity
@@ -174,16 +173,16 @@ public class UserController {
      * Metodo che permette a un turista di smettere di seguire un organizzatore.
      * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
-     * @return DTO con messaggio di successo -> {@link SeguiOrganizzatoreResponse}.
+     * @return Messaggio di avvenuto unfollow.
      */
     @GetMapping("smettiSeguireOrganizzatore/{organizzatoreId}/{turistaId}")
-    public ResponseEntity<SeguiOrganizzatoreResponse> smettiSeguireOrganizzatore(
+    public ResponseEntity<MessageResponse> smettiSeguireOrganizzatore(
             @PathVariable String organizzatoreId, @PathVariable String turistaId) {
 
         userService.smettiSeguireOrganizzatore(Long.parseLong(organizzatoreId), Long.parseLong(turistaId));
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new SeguiOrganizzatoreResponse("Hai smesso di seguire l'organizzatore"));
+                .body(new MessageResponse("Hai smesso di seguire l'organizzatore"));
     }
 }

@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Ruolo } from 'src/app/types/Ruolo';
 import { RegisterRequest } from 'src/app/dtos/request/RegisterRequest';
-import { RegisterResponse } from 'src/app/dtos/response/RegisterResponse';
+import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 
 @Component({
   selector: 'app-register',
@@ -59,7 +59,7 @@ export class RegisterComponent implements OnInit {
 
     //Tramite il service mando la richiesta al server
     this.authService.register(request).subscribe({
-      next: (res: RegisterResponse) => {
+      next: (res: MessageResponse) => {
         //In caso di successo mando l'utente al login
         this.toastr.success(res.message);
         this.router.navigateByUrl('/login');

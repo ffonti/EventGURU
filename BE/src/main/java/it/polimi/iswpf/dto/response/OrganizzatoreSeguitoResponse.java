@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class InviaRecensioneResponse {
+public class OrganizzatoreSeguitoResponse {
 
-    private String message;
+    private String usernameOrganizzatore;
 }

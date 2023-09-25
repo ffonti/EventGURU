@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetUserDataResponse } from '../dtos/response/GetUserDataResponse';
 import { UpdateUserDataRequest } from '../dtos/request/UpdateUserDataRequest';
-import { DeleteUserResponse } from '../dtos/response/DeleteUserResponse';
 import { OrganizzatoreResponse } from '../dtos/response/OrganizzatoreResponse';
 import { GetOrganizzatoriSeguiti } from '../dtos/response/GetOrganizzatoriSeguiti';
+import { MessageResponse } from '../dtos/response/MessageResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -40,10 +40,10 @@ export class UserService {
   }
 
   //chiamo il backend per eliminare l'account
-  eliminaAccount(): Observable<DeleteUserResponse> {
+  eliminaAccount(): Observable<MessageResponse> {
     const header = this.getHeader();
 
-    return this.http.delete<DeleteUserResponse>(this.backendUrl + 'delete/' + localStorage.getItem('id')?.toString(), { headers: header });
+    return this.http.delete<MessageResponse>(this.backendUrl + 'delete/' + localStorage.getItem('id')?.toString(), { headers: header });
   }
 
   //chiamo il backend per prendere i dati di un utente dato un username
@@ -54,10 +54,10 @@ export class UserService {
   }
 
   //chiamo il backend per eliminare i dati di un altro utente (solo se si è admin)
-  adminEliminaUser(username: string): Observable<DeleteUserResponse> {
+  adminEliminaUser(username: string): Observable<MessageResponse> {
     const header = this.getHeader();
 
-    return this.http.delete<DeleteUserResponse>(this.backendUrl + 'adminDelete/' + username, { headers: header });
+    return this.http.delete<MessageResponse>(this.backendUrl + 'adminDelete/' + username, { headers: header });
   }
 
   getAllOrganizzatori(): Observable<OrganizzatoreResponse[]> {
@@ -66,16 +66,16 @@ export class UserService {
     return this.http.get<OrganizzatoreResponse[]>(this.backendUrl + 'getAllOrganizzatori', { headers: header });
   }
 
-  seguiOrganizzatore(organizzatoreId: string): Observable<any> {
+  seguiOrganizzatore(organizzatoreId: string): Observable<MessageResponse> {
     const header = this.getHeader();
 
-    return this.http.get(this.backendUrl + 'seguiOrganizzatore/' + organizzatoreId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+    return this.http.get<MessageResponse>(this.backendUrl + 'seguiOrganizzatore/' + organizzatoreId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
-  smettiSeguireOrganizzatore(organizzatoreId: string): Observable<any> {
+  smettiSeguireOrganizzatore(organizzatoreId: string): Observable<MessageResponse> {
     const header = this.getHeader();
 
-    return this.http.get(this.backendUrl + 'smettiSeguireOrganizzatore/' + organizzatoreId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+    return this.http.get<MessageResponse>(this.backendUrl + 'smettiSeguireOrganizzatore/' + organizzatoreId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
   getAllOrganizzatoriSeguiti(): Observable<GetOrganizzatoriSeguiti[]> {

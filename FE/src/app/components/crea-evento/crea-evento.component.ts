@@ -2,8 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CreaModificaEventoResponse } from 'src/app/dtos/response/CreaModificaEventoResponse';
 import { GetEventoByIdResponse } from 'src/app/dtos/response/GetEventoByIdResponse';
+import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
 
@@ -78,7 +78,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
 
       if (this.ruolo === 'ORGANIZZATORE') {
         this.eventService.modificaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo, this.eventoId).subscribe({
-          next: (res: CreaModificaEventoResponse) => {
+          next: (res: MessageResponse) => {
             this.toastr.success(res.message);
             if (localStorage.getItem('ruolo') == 'ADMIN') {
               this.router.navigateByUrl('homepage/esplora');
@@ -94,7 +94,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
         return;
       } else {
         this.eventService.adminModificaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo, this.eventoId, this.usernameOrganizzatore).subscribe({
-          next: (res: CreaModificaEventoResponse) => {
+          next: (res: MessageResponse) => {
             this.toastr.success(res.message);
             if (localStorage.getItem('ruolo') == 'ADMIN') {
               this.router.navigateByUrl('homepage/esplora');
@@ -119,7 +119,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
       //TODO controllare che tutti i campi siano stati compilati (con bordo rosso)
       if (this.ruolo === 'ORGANIZZATORE') {
         this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo).subscribe({
-          next: (res: CreaModificaEventoResponse) => {
+          next: (res: MessageResponse) => {
             this.toastr.success(res.message);
             if (localStorage.getItem('ruolo') == 'ADMIN') {
               this.router.navigateByUrl('homepage/esplora');
@@ -135,7 +135,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
         return;
       } else {
         this.eventService.adminCreaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo, this.usernameOrganizzatore).subscribe({
-          next: (res: CreaModificaEventoResponse) => {
+          next: (res: MessageResponse) => {
             this.toastr.success(res.message);
             if (localStorage.getItem('ruolo') == 'ADMIN') {
               this.router.navigateByUrl('homepage/esplora');

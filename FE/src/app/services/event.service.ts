@@ -1,12 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreaModificaEventoResponse } from '../dtos/response/CreaModificaEventoResponse';
 import { GetAllEventiByOrganizzatoreResponse } from '../dtos/response/GetAllEventiByOrganizzatoreResponse';
 import { GetEventoByIdResponse } from '../dtos/response/GetEventoByIdResponse';
 import { CreaModificaEventoRequest } from '../dtos/request/CreaModificaEventoRequest';
 import { GetAllEventiResponse } from '../dtos/response/GetAllEventiResponse';
 import { AdminCreaEventoRequest } from '../dtos/request/AdminCreaEventoRequest';
+import { MessageResponse } from '../dtos/response/MessageResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -17,32 +17,32 @@ export class EventService {
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
 
-  creaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string): Observable<CreaModificaEventoResponse> {
+  creaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: CreaModificaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
 
-    return this.http.post<CreaModificaEventoResponse>(this.backendUrl + 'crea/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
+    return this.http.post<MessageResponse>(this.backendUrl + 'crea/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
   }
 
-  adminCreaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, usernameOrganizzatore: string): Observable<CreaModificaEventoResponse> {
+  adminCreaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, usernameOrganizzatore: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: AdminCreaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo, usernameOrganizzatore };
 
-    return this.http.post<CreaModificaEventoResponse>(this.backendUrl + 'adminCrea', request, { headers: header });
+    return this.http.post<MessageResponse>(this.backendUrl + 'adminCrea', request, { headers: header });
   }
 
-  modificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, eventoId: string): Observable<CreaModificaEventoResponse> {
+  modificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, eventoId: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: CreaModificaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
 
-    return this.http.put<CreaModificaEventoResponse>(this.backendUrl + 'modifica/' + eventoId, request, { headers: header });
+    return this.http.put<MessageResponse>(this.backendUrl + 'modifica/' + eventoId, request, { headers: header });
   }
 
-  adminModificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, eventoId: string, usernameOrganizzatore: string): Observable<CreaModificaEventoResponse> {
+  adminModificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, eventoId: string, usernameOrganizzatore: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: AdminCreaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo, usernameOrganizzatore };
 
-    return this.http.put<CreaModificaEventoResponse>(this.backendUrl + 'adminModifica/' + eventoId, request, { headers: header });
+    return this.http.put<MessageResponse>(this.backendUrl + 'adminModifica/' + eventoId, request, { headers: header });
   }
 
   getEventiByOrganizzatore(): Observable<GetAllEventiByOrganizzatoreResponse[]> {
@@ -63,10 +63,10 @@ export class EventService {
     return this.http.get<GetAllEventiResponse[]>(this.backendUrl + 'getAll', { headers: header });
   }
 
-  eliminaEvento(eventoId: number): Observable<string> {
+  eliminaEvento(eventoId: number): Observable<MessageResponse> {
     const header = this.getHeader();
 
-    return this.http.delete<string>(this.backendUrl + 'eliminaEvento/' + eventoId.toString().trim(), { headers: header });
+    return this.http.delete<MessageResponse>(this.backendUrl + 'eliminaEvento/' + eventoId.toString().trim(), { headers: header });
   }
 
   getEventoById(eventoId: string): Observable<GetEventoByIdResponse> {
@@ -75,16 +75,16 @@ export class EventService {
     return this.http.get<GetEventoByIdResponse>(this.backendUrl + 'getEventoById/' + eventoId.toString().trim(), { headers: header });
   }
 
-  iscrizioneEvento(eventoId: string): Observable<any> {
+  iscrizioneEvento(eventoId: string): Observable<MessageResponse> {
     const header = this.getHeader();
 
-    return this.http.get(this.backendUrl + 'iscrizione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+    return this.http.get<MessageResponse>(this.backendUrl + 'iscrizione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
-  annullaIscrizione(eventoId: string): Observable<any> {
+  annullaIscrizione(eventoId: string): Observable<MessageResponse> {
     const header = this.getHeader();
 
-    return this.http.get(this.backendUrl + 'annullaIscrizione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
+    return this.http.get<MessageResponse>(this.backendUrl + 'annullaIscrizione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
   getEventiByTurista(usernameTurista: string): Observable<GetAllEventiByOrganizzatoreResponse[]> {
@@ -93,10 +93,10 @@ export class EventService {
     return this.http.get<GetAllEventiByOrganizzatoreResponse[]>(this.backendUrl + 'getByTurista/' + usernameTurista, { headers: header });
   }
 
-  rimuoviTuristaDaEvento(usernameTurista: string, eventoId: string): Observable<any> {
+  rimuoviTuristaDaEvento(usernameTurista: string, eventoId: string): Observable<MessageResponse> {
     const header = this.getHeader();
 
-    return this.http.delete(this.backendUrl + 'rimuoviTuristaDaEvento/' + usernameTurista + '/' + eventoId, { headers: header });
+    return this.http.delete<MessageResponse>(this.backendUrl + 'rimuoviTuristaDaEvento/' + usernameTurista + '/' + eventoId, { headers: header });
   }
 
   //creo l'header con il token da mandare al backend

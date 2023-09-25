@@ -4,8 +4,7 @@ import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.LuogoBuilder;
 import it.polimi.iswpf.dto.request.AdminCreaModificaEventoRequest;
 import it.polimi.iswpf.dto.request.CreaModificaEventoRequest;
-import it.polimi.iswpf.dto.response.AllEventiResponse;
-import it.polimi.iswpf.dto.response.GetEventoResponse;
+import it.polimi.iswpf.dto.response.EventoResponse;
 import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
@@ -103,10 +102,10 @@ public class EventoServiceImpl implements EventoService {
     /**
      * Metodo per prendere tutti gli eventi di un organizzatore.
      * @param organizzatoreId Id dell'organizzatore di cui si vogliono prendere gli eventi.
-     * @return Lista di DTO con i dati degli eventi {@link GetEventoResponse}.
+     * @return Lista di DTO con i dati degli eventi {@link EventoResponse}.
      */
     @Override
-    public List<GetEventoResponse> getAllEventi(Long organizzatoreId) {
+    public List<EventoResponse> getAllEventi(Long organizzatoreId) {
 
         //L'id autoincrement parte da 1.
         if(organizzatoreId < 1) {
@@ -130,10 +129,12 @@ public class EventoServiceImpl implements EventoService {
         }
 
         //Se sono presenti eventi, inizializzo l'array che conterrà gli eventi.
-        List<GetEventoResponse> response = new ArrayList<>();
+        List<EventoResponse> response = new ArrayList<>();
 
         //Lista di username dei turisti iscritti per ogni evento.
         List<String> usernameTuristi;
+
+        List<RecensioneResponse> recensioni = new ArrayList<>();
 
         //Per ogni evento presente sul database, salvo tutti i campi nell'array di risposta.
         for(Evento evento : eventi.get()) {
@@ -146,8 +147,16 @@ public class EventoServiceImpl implements EventoService {
                 usernameTuristi.add(turista.getUsername());
             }
 
+            for(Recensione recensione : evento.getRecensioni()) {
+                recensioni.add(new RecensioneResponse(
+                        recensione.getUser().getUsername(),
+                        recensione.getVoto(),
+                        recensione.getTesto()
+                ));
+            }
+
             //Costruisco il DTO.
-            response.add(new GetEventoResponse(
+            response.add(new EventoResponse(
                     evento.getEventoId(),
                     evento.getTitolo(),
                     evento.getDescrizione(),
@@ -159,7 +168,8 @@ public class EventoServiceImpl implements EventoService {
                     evento.getLuogo().getLng(),
                     evento.getLuogo().getNome(),
                     evento.getOrganizzatore().getUsername(),
-                    usernameTuristi
+                    usernameTuristi,
+                    recensioni
             ));
         }
 
@@ -201,10 +211,10 @@ public class EventoServiceImpl implements EventoService {
     /**
      * Metodo per prendere un evento dato un id.
      * @param eventoId Id del singolo evento.
-     * @return DTO con i dati dell'evento richiesto -> {@link GetEventoResponse}.
+     * @return DTO con i dati dell'evento richiesto -> {@link EventoResponse}.
      */
     @Override
-    public GetEventoResponse getEventoById(Long eventoId) {
+    public EventoResponse getEventoById(Long eventoId) {
 
         //L'id autoincrement parte da 1.
         if(eventoId < 1) {
@@ -222,13 +232,24 @@ public class EventoServiceImpl implements EventoService {
         //Lista di username dei turisti iscritti all'evento.
         List<String> usernameTuristi = new ArrayList<>();
 
+        List<RecensioneResponse> recensioni = new ArrayList<>();
+
         //Salvo tutti i campi nell'array di risposta.
         for(User turista : eventoExists.get().getIscritti()) {
             usernameTuristi.add(turista.getUsername());
         }
 
+        //Aggiungo tutte le recensioni dell'evento
+        for(Recensione recensione : eventoExists.get().getRecensioni()) {
+            recensioni.add(new RecensioneResponse(
+                    recensione.getUser().getUsername(),
+                    recensione.getVoto(),
+                    recensione.getTesto()
+            ));
+        }
+
         //Costruisco il DTO.
-        return new GetEventoResponse(
+        return new EventoResponse(
                 eventoExists.get().getEventoId(),
                 eventoExists.get().getTitolo(),
                 eventoExists.get().getDescrizione(),
@@ -240,7 +261,8 @@ public class EventoServiceImpl implements EventoService {
                 eventoExists.get().getLuogo().getLng(),
                 eventoExists.get().getLuogo().getNome(),
                 eventoExists.get().getOrganizzatore().getUsername(),
-                usernameTuristi
+                usernameTuristi,
+                recensioni
         );
     }
 
@@ -330,10 +352,10 @@ public class EventoServiceImpl implements EventoService {
 
     /**
      * Metodo per prendere tutti gli eventi presenti sul database.
-     * @return Lista di DTO con tutti i dati di ogni evento -> {@link AllEventiResponse}.
+     * @return Lista di DTO con tutti i dati di ogni evento -> {@link EventoResponse}.
      */
     @Override
-    public List<AllEventiResponse> adminGetAllEventi() {
+    public List<EventoResponse> adminGetAllEventi() {
 
         //Prendo tutti gli eventi presenti sul database.
         List<Evento> eventi = eventoRepository.findAll();
@@ -344,7 +366,7 @@ public class EventoServiceImpl implements EventoService {
         }
 
         //Se non sono presenti eventi, ritorno un array vuoto.
-        List<AllEventiResponse> response = new ArrayList<>();
+        List<EventoResponse> response = new ArrayList<>();
 
         //Lista di username dei turisti iscritti per ogni evento.
         List<String> usernameTuristi;
@@ -374,7 +396,7 @@ public class EventoServiceImpl implements EventoService {
             }
 
             //Costruisco il DTO.
-            response.add(new AllEventiResponse(
+            response.add(new EventoResponse(
                     evento.getEventoId(),
                     evento.getTitolo(),
                     evento.getDescrizione(),
@@ -720,7 +742,7 @@ public class EventoServiceImpl implements EventoService {
      * @return Lista di DTO con tutti i dati di ogni evento.
      */
     @Override
-    public List<AllEventiResponse> getEventiByTurista(String usernameTurista) {
+    public List<EventoResponse> getEventiByTurista(String usernameTurista) {
 
         if(usernameTurista.isEmpty() || usernameTurista.isBlank()) {
             throw new BadRequestException("Inserire un username valido");
@@ -736,7 +758,7 @@ public class EventoServiceImpl implements EventoService {
         List<Evento> eventi = eventoRepository.findAllByIscrittiIsContaining(turistaExists.get());
 
         //Se non sono presenti eventi, ritorno un array vuoto.
-        List<AllEventiResponse> response = new ArrayList<>();
+        List<EventoResponse> response = new ArrayList<>();
 
         //Lista di username dei turisti iscritti per ogni evento.
         List<String> usernameTuristi;
@@ -766,7 +788,7 @@ public class EventoServiceImpl implements EventoService {
             }
 
             //Costruisco il DTO.
-            response.add(new AllEventiResponse(
+            response.add(new EventoResponse(
                     evento.getEventoId(),
                     evento.getTitolo(),
                     evento.getDescrizione(),

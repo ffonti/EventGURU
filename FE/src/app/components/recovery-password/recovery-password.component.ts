@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 import { AuthService } from 'src/app/services/auth.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 
@@ -17,7 +18,7 @@ export class RecoveryPasswordComponent {
 
   inviaEmail(): void {
     this.authService.recuperaPassword(this.email).subscribe({
-      next: (res: any) => {
+      next: (res: MessageResponse) => {
         this.spinnerService.requestEnded();
         this.toastr.success('Password modificata con successo');
         this.toastr.info('Controllare la mail per accedere con la nuova password');

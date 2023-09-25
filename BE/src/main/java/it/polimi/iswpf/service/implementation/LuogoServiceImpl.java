@@ -2,7 +2,7 @@ package it.polimi.iswpf.service.implementation;
 
 import it.polimi.iswpf.dto.request.DatiCirconferenza;
 import it.polimi.iswpf.dto.request.PuntoPoligono;
-import it.polimi.iswpf.dto.response.AllEventiResponse;
+import it.polimi.iswpf.dto.response.EventoResponse;
 import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.model.*;
 import it.polimi.iswpf.repository.EventoRepository;
@@ -21,10 +21,10 @@ public class LuogoServiceImpl implements LuogoService {
     private final EventoRepository eventoRepository;
 
     @Override
-    public List<AllEventiResponse> getAllMarkerCoordinates() {
+    public List<EventoResponse> getAllMarkerCoordinates() {
 
         List<Evento> eventi = eventoRepository.findAll();
-        List<AllEventiResponse> response = new ArrayList<>();
+        List<EventoResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             if(evento.getDataInizio().isAfter(LocalDateTime.now())) {
@@ -37,10 +37,10 @@ public class LuogoServiceImpl implements LuogoService {
     }
 
     @Override
-    public List<AllEventiResponse> getAllMarkerCoordinatesByOrganizzatore(Long organizzatoreId) {
+    public List<EventoResponse> getAllMarkerCoordinatesByOrganizzatore(Long organizzatoreId) {
 
         List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
-        List<AllEventiResponse> response = new ArrayList<>();
+        List<EventoResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             buildCoordinatesResponse(response, evento);
@@ -50,10 +50,10 @@ public class LuogoServiceImpl implements LuogoService {
     }
 
     @Override
-    public List<AllEventiResponse> coordinateDentroPoligono(List<PuntoPoligono> request) {
+    public List<EventoResponse> coordinateDentroPoligono(List<PuntoPoligono> request) {
 
         List<Evento> eventi = eventoRepository.findAll();
-        List<AllEventiResponse> response = new ArrayList<>();
+        List<EventoResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             if(isMarkerInsidePolygon(
@@ -70,10 +70,10 @@ public class LuogoServiceImpl implements LuogoService {
     }
 
     @Override
-    public List<AllEventiResponse> coordinateDentroPoligonoByOrganizzatore(List<PuntoPoligono> request, Long organizzatoreId) {
+    public List<EventoResponse> coordinateDentroPoligonoByOrganizzatore(List<PuntoPoligono> request, Long organizzatoreId) {
 
         List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
-        List<AllEventiResponse> response = new ArrayList<>();
+        List<EventoResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             if(isMarkerInsidePolygon(
@@ -89,10 +89,10 @@ public class LuogoServiceImpl implements LuogoService {
     }
 
     @Override
-    public List<AllEventiResponse> coordinateDentroCirconferenza(DatiCirconferenza request) {
+    public List<EventoResponse> coordinateDentroCirconferenza(DatiCirconferenza request) {
 
         List<Evento> eventi = eventoRepository.findAll();
-        List<AllEventiResponse> response = new ArrayList<>();
+        List<EventoResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             if(isMarkerInsideCircumference(
@@ -109,10 +109,10 @@ public class LuogoServiceImpl implements LuogoService {
     }
 
     @Override
-    public List<AllEventiResponse> coordinateDentroCirconferenzaByOrganizzatore(DatiCirconferenza request, Long organizzatoreId) {
+    public List<EventoResponse> coordinateDentroCirconferenzaByOrganizzatore(DatiCirconferenza request, Long organizzatoreId) {
 
         List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
-        List<AllEventiResponse> response = new ArrayList<>();
+        List<EventoResponse> response = new ArrayList<>();
 
         for(Evento evento : eventi) {
             if(isMarkerInsideCircumference(
@@ -127,7 +127,7 @@ public class LuogoServiceImpl implements LuogoService {
         return response;
     }
 
-    private void buildCoordinatesResponse(List<AllEventiResponse> response, Evento evento) {
+    private void buildCoordinatesResponse(List<EventoResponse> response, Evento evento) {
         List<String> usernameTuristi;
         List<RecensioneResponse> recensioni;
         usernameTuristi = new ArrayList<>();
@@ -145,7 +145,7 @@ public class LuogoServiceImpl implements LuogoService {
             ));
         }
 
-        response.add(new AllEventiResponse(
+        response.add(new EventoResponse(
                 evento.getEventoId(),
                 evento.getTitolo(),
                 evento.getDescrizione(),
