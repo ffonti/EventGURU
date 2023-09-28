@@ -12,11 +12,13 @@ import { TuristaService } from 'src/app/services/turista.service';
   styleUrls: ['./admin-page.component.css']
 })
 export class AdminPageComponent implements OnInit {
-  protected usersList: GetAllResponse[] = []; //inizializzo la lista di utenti da visualizzare
+  //inizializzo la lista di utenti da visualizzare
+  protected usersList: GetAllResponse[] = [];
   protected showUsersList: boolean = false;
   protected usernameTurista: string = '';
   protected usernameOrganizzatore: string = '';
   protected nomeEvento: string = '';
+  //variabili per il filtro
   protected isIdArrowUp: boolean = true;
   protected isNomeArrowUp: boolean = false;
   protected isCognomeArrowUp: boolean = false;
@@ -43,6 +45,7 @@ export class AdminPageComponent implements OnInit {
     //chiamo il backend per prendere tutti gli utenti con ruolo turista
     this.turistaService.getAllTurista().subscribe({
       next: (res: GetAllResponse[]) => {
+        //aggiungo tutti i dati a delle variabili così da poterli visualizzare
         this.compilaUsersList(res);
         this.toggleModalUsersList();
       },
@@ -86,6 +89,7 @@ export class AdminPageComponent implements OnInit {
       this.usersList.push(user);
     }
 
+    //sorting in ordine crescente
     this.usersList.sort((a, b) => {
       if (a.userId > b.userId) {
         return 1;
@@ -109,17 +113,6 @@ export class AdminPageComponent implements OnInit {
     this.isAdmin();
 
     this.router.navigateByUrl('homepage/esplora');
-  }
-
-  //per cercare un evento e visualizzarne i dati per poterli modificare
-  cercaEventoPerNome(): void {
-    this.isAdmin(); //controllo il ruolo
-
-    if (this.nomeEvento === '' || this.nomeEvento === null || this.nomeEvento === undefined) {
-      this.toastr.warning("Il campo non può essere vuoto");
-    } else {
-      //TODO Event page con modale evento aperta per modifica
-    }
   }
 
   //per andare alla pagina dove è possibile modificare i dati di un utente, divisi per organizzatore o turista

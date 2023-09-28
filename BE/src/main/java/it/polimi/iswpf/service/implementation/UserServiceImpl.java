@@ -256,6 +256,54 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * Metodo per prendere tutti gli utenti di un dato ruolo.
+     * @param ruolo Ruolo richiesto, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con i dati degli utenti richiesti.
+     */
+    @Override
+    public List<UserResponse> getAllByRuolo(String ruolo) {
+
+        //Controllo la validità del campo.
+        if(ruolo.isBlank() || ruolo.isEmpty()) {
+            throw new BadRequestException("Ruolo non valido");
+        }
+
+        //In base al ruolo richiesto dal client, creo una variabile da usare per chiamare il db.
+        final Ruolo ruoloDaCercare = switch (ruolo) {
+            case "TURISTA" -> Ruolo.TURISTA;
+            case "ORGANIZZATORE" -> Ruolo.ORGANIZZATORE;
+            default -> throw new BadRequestException("Ruolo non valido");
+        };
+
+        //Prendo dal db tutti gli utenti.
+        Optional<List<User>> users = userRepository.findAllByRuolo(ruoloDaCercare);
+
+        //Se non è presente nessun utente lancio un'eccezione.
+        if(users.isEmpty()) {
+            throw new NotFoundException("Utenti non trovati");
+        }
+
+        //Inizializzo la variabile di risposta.
+        List<UserResponse> response = new ArrayList<>();
+
+        //Per ogni utente, aggiungo all'array di risposta i dati.
+        for(User user: users.get()) {
+            response.add(new UserResponse(
+                    user.getUserId(),
+                    user.getNome(),
+                    user.getCognome(),
+                    user.getEmail(),
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getRuolo(),
+                    user.isIscrittoNewsletter()
+            ));
+        }
+
+        return response;
+    }
+
+    /**
      * Metodo che permette a un turista di seguire un organizzatore, e quindi essere notificati alla creazione di un evento.
      * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.

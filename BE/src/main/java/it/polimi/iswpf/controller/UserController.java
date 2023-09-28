@@ -125,6 +125,20 @@ public class UserController {
     }
 
     /**
+     * Metodo per prendere tutti gli utenti di un dato ruolo.
+     * @param ruolo Ruolo richiesto, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con i dati degli utenti richiesti.
+     */
+    @GetMapping("getAll/{ruolo}")
+    public ResponseEntity<List<UserResponse>> getAllByRuolo(@PathVariable String ruolo) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getAllByRuolo(ruolo));
+    }
+
+
+    /**
      * Metodo che permette a un turista di seguire un organizzatore, e quindi essere notificati alla creazione di un evento.
      * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.

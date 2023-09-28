@@ -38,9 +38,9 @@ export class AccountComponent implements OnInit {
   //costruttore dove istanzio le classi con cui interagire
   constructor(private userService: UserService, private toastr: ToastrService, private router: Router) { }
 
-  //metodo eseguito appena viene caricato il componente
+  //Metodo eseguito appena viene caricato il componente
   ngOnInit(): void {
-    this.username = ''; //inizzializzo l'username
+    this.username = '';
     this.oldUsername = '';
 
     //se nell'url è presente un username, vuol dire che un admin vuole visualizzare i dati di un altro utente
@@ -65,7 +65,8 @@ export class AccountComponent implements OnInit {
     })
   }
 
-  //per gestire la visualizzazione dell'icona
+  /* per gestire la visualizzazione dell'icona nell'input password
+  il parametro "type" stabilisce iltipo di password di cui cambiare l'icona */
   toggleShowPassword(type: string): void {
     switch (type) {
       case 'repeat':
@@ -80,7 +81,7 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  //per visualizzare i messaggi di errore
+  //per visualizzare i messaggi di errore in caso i due campi password siano diversi
   ripetiPasswordNotOk(): boolean {
     return (this.userData.nuovaPassword !== this.ripeti_password);
   }
@@ -88,10 +89,12 @@ export class AccountComponent implements OnInit {
   //per aggiornare i dati dell'utente
   updateUserData(): void {
 
+    //prendo l'username dell'account
     this.oldUsername = this.router.url.split('/homepage/account/')[1];
 
     //caso in cui un admin modifica i dati di un altro utente
     if (this.oldUsername !== null && this.oldUsername !== undefined && this.oldUsername !== '') {
+      //chiamo il server e gli passo tutti i dati da modificare di un dato utente
       this.userService.adminUpdateUserData(this.userData.nome, this.userData.cognome, this.userData.email, this.userData.username, this.userData.vecchiaPassword, this.userData.nuovaPassword, this.userData.iscrittoNewsletter, this.oldUsername).subscribe({
         next: (res: GetUserDataResponse) => {
           this.toastr.success("Dati modificati con successo");
@@ -102,8 +105,9 @@ export class AccountComponent implements OnInit {
         }
       });
 
+      //caso in cui l'utente vuole modificare i propri dati
     } else {
-      //chiamo il server per aggiornare i dati dell'utente
+      //chiamo il server per aggiornare i dati dell'utente stesso
       this.userService.updateUserData(this.userData.nome, this.userData.cognome, this.userData.email, this.userData.username, this.userData.vecchiaPassword, this.userData.nuovaPassword, this.userData.iscrittoNewsletter).subscribe({
         next: (res: GetUserDataResponse) => {
           this.router.navigateByUrl('login');
@@ -118,12 +122,12 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  //per visualizzare i messaggi di errore
+  //per visualizzare i messaggi di errore in caso le password non coincidono
   vecchiaENuovaPasswordUguali(): boolean {
     return (this.userData.vecchiaPassword === this.userData.nuovaPassword && this.userData.vecchiaPassword !== '');
   }
 
-  //per visualizzare la modale
+  //per visualizzare o meno la modale
   toggleModalEliminaAccount(): void {
     this.showModalEliminaAccount = !this.showModalEliminaAccount;
   }
@@ -150,7 +154,7 @@ export class AccountComponent implements OnInit {
     })
   }
 
-  //per far ricevere ad un admin i dati di un altro utente
+  //per far ricevere ad un admin i dati di un altro utente dato l'username
   getAdminUserData(username: string): void {
     this.userService.getAdminUserData(username).subscribe({
       next: (res: GetUserDataResponse) => {
@@ -164,7 +168,7 @@ export class AccountComponent implements OnInit {
     })
   }
 
-  //assegna a delle variabili i dati della response, così da vedere il form compilato
+  //assegna a delle variabili i dati della response, così da vedere il form già compilato
   compilaCampi(res: GetUserDataResponse): void {
     this.userData.nome = res.nome;
     this.userData.cognome = res.cognome;

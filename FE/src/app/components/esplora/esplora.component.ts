@@ -33,6 +33,11 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   protected allEventiFiltered: GetAllEventiResponse[] = [];
   protected allEventiWithDateFormattedFiltered: any[] = [];
   protected temp: any = [];
+  protected eventoIdSelected: number = 0;
+  protected allEventiByOrganizzatore: GetAllEventiByOrganizzatoreResponse[] = [];
+  protected showModalPartecipantiNoRemove: boolean = false;
+  protected showModalPartecipanti: boolean = false;
+  protected usernamePartecipanti: string[] = [];
 
   mapDraw: any;
 
@@ -268,5 +273,51 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     this.temp = JSON.parse(JSON.stringify(this.allEventiWithDateFormatted));
 
     this.allEventiWithDateFormatted = this.allEventiWithDateFormattedFiltered;
+  }
+
+  toggleModalPartecipanti(eventoId: number): void {
+    this.eventoIdSelected = eventoId;
+    this.allEventiWithDateFormatted.forEach((evento) => {
+      if (evento.eventoId == eventoId) {
+        this.usernamePartecipanti = evento.usernameTuristi;
+      }
+    });
+
+    this.showModalPartecipanti = !this.showModalPartecipanti;
+  }
+
+  toggleModalPartecipantiNoRemove(eventoId: number): void {
+    this.eventoIdSelected = eventoId;
+    this.allEventiByOrganizzatore.forEach((evento) => {
+      if (evento.eventoId == eventoId) {
+        this.usernamePartecipanti = evento.usernameTuristi;
+      }
+    })
+    this.showModalPartecipantiNoRemove = !this.showModalPartecipantiNoRemove;
+  }
+
+  rimuoviTuristaDaEvento(usernameTurista: string): void {
+    this.eventService.rimuoviTuristaDaEvento(usernameTurista, this.eventoIdSelected.toString().trim()).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message);
+
+        this.usernamePartecipanti = this.usernamePartecipanti.filter((username) => {
+          return username != usernameTurista;
+        });
+
+        this.allEventiByOrganizzatore.forEach((evento) => {
+          if (evento.eventoId == this.eventoIdSelected) {
+            evento.usernameTuristi = evento.usernameTuristi.filter((username) => {
+              return username != usernameTurista;
+            });
+          }
+        });
+      },
+      error: (err: HttpErrorResponse) => {
+        this.showModalPartecipanti = false;
+        this.toastr.error(err.error.message);
+        console.log(err);
+      }
+    })
   }
 }

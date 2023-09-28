@@ -1,14 +1,6 @@
 <!-- Header -->
 <div class="flex-center flex-col mt-[4%] space-y-4">
   <h1 class="mb-2 text-3xl font-bold text-gray-900">Admin page</h1>
-
-  <div class="w-[50%]">
-    <h3 class="text-center">
-      Negli elenchi sottostanti è possibile visualizzare tutti gli utenti.
-      È presente un bottone per ognuno di loro che porterà alla
-      pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
-    </h3>
-  </div>
 </div>
 
 <!-- Body -->
@@ -61,7 +53,7 @@
     <div class="mt-5 flex-center flex-col w-full">
 
       <p class="mb-3 font-normal text-gray-700">
-        Elenco di tutti i turisti registrati nella piattaforma.
+        Elenco di tutti gli organizzatori registrati nella piattaforma.
         È presente un bottone per ognuno di loro che porterà alla
         pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
       </p>
@@ -96,17 +88,13 @@
     <div class="mt-5 flex-center flex-col w-full">
 
       <p class="mb-3 font-normal text-gray-700">
-        Elenco di tutti i turisti registrati nella piattaforma.
-        È presente un bottone per ognuno di loro che porterà alla
-        pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
+        Elenco di tutti gli eventi presenti nella piattaforma.
+        È presente una serie di filtri in modo da visualizzare tutte le categorie
+        di eventi e ordinarli. Vi è inoltre la possibilità di modificare o eliminare gli eventi
+        e poi visualizzare e rimuovere i partecipanti.
       </p>
 
-      <div class="w-full relative">
-        <input type="text" placeholder="Cerca per nome" [(ngModel)]="nomeEvento"
-          class="h-10 w-full rounded border-fields shadow-fields px-2" />
-        <span (click)="cercaEventoPerNome()" class="material-icons absolute cursor-pointer top-[19%] right-[1%]">
-          search
-        </span>
+      <div class="w-full h-4 relative">
       </div>
 
       <a (click)="goToEsploraPage()"

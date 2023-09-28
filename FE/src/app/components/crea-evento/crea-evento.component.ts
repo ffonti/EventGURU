@@ -116,7 +116,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
         this.toastr.warning('Selezionare prima un punto sulla mappa');
         return;
       }
-      //TODO controllare che tutti i campi siano stati compilati (con bordo rosso)
+
       if (this.ruolo === 'ORGANIZZATORE') {
         this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo).subscribe({
           next: (res: MessageResponse) => {
