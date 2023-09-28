@@ -40,10 +40,10 @@ public class Evento {
     @Column(name = "data_creazione", nullable = false, updatable = false)
     private LocalDateTime dataCreazione;
 
-    @Column(name = "data_inizio", nullable = false, updatable = false)
+    @Column(name = "data_inizio", nullable = false)
     private LocalDateTime dataInizio;
 
-    @Column(name = "data_fine", nullable = false, updatable = false)
+    @Column(name = "data_fine", nullable = false)
     private LocalDateTime dataFine;
 
     @Enumerated(EnumType.STRING)

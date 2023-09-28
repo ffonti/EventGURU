@@ -317,7 +317,6 @@ public class EventoServiceImpl implements EventoService {
             throw new BadRequestException("L'evento non può avvenire nel passato");
         }
 
-        //TODO capire perché le date non vengono aggiornate.
         //Aggiorno la data di inizio e fine dell'evento.
         evento.setDataInizio(request.getDataInizio());
         evento.setDataFine(request.getDataFine());
@@ -527,7 +526,6 @@ public class EventoServiceImpl implements EventoService {
             throw new BadRequestException("L'evento non può avvenire nel passato");
         }
 
-        //TODO capire perché le date non vengono aggiornate.
         //Aggiorno la data di inizio e fine dell'evento.
         evento.setDataInizio(request.getDataInizio());
         evento.setDataFine(request.getDataFine());
