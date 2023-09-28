@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Metodo che, dato un id, prende l'utente dal database tramite la repository e lo ritorna al controller.
      * @param userId Id dell'utente.
-     * @return DTO con tutti i dati dell'utente richiesto -> {@link UserResponse}.
+     * @return DTO con tutti i dati dell'utente.
      */
     @Override
     public UserResponse getUserData(Long userId) {
@@ -63,10 +63,10 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Metodo che, dato un id e un DTO con i nuovi dati, modifica i dati dell'utente con quell'id.
+     * Metodo che, modifica i dati dell'utente con quell'id.
      * @param userId Id dell'utente.
-     * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
-     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
+     * @param request DTO con i nuovi dati.
+     * @return DTO con i dati dell'utente aggiornati.
      */
     @Override
     public UserResponse updateUserData(Long userId, UpdateUserDataRequest request) {
@@ -82,20 +82,20 @@ public class UserServiceImpl implements UserService {
         //Se non esiste un utente con quell'id, lancio un'eccezione.
         if(userExists.isEmpty()) {
             throw new NotFoundException("Utente non trovato");
-        } else {
-            //Se l'utente esiste, lo assegno a una variabile.
-            User user = userExists.get();
-
-            //Aggiorno i dati dell'utente.
-            return updateGeneralUser(user, request);
         }
+
+        //Se l'utente esiste, lo assegno a una variabile.
+        User user = userExists.get();
+
+        //Aggiorno i dati dell'utente.
+        return updateGeneralUser(user, request);
     }
 
     /**
      * Metodo che permette all'admin di modificare i dati di un utente, dato un username.
      * @param username Username dell'utente da modificare.
-     * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
-     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
+     * @param request DTO con i nuovi dati.
+     * @return DTO con i dati dell'utente aggiornati.
      */
     @Override
     public UserResponse adminUpdateUserData(String username, UpdateUserDataRequest request) {
@@ -112,20 +112,276 @@ public class UserServiceImpl implements UserService {
         if(userExists.isEmpty()) {
             throw new NotFoundException("Utente non trovato");
 
-        } else {
-            //Se l'utente esiste, lo assegno a una variabile.
-            User user = userExists.get();
-
-            //Aggiorno i dati dell'utente
-            return updateGeneralUser(user, request);
         }
+
+        //Se l'utente esiste, lo assegno a una variabile.
+        User user = userExists.get();
+
+        //Aggiorno i dati dell'utente
+        return updateGeneralUser(user, request);
+    }
+
+    /**
+     * Elimina l'utente dal database dopo aver fatto diversi controlli.
+     * @param userId Id dell'utente da eliminare.
+     */
+    @Override
+    public void deleteAccount(Long userId) {
+
+        //L'id autoincrement parte da 1.
+        if(userId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'utente dal db con quell'id.
+        Optional<User> userExists = userRepository.findByUserId(userId);
+
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
+        if(userExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        //Elimino l'utente dal database.
+        userRepository.delete(userExists.get());
+
+        //Controllo se esiste ancora l'utente con quell'id
+        Optional<User> userDeleted = userRepository.findByUserId(userId);
+
+        //Se non è stato eliminato, lancio un'eccezione.
+        if(userDeleted.isPresent()) {
+            throw new InternalServerErrorException("Errore nell'eliminazione dell'utente");
+        }
+    }
+
+    /**
+     * Dato un username, ed eseguiti diversi controlli, ritorno l'utente con quell'username.
+     * @param username Username dell'utente richiesto.
+     * @return DTO con i dati dell'utente richiesto.
+     */
+    @Override
+    public UserResponse getAdminUserData(String username) {
+
+        //L'username dev'essere valido.
+        if(username.isBlank() || username.isEmpty()) {
+            throw new BadRequestException("Username non valido");
+        }
+
+        //Prendo l'utente dal db con quell'username.
+        Optional<User> userExists = userRepository.findByUsername(username);
+
+        //Se non esiste un utente con quell'username, lancio un'eccezione.
+        if(userExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        //Ritorno il DTO con i dati dell'utente richiesto.
+        return new UserResponse(
+                userExists.get().getUserId(),
+                userExists.get().getNome(),
+                userExists.get().getCognome(),
+                userExists.get().getEmail(),
+                userExists.get().getUsername(),
+                userExists.get().getPassword(),
+                userExists.get().getRuolo(),
+                userExists.get().isIscrittoNewsletter()
+        );
+    }
+
+    /**
+     * Dato un username, viene eliminato l'account.
+     * @param username Username dell'account da eliminare.
+     */
+    @Override
+    public void adminDeleteAccount(String username) {
+
+        //L'username dev'essere valido.
+        if(username.isBlank() || username.isEmpty()) {
+            throw new BadRequestException("Username non valido");
+        }
+
+        //Prendo l'utente dal db con quell'username.
+        Optional<User> userExists = userRepository.findByUsername(username);
+
+        //Se non esiste un utente con quell'username, lancio un'eccezione.
+        if(userExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        //Elimino l'utente dal database.
+        userRepository.delete(userExists.get());
+
+        //Controllo se esiste ancora l'utente con quell'id.
+        Optional<User> userDeleted = userRepository.findByUsername(username);
+
+        //Se non è stato eliminato, lancio un'eccezione.
+        if(userDeleted.isPresent()) {
+            throw new InternalServerErrorException("Errore durante l'eliminazione dell'utente");
+        }
+    }
+
+    /**
+     * Metodo per prendere tutti gli organizzatori presenti sul database.
+     * @return Lista di DTO con i dati di ogni organizzatore.
+     */
+    @Override
+    public List<OrganizzatoreResponse> getAllOrganizzatori() {
+
+        //Prendo dal db tutti gli organizzatori.
+        Optional<List<User>> organizzatori = userRepository.findAllByRuolo(Ruolo.ORGANIZZATORE);
+
+        //Se non è presente nessun utente lancio un'eccezione.
+        if(organizzatori.isEmpty()) {
+            throw new NotFoundException("Organizzatori non trovati");
+        }
+
+        //Inizializzo la variabile di risposta.
+        List<OrganizzatoreResponse> response = new ArrayList<>();
+
+        //Per ogni utente, aggiungo all'array di risposta i dati dell'utente.
+        for(User organizzatore: organizzatori.get()) {
+            response.add(new OrganizzatoreResponse(
+                organizzatore.getUserId(),
+                organizzatore.getUsername(),
+                organizzatore.getNome(),
+                organizzatore.getCognome(),
+                organizzatore.getDataCreazione(),
+                //Prendo il numero di eventi futuri organizzati dall'organizzatore.
+                organizzatore.getEventi().stream()
+                        .filter(evento -> evento.getDataInizio().isAfter(LocalDateTime.now()))
+                        .count()
+            ));
+        }
+
+        return response;
+    }
+
+    /**
+     * Metodo che permette a un turista di seguire un organizzatore, e quindi essere notificati alla creazione di un evento.
+     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    @Override
+    public void seguiOrganizzatore(Long organizzatoreId, Long turistaId) {
+
+        //L'id autoincrement parte da 1.
+        if(organizzatoreId < 1 || turistaId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo gli utenti dal db con quegli id.
+        Optional<User> organizzatoreExists = userRepository.findByUserId(organizzatoreId);
+        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
+        if(organizzatoreExists.isEmpty() || turistaExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        User organizzatore = organizzatoreExists.get();
+        User turista = turistaExists.get();
+
+        //Controllo il ruolo di turista e organizzatore.
+        if(!organizzatore.getRuolo().equals(Ruolo.ORGANIZZATORE) || !turista.getRuolo().equals(Ruolo.TURISTA)) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
+
+        //Controllo che il turista non segua già l'organizzatore.
+        if(turista.getSeguiti().contains(organizzatore)) {
+            throw new BadRequestException("Il turista segue già l'organizzatore");
+        }
+
+        //Aggiungo l'organizzatore alla lista dei seguiti del turista.
+        turista.getSeguiti().add(organizzatore);
+
+        //Aggiorno i dati sul database.
+        userRepository.save(turista);
+    }
+
+    /**
+     * Metodo che, dato un turista, restituisce gli username degli organizzatori seguiti.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     * @return Lista di DTO con gli username degli organizzatori.
+     */
+    @Override
+    public List<OrganizzatoreSeguitoResponse> getOrganizzatoriSeguiti(Long turistaId) {
+
+        //L'id autoincrement parte da 1.
+        if(turistaId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo l'utente dal db con quell'id.
+        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
+        if(turistaExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        //Controllo il ruolo di turista.
+        if(!turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
+
+        //Inizializzo l'array di risposta.
+        List<OrganizzatoreSeguitoResponse> response = new ArrayList<>();
+
+        //Aggiungo i dati al DTO.
+        for(User organizzatoreSeguito : turistaExists.get().getSeguiti()) {
+            response.add(new OrganizzatoreSeguitoResponse(organizzatoreSeguito.getUsername()));
+        }
+
+        //Ritorno il DTO.
+        return response;
+    }
+
+    /**
+     * Metodo che permette a un turista di smettere di seguire un organizzatore.
+     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
+     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
+     */
+    @Override
+    public void smettiSeguireOrganizzatore(Long organizzatoreId, Long turistaId) {
+
+        //L'id autoincrement parte da 1.
+        if(organizzatoreId < 1 || turistaId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
+        //Prendo gli utenti dal db con quegli id.
+        Optional<User> organizzatoreExists = userRepository.findByUserId(organizzatoreId);
+        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
+
+        //Se non esiste un utente con quell'id, lancio un'eccezione.
+        if(organizzatoreExists.isEmpty() || turistaExists.isEmpty()) {
+            throw new NotFoundException("Utente non trovato");
+        }
+
+        User organizzatore = organizzatoreExists.get();
+        User turista = turistaExists.get();
+
+        //Controllo il ruolo di turista e organizzatore.
+        if(!organizzatore.getRuolo().equals(Ruolo.ORGANIZZATORE) || !turista.getRuolo().equals(Ruolo.TURISTA)) {
+            throw new ForbiddenException("L'utente non ha i permessi adatti");
+        }
+
+        //Controllo che il turista segua l'organizzatore.
+        if(!turista.getSeguiti().contains(organizzatore)) {
+            throw new BadRequestException("Il turista non segue l'organizzatore");
+        }
+
+        //Aggiungo l'organizzatore alla lista dei seguiti del turista.
+        turista.getSeguiti().remove(organizzatore);
+
+        //Aggiorno i dati sul database.
+        userRepository.save(turista);
     }
 
     /**
      * Code cleaning. Metodo usato da due endpoint (admin e no) per modificare i dati di un utente.
      * @param user Utente da modificare.
-     * @param request DTO con i nuovi dati -> {@link UpdateUserDataRequest}.
-     * @return DTO con i dati dell'utente modificati -> {@link UserResponse}.
+     * @param request DTO con i nuovi dati.
+     * @return DTO con i dati dell'utente modificati.
      */
     private UserResponse updateGeneralUser(User user, UpdateUserDataRequest request) {
 
@@ -198,259 +454,5 @@ public class UserServiceImpl implements UserService {
                 user.getRuolo(),
                 user.isIscrittoNewsletter()
         );
-    }
-
-    /**
-     * Elimina l'utente dal database dopo aver fatto diversi controlli.
-     * @param userId Id dell'utente da eliminare.
-     */
-    @Override
-    public void deleteAccount(Long userId) {
-
-        //L'id autoincrement parte da 1.
-        if(userId < 1) {
-            throw new BadRequestException("Id non valido");
-        }
-
-        //Prendo l'utente dal db con quell'id.
-        Optional<User> userExists = userRepository.findByUserId(userId);
-
-        //Se non esiste un utente con quell'id, lancio un'eccezione.
-        if(userExists.isEmpty()) {
-            throw new NotFoundException("Utente non trovato");
-        }
-
-        //Elimino l'utente dal database.
-        userRepository.delete(userExists.get());
-
-        //Controllo se esiste ancora l'utente con quell'id
-        Optional<User> userDeleted = userRepository.findByUserId(userId);
-
-        //Se non è stato eliminato, lancio un'eccezione.
-        if(userDeleted.isPresent()) {
-            throw new InternalServerErrorException("Errore nell'eliminazione dell'utente");
-        }
-    }
-
-    /**
-     * Dato un username, ed eseguiti diversi controlli, ritorno l'utente con quell'username.
-     * @param username Username dell'utente richiesto.
-     * @return DTO con i dati dell'utente richiesto -> {@link UserResponse}.
-     */
-    @Override
-    public UserResponse getAdminUserData(String username) {
-
-        //L'username dev'essere valido.
-        if(username.isBlank() || username.isEmpty()) {
-            throw new BadRequestException("Username non valido");
-        }
-
-        //Prendo l'utente dal db con quell'username.
-        Optional<User> userExists = userRepository.findByUsername(username);
-
-        //Se non esiste un utente con quell'username, lancio un'eccezione.
-        if(userExists.isEmpty()) {
-            throw new NotFoundException("Utente non trovato");
-        }
-
-        //Ritorno il DTO con i dati dell'utente richiesto.
-        return new UserResponse(
-                userExists.get().getUserId(),
-                userExists.get().getNome(),
-                userExists.get().getCognome(),
-                userExists.get().getEmail(),
-                userExists.get().getUsername(),
-                userExists.get().getPassword(),
-                userExists.get().getRuolo(),
-                userExists.get().isIscrittoNewsletter()
-        );
-    }
-
-    /**
-     * Dato un username, viene eliminato l'account.
-     * @param username Username dell'account da eliminare.
-     */
-    @Override
-    public void adminDeleteAccount(String username) {
-
-        //L'username dev'essere valido.
-        if(username.isBlank() || username.isEmpty()) {
-            throw new BadRequestException("Username non valido");
-        }
-
-        //Prendo l'utente dal db con quell'username.
-        Optional<User> userExists = userRepository.findByUsername(username);
-
-        //Se non esiste un utente con quell'username, lancio un'eccezione.
-        if(userExists.isEmpty()) {
-            throw new NotFoundException("Utente non trovato");
-        }
-
-        //Elimino l'utente dal database.
-        userRepository.delete(userExists.get());
-
-        //Controllo se esiste ancora l'utente con quell'id
-        Optional<User> userDeleted = userRepository.findByUsername(username);
-
-        //Se non è stato eliminato, lancio un'eccezione.
-        if(userDeleted.isPresent()) {
-            throw new InternalServerErrorException("Errore nell'eliminazione dell'utente");
-        }
-    }
-
-    /**
-     * Metodo per prendere tutti gli organizzatori presenti sul database.
-     * @return Lista di DTO con i dati di ogni organizzatore -> {@link OrganizzatoreResponse}.
-     */
-    @Override
-    public List<OrganizzatoreResponse> getAllOrganizzatori() {
-
-        Optional<List<User>> organizzatori = userRepository.findAllByRuolo(Ruolo.ORGANIZZATORE);
-
-        //Se non è presente nessun utente lancio un'eccezione.
-        if(organizzatori.isEmpty()) {
-            throw new NotFoundException("Organizzatori non trovati");
-        }
-
-        //Inizializzo la variabile di risposta
-        List<OrganizzatoreResponse> response = new ArrayList<>();
-
-        //Per ogni utente, aggiungo all'array di risposta i dati dell'utente.
-        for(User organizzatore: organizzatori.get()) {
-            response.add(new OrganizzatoreResponse(
-                organizzatore.getUserId(),
-                organizzatore.getUsername(),
-                organizzatore.getNome(),
-                organizzatore.getCognome(),
-                organizzatore.getDataCreazione(),
-                organizzatore.getEventi().stream()
-                        .filter(evento -> evento.getDataInizio().isAfter(LocalDateTime.now()))
-                        .count()
-            ));
-        }
-
-        return response;
-    }
-
-    /**
-     * Metodo che permette a un turista di seguire un organizzatore, e quindi essere notificati alla creazione di un evento.
-     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
-     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
-     */
-    @Override
-    public void seguiOrganizzatore(Long organizzatoreId, Long turistaId) {
-
-        //L'id autoincrement parte da 1.
-        if(organizzatoreId < 1 || turistaId < 1) {
-            throw new BadRequestException("Id non valido");
-        }
-
-        //Prendo gli utenti dal db con quell'id.
-        Optional<User> organizzatoreExists = userRepository.findByUserId(organizzatoreId);
-        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
-
-        //Se non esiste un utente con quell'id, lancio un'eccezione.
-        if(organizzatoreExists.isEmpty() || turistaExists.isEmpty()) {
-            throw new NotFoundException("Utente non trovato");
-        }
-
-        User organizzatore = organizzatoreExists.get();
-        User turista = turistaExists.get();
-
-        //Controllo il ruolo di turista e organizzatore.
-        if(!organizzatore.getRuolo().equals(Ruolo.ORGANIZZATORE) || !turista.getRuolo().equals(Ruolo.TURISTA)) {
-            throw new ForbiddenException("L'utente non ha i permessi adatti");
-        }
-
-        //Controllo che il turista non segua già l'organizzatore.
-        if(turista.getSeguiti().contains(organizzatore)) {
-            throw new BadRequestException("Il turista segue già l'organizzatore");
-        }
-
-        //Aggiungo l'organizzatore alla lista dei seguiti del turista.
-        turista.getSeguiti().add(organizzatore);
-
-        //Aggiorno i dati sul database.
-        userRepository.save(turista);
-    }
-
-    /**
-     * Metodo che, dato un turista, restituisce gli username degli organizzatori seguiti.
-     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
-     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoreSeguitoResponse}.
-     */
-    @Override
-    public List<OrganizzatoreSeguitoResponse> getOrganizzatoriSeguiti(Long turistaId) {
-
-        //L'id autoincrement parte da 1.
-        if(turistaId < 1) {
-            throw new BadRequestException("Id non valido");
-        }
-
-        //Prendo l'utente dal db con quell'id.
-        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
-
-        //Se non esiste un utente con quell'id, lancio un'eccezione.
-        if(turistaExists.isEmpty()) {
-            throw new NotFoundException("Utente non trovato");
-        }
-
-        //Controllo il ruolo di turista.
-        if(!turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
-            throw new ForbiddenException("L'utente non ha i permessi adatti");
-        }
-
-        //Inizializzo l'array di risposta.
-        List<OrganizzatoreSeguitoResponse> response = new ArrayList<>();
-
-        //Aggiungo i dati al DTO.
-        for(User organizzatoreSeguito : turistaExists.get().getSeguiti()) {
-            response.add(new OrganizzatoreSeguitoResponse(organizzatoreSeguito.getUsername()));
-        }
-
-        //Ritorno il DTO.
-        return response;
-    }
-
-    /**
-     * Metodo che permette a un turista di smettere di seguire un organizzatore.
-     * @param organizzatoreId Id univoco dell'organizzatore, passato in modo dinamico tramite l'endpoint.
-     * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
-     */
-    @Override
-    public void smettiSeguireOrganizzatore(Long organizzatoreId, Long turistaId) {
-
-        //L'id autoincrement parte da 1.
-        if(organizzatoreId < 1 || turistaId < 1) {
-            throw new BadRequestException("Id non valido");
-        }
-
-        //Prendo gli utenti dal db con quell'id.
-        Optional<User> organizzatoreExists = userRepository.findByUserId(organizzatoreId);
-        Optional<User> turistaExists = userRepository.findByUserId(turistaId);
-
-        //Se non esiste un utente con quell'id, lancio un'eccezione.
-        if(organizzatoreExists.isEmpty() || turistaExists.isEmpty()) {
-            throw new NotFoundException("Utente non trovato");
-        }
-
-        User organizzatore = organizzatoreExists.get();
-        User turista = turistaExists.get();
-
-        //Controllo il ruolo di turista e organizzatore.
-        if(!organizzatore.getRuolo().equals(Ruolo.ORGANIZZATORE) || !turista.getRuolo().equals(Ruolo.TURISTA)) {
-            throw new ForbiddenException("L'utente non ha i permessi adatti");
-        }
-
-        //Controllo che il turista segua l'organizzatore.
-        if(!turista.getSeguiti().contains(organizzatore)) {
-            throw new BadRequestException("Il turista non segue l'organizzatore");
-        }
-
-        //Aggiungo l'organizzatore alla lista dei seguiti del turista.
-        turista.getSeguiti().remove(organizzatore);
-
-        //Aggiorno i dati sul database.
-        userRepository.save(turista);
     }
 }

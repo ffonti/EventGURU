@@ -4,13 +4,12 @@ import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
 import it.polimi.iswpf.dto.response.OrganizzatoreResponse;
 import it.polimi.iswpf.dto.response.OrganizzatoreSeguitoResponse;
 import it.polimi.iswpf.dto.response.UserResponse;
-import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service.implementation.UserServiceImpl;
 
 import java.util.List;
 
 /**
- * Interfaccia che contiene le firme dei metodi del service.
+ * Interfaccia che contiene le firme dei metodi del service inerenti all'user.
  * Implementazione -> {@link UserServiceImpl}.
  */
 public interface UserService {
@@ -18,23 +17,23 @@ public interface UserService {
     /**
      * Metodo che, dato un id, prende l'utente dal database tramite la repository e lo ritorna al controller.
      * @param userId Id dell'utente.
-     * @return Oggetto {@link User} con tutti i dati dell'utente.
+     * @return DTO con tutti i dati dell'utente.
      */
     UserResponse getUserData(Long userId);
 
     /**
-     * Metodo che, dato un id e un DTO con i nuovi dati, modifica i dati dell'utente con quell'id.
+     * Metodo che, modifica i dati dell'utente con quell'id.
      * @param userId Id dell'utente.
-     * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
-     * @return L'oggetto utente con i dati aggiornati.
+     * @param request DTO con i nuovi dati.
+     * @return DTO con i dati dell'utente aggiornati.
      */
     UserResponse updateUserData(Long userId, UpdateUserDataRequest request);
 
     /**
      * Metodo che permette all'admin di modificare i dati di un utente, dato un username.
      * @param username Username dell'utente da modificare.
-     * @param request DTO con i nuovi dati {@link UpdateUserDataRequest}.
-     * @return L'oggetto utente con i dati aggiornati.
+     * @param request DTO con i nuovi dati.
+     * @return DTO con i dati dell'utente aggiornati.
      */
     UserResponse adminUpdateUserData(String username, UpdateUserDataRequest request);
 
@@ -47,7 +46,7 @@ public interface UserService {
     /**
      * Dato un username, ed eseguiti diversi controlli, ritorno l'utente con quell'username.
      * @param username Username dell'utente richiesto.
-     * @return Istanza di {@link User} richiesta.
+     * @return DTO con i dati dell'utente richiesto.
      */
     UserResponse getAdminUserData(String username);
 
@@ -59,7 +58,7 @@ public interface UserService {
 
     /**
      * Metodo per prendere tutti gli organizzatori presenti sul database.
-     * @return Lista di DTO con i dati di ogni organizzatore -> {@link OrganizzatoreResponse}.
+     * @return Lista di DTO con i dati di ogni organizzatore.
      */
     List<OrganizzatoreResponse> getAllOrganizzatori();
 
@@ -73,7 +72,7 @@ public interface UserService {
     /**
      * Metodo che, dato un turista, restituisce gli username degli organizzatori seguiti.
      * @param turistaId Id univoco del turista, passato in modo dinamico tramite l'endpoint.
-     * @return Lista di DTO con gli username degli organizzatori -> {@link OrganizzatoreSeguitoResponse}.
+     * @return Lista di DTO con gli username degli organizzatori.
      */
     List<OrganizzatoreSeguitoResponse> getOrganizzatoriSeguiti(Long turistaId);
 

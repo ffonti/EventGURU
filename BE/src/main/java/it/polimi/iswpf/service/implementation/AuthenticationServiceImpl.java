@@ -34,12 +34,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     /**
-     * Metodo per la registrazione. Chiamando la repository, viene prima controllato se
-     * esiste già un utente registrato con quell'username, poi viene controllato che ogni
-     * campo non sia vuoto, poi viene salvato l'utente sul database e infine viene chiamato
-     * di nuovo il database per controllare se l'utente è stato salvato correttamente.
-     * @param request DTO con i dati per la registrazione -> {@link RegisterRequest}.
-     * @throws RuntimeException insieme di eccezioni causate dal client.
+     * Metodo per registrare un utente sul database.
+     * @param request DTO con i dati per la registrazione.
+     * @throws RuntimeException possibile eccezione causata dal client.
      */
     @Override
     public void register(@NonNull RegisterRequest request) throws RuntimeException {
@@ -51,6 +48,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         //Controllo se esiste già un utente con questo username sul database.
         Optional<User> userAlreadyRegistered = userRepository.findByUsername(request.getUsername());
+
+        //Se esiste, lancio un eccezione.
         if(userAlreadyRegistered.isPresent()) {
             throw new ConflictException("Username già registrato");
         }
@@ -61,44 +60,44 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final String email = request.getEmail().trim().toLowerCase();
         final String username = request.getUsername().trim().toLowerCase();
         final String password = request.getPassword();
-
-        Ruolo ruolo = switch (request.getRuolo()) {
+        final Ruolo ruolo = switch (request.getRuolo()) {
             case "TURISTA" -> Ruolo.TURISTA;
             case "ORGANIZZATORE" -> Ruolo.ORGANIZZATORE;
-            default -> throw new BadRequestException("Operazione non autorizzata");
+            default -> throw new BadRequestException("Ruolo non valido");
         };
 
         //Controllo che tutti i campi non siano vuoti.
         checkUserData(List.of(nome, cognome, email, username, password, ruolo.name()));
 
-        //Costruisco l'oggetto utente con il design pattern builder
+        //Costruisco l'oggetto utente con il pattern builder
         User user = new UserBuilder()
                 .nome(nome)
                 .cognome(cognome)
                 .email(email)
                 .username(username)
+                //Password codificata.
                 .password(passwordEncoder.encode(password))
                 .ruolo(ruolo)
                 .iscrittoNewsletter(false)
                 .dataCreazione(LocalDateTime.now())
                 .build();
 
-        userRepository.save(user); //Salvo l'utente sul database
+        //Salvo l'utente sul database
+        userRepository.save(user);
 
         //Controllo se l'utente è presente sul database, se sì la registrazione è andata a buon fine.
         Optional<User> userRegistered = userRepository.findByUsername(username);
+
+        //Se l'utente appena registrato non è presente sul database, lancio un'eccezione.
         if(userRegistered.isEmpty()) {
             throw new InternalServerErrorException("Registrazione non riuscita");
         }
     }
 
     /**
-     * Metodo per il login. Viene chiamato l'authenticationManager a cui vengono passate
-     * le credenziali per eseguire il login e gestirà anche le eccezioni. Successivamente
-     * viene preso l'utente dal database con quell'username così da codificare i dati nel jwt.
-     * L'utente appena autenticato viene salvato in una sessione gestita con il pattern Singleton.
-     * @param request DTO con i dati per il login -> {@link LoginRequest}.
-     * @return DTO con l'oggetto utente. -> {@link LoginResponse}.
+     * Metodo per il login. Dopo aver eseguito i controlli viene generato un jwt per l'utente loggato.
+     * @param request DTO con i dati per il login.
+     * @return DTO con i dati dell'utente.
      */
     @Override
     public LoginResponse login(@NonNull LoginRequest request) {
@@ -111,11 +110,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             )
         );
 
-        //Prendo l'utente dal database.
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow();
+        //Prendo l'utente appena loggato dal database.
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
 
-        //Codifico i dati dell'utente nel jwt.
+        //Costruisco il DTO con i dati dell'utente e lo ritorno.
         return new LoginResponse(
                 user.getUserId(),
                 user.getNome(),
@@ -153,6 +151,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     private void checkUserData(@NonNull List<String> dataList) throws RuntimeException {
 
+        //Scorro tutta la lista passata come parametro.
         for(String data : dataList) {
             if(data.isEmpty() || data.isBlank()) {
                 throw new BadRequestException("Compilare tutti i campi");

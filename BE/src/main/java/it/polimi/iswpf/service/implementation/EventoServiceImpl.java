@@ -38,7 +38,7 @@ public class EventoServiceImpl implements EventoService {
 
     /**
      * Metodo per creare un evento. Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
-     * @param request DTO con i dati dell'evento da creare -> {@link CreaModificaEventoRequest}.
+     * @param request DTO con i dati dell'evento da creare.
      */
     @Override
     public void creaEvento(@NonNull CreaModificaEventoRequest request, Long organizzatoreId) {
@@ -57,7 +57,7 @@ public class EventoServiceImpl implements EventoService {
         }
 
         //Verifico se l'utente è effettivamente un organizzatore.
-        if(!organizzatoreExists.get().getRuolo().toString().equals("ORGANIZZATORE")) {
+        if(!organizzatoreExists.get().getRuolo().equals(Ruolo.ORGANIZZATORE)) {
             throw new ForbiddenException("L'utente non ha i permessi adatti");
         }
 
@@ -103,7 +103,7 @@ public class EventoServiceImpl implements EventoService {
     /**
      * Metodo per prendere tutti gli eventi di un organizzatore.
      * @param organizzatoreId Id dell'organizzatore di cui si vogliono prendere gli eventi.
-     * @return Lista di DTO con i dati degli eventi {@link EventoResponse}.
+     * @return Lista di DTO con i dati degli eventi.
      */
     @Override
     public List<EventoResponse> getAllEventi(Long organizzatoreId) {
@@ -135,6 +135,7 @@ public class EventoServiceImpl implements EventoService {
         //Lista di username dei turisti iscritti per ogni evento.
         List<String> usernameTuristi;
 
+        //Lista di DTO con i dati di ogni recensione
         List<RecensioneResponse> recensioni = new ArrayList<>();
 
         //Per ogni evento presente sul database, salvo tutti i campi nell'array di risposta.
@@ -142,12 +143,14 @@ public class EventoServiceImpl implements EventoService {
 
             //Inizializzo la lista per ogni evento.
             usernameTuristi = new ArrayList<>();
+            recensioni = new ArrayList<>();
 
             //Aggiungo tutti gli utenti iscritti all'evento.
             for(User turista : evento.getIscritti()) {
                 usernameTuristi.add(turista.getUsername());
             }
 
+            //Aggiungo tutte le recensioni dell'evento.
             for(Recensione recensione : evento.getRecensioni()) {
                 recensioni.add(new RecensioneResponse(
                         recensione.getUser().getUsername(),
@@ -200,7 +203,7 @@ public class EventoServiceImpl implements EventoService {
         //Elimino l'evento dal database.
         eventoRepository.delete(eventoExists.get());
 
-        //Controllo se esiste ancora l'evento con quell'id
+        //Controllo se esiste ancora l'evento con quell'id.
         Optional<Evento> eventoDeleted = eventoRepository.findById(eventoId);
 
         //Se non è stato eliminato, lancio un'eccezione.
@@ -212,7 +215,7 @@ public class EventoServiceImpl implements EventoService {
     /**
      * Metodo per prendere un evento dato un id.
      * @param eventoId Id del singolo evento.
-     * @return DTO con i dati dell'evento richiesto -> {@link EventoResponse}.
+     * @return DTO con i dati dell'evento richiesto.
      */
     @Override
     public EventoResponse getEventoById(Long eventoId) {
@@ -233,6 +236,7 @@ public class EventoServiceImpl implements EventoService {
         //Lista di username dei turisti iscritti all'evento.
         List<String> usernameTuristi = new ArrayList<>();
 
+        //Lista di DTO con i dati delle recensioni dell'evento
         List<RecensioneResponse> recensioni = new ArrayList<>();
 
         //Salvo tutti i campi nell'array di risposta.
@@ -240,7 +244,7 @@ public class EventoServiceImpl implements EventoService {
             usernameTuristi.add(turista.getUsername());
         }
 
-        //Aggiungo tutte le recensioni dell'evento
+        //Aggiungo tutte le recensioni dell'evento.
         for(Recensione recensione : eventoExists.get().getRecensioni()) {
             recensioni.add(new RecensioneResponse(
                     recensione.getUser().getUsername(),
@@ -269,7 +273,7 @@ public class EventoServiceImpl implements EventoService {
 
     /**
      * Metodo per modificare i dati di un evento già esistente.
-     * @param request DTO con nuovi dati per aggiornare l'evento -> {@link CreaModificaEventoRequest}.
+     * @param request DTO con nuovi dati per aggiornare l'evento.
      * @param eventoId Id dell'evento da modificare, passato in modo dinamico tramite l'endpoint.
      */
     @Override
@@ -286,74 +290,73 @@ public class EventoServiceImpl implements EventoService {
         //Se non esiste un evento con quell'id, lancio un'eccezione.
         if(eventoExists.isEmpty()) {
             throw new NotFoundException("Evento non trovato");
-        } else {
-
-            //Se l'evento esiste, lo assegno a una variabile.
-            Evento evento = eventoExists.get();
-
-            //Se il client ha compilato il campo "Titolo" e non è vuoto, aggiorno il titolo dell'evento.
-            if(!request.getTitolo().isEmpty() && !request.getTitolo().isBlank()) {
-                evento.setTitolo(request.getTitolo());
-            }
-
-            //Se il client ha compilato il campo "Descrizione" e non è vuoto, aggiorno la descrizione dell'evento.
-            if(!request.getDescrizione().isEmpty() && !request.getDescrizione().isBlank()) {
-                evento.setDescrizione(request.getDescrizione());
-            }
-
-            //La data di inizio dell'evento deve essere precedente alla data di fine dell'evento.
-            if(request.getDataFine().isBefore(request.getDataInizio()) ||
-                    request.getDataInizio().isEqual(request.getDataFine())) {
-                throw new BadRequestException("La data di inizio deve essere precedente alla data di fine");
-            }
-
-            //La data di inizio dell'evento deve essere precedente alla data attuale.
-            if(request.getDataInizio().isBefore(LocalDateTime.now()) ||
-                    request.getDataInizio().isEqual(LocalDateTime.now())) {
-                throw new BadRequestException("L'evento non può avvenire nel passato");
-            }
-
-            //TODO capire perché le date non vengono aggiornate.
-            //Aggiorno la data di inizio e fine dell'evento.
-            evento.setDataInizio(request.getDataInizio());
-            evento.setDataFine(request.getDataFine());
-
-            //Se il client ha compilato il campo "Nome luogo" e non è vuoto, aggiorno il nome del luogo dell'evento.
-            if(!request.getNomeLuogo().isEmpty() && !request.getNomeLuogo().isBlank()) {
-
-                //Verifico se il luogo con un dato nome è già salvato sul database.
-                Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(request.getNomeLuogo());
-
-                Luogo luogo;
-
-                if(luogoExists.isEmpty()) {
-                    //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto.
-                    luogo = new LuogoBuilder()
-                            .nome(request.getNomeLuogo())
-                            .lat(request.getLat())
-                            .lng(request.getLng())
-                            .build();
-
-                    //Salvo sul database l'oggetto appena costruito
-                    luogoRepository.save(luogo);
-
-                } else {
-                    //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
-                    luogo = luogoExists.get();
-                }
-
-                //Aggiorno il luogo dell'evento
-                evento.setLuogo(luogo);
-            }
-
-            //Chiamo la repository e salvo i dati aggiornati dell'evento.
-            eventoRepository.save(evento);
         }
+
+        //Se l'evento esiste, lo assegno a una variabile.
+        Evento evento = eventoExists.get();
+
+        //Se il client ha compilato il campo "Titolo" e non è vuoto, aggiorno il titolo dell'evento.
+        if(!request.getTitolo().isEmpty() && !request.getTitolo().isBlank()) {
+            evento.setTitolo(request.getTitolo());
+        }
+
+        //Se il client ha compilato il campo "Descrizione" e non è vuoto, aggiorno la descrizione dell'evento.
+        if(!request.getDescrizione().isEmpty() && !request.getDescrizione().isBlank()) {
+            evento.setDescrizione(request.getDescrizione());
+        }
+
+        //La data di inizio dell'evento deve essere precedente alla data di fine dell'evento.
+        if(request.getDataFine().isBefore(request.getDataInizio()) ||
+                request.getDataInizio().isEqual(request.getDataFine())) {
+            throw new BadRequestException("La data di inizio deve essere precedente alla data di fine");
+        }
+
+        //La data di inizio dell'evento deve essere precedente alla data attuale.
+        if(request.getDataInizio().isBefore(LocalDateTime.now()) ||
+                request.getDataInizio().isEqual(LocalDateTime.now())) {
+            throw new BadRequestException("L'evento non può avvenire nel passato");
+        }
+
+        //TODO capire perché le date non vengono aggiornate.
+        //Aggiorno la data di inizio e fine dell'evento.
+        evento.setDataInizio(request.getDataInizio());
+        evento.setDataFine(request.getDataFine());
+
+        //Se il client ha compilato il campo "Nome luogo" e non è vuoto, aggiorno il nome del luogo dell'evento.
+        if(!request.getNomeLuogo().isEmpty() && !request.getNomeLuogo().isBlank()) {
+
+            //Verifico se il luogo con un dato nome è già salvato sul database.
+            Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(request.getNomeLuogo());
+
+            Luogo luogo;
+
+            if(luogoExists.isEmpty()) {
+                //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto.
+                luogo = new LuogoBuilder()
+                        .nome(request.getNomeLuogo())
+                        .lat(request.getLat())
+                        .lng(request.getLng())
+                        .build();
+
+                //Salvo sul database l'oggetto appena costruito.
+                luogoRepository.save(luogo);
+
+            } else {
+                //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
+                luogo = luogoExists.get();
+            }
+
+            //Aggiorno il luogo dell'evento.
+            evento.setLuogo(luogo);
+        }
+
+        //Chiamo la repository e salvo i dati aggiornati dell'evento.
+        eventoRepository.save(evento);
     }
 
     /**
      * Metodo per prendere tutti gli eventi presenti sul database.
-     * @return Lista di DTO con tutti i dati di ogni evento -> {@link EventoResponse}.
+     * @return Lista di DTO con tutti i dati di ogni evento.
      */
     @Override
     public List<EventoResponse> adminGetAllEventi() {
@@ -372,7 +375,7 @@ public class EventoServiceImpl implements EventoService {
         //Lista di username dei turisti iscritti per ogni evento.
         List<String> usernameTuristi;
 
-        //Lista di recensioni per ogni evento
+        //Lista di recensioni per ogni evento.
         List<RecensioneResponse> recensioni;
 
         //Per ogni evento, aggiungo all'array di risposta i dati dell'evento stesso.
@@ -387,7 +390,7 @@ public class EventoServiceImpl implements EventoService {
                 usernameTuristi.add(turista.getUsername());
             }
 
-            //Aggiungo tutte le recensioni dell'evento
+            //Aggiungo tutte le recensioni dell'evento.
             for(Recensione recensione : evento.getRecensioni()) {
                 recensioni.add(new RecensioneResponse(
                         recensione.getUser().getUsername(),
@@ -420,7 +423,7 @@ public class EventoServiceImpl implements EventoService {
     /**
      * Metodo per gli admin. Permette di creare un evento scegliendo l'organizzatore.
      * Salva l'utente sul db dopo aver effettuato tutti i controlli di validità dei dati.
-     * @param request DTO con i dati dell'evento da creare -> {@link AdminCreaModificaEventoRequest}.
+     * @param request DTO con i dati dell'evento da creare.
      */
     @Override
     public void adminCreaEvento(AdminCreaModificaEventoRequest request) {
@@ -480,7 +483,7 @@ public class EventoServiceImpl implements EventoService {
 
     /**
      * Metodo per gli admin, usato per modificare i dati di un evento già esistente.
-     * @param request DTO con nuovi dati per aggiornare l'evento -> {@link AdminCreaModificaEventoRequest}.
+     * @param request DTO con nuovi dati per aggiornare l'evento.
      * @param eventoId Id dell'evento da modificare, passato in modo dinamico tramite l'endpoint.
      */
     @Override
@@ -497,86 +500,88 @@ public class EventoServiceImpl implements EventoService {
         //Se non esiste un evento con quell'id, lancio un'eccezione.
         if(eventoExists.isEmpty()) {
             throw new NotFoundException("Evento non trovato");
-        } else {
-
-            //Se l'evento esiste, lo assegno a una variabile.
-            Evento evento = eventoExists.get();
-
-            //Se il client ha compilato il campo "Titolo" e non è vuoto, aggiorno il titolo dell'evento.
-            if(!request.getTitolo().isEmpty() && !request.getTitolo().isBlank()) {
-                evento.setTitolo(request.getTitolo());
-            }
-
-            //Se il client ha compilato il campo "Descrizione" e non è vuoto, aggiorno la descrizione dell'evento.
-            if(!request.getDescrizione().isEmpty() && !request.getDescrizione().isBlank()) {
-                evento.setDescrizione(request.getDescrizione());
-            }
-
-            //La data di inizio dell'evento deve essere precedente alla data di fine dell'evento.
-            if(request.getDataFine().isBefore(request.getDataInizio()) ||
-                    request.getDataInizio().isEqual(request.getDataFine())) {
-                throw new BadRequestException("La data di inizio deve essere precedente alla data di fine");
-            }
-
-            //La data di inizio dell'evento deve essere precedente alla data attuale.
-            if(request.getDataInizio().isBefore(LocalDateTime.now()) ||
-                    request.getDataInizio().isEqual(LocalDateTime.now())) {
-                throw new BadRequestException("L'evento non può avvenire nel passato");
-            }
-
-            //TODO capire perché le date non vengono aggiornate.
-            //Aggiorno la data di inizio e fine dell'evento.
-            evento.setDataInizio(request.getDataInizio());
-            evento.setDataFine(request.getDataFine());
-
-            //Se il client ha compilato il campo "Nome luogo" e non è vuoto, aggiorno il nome del luogo dell'evento.
-            if(!request.getNomeLuogo().isEmpty() && !request.getNomeLuogo().isBlank()) {
-
-                //Verifico se il luogo con un dato nome è già salvato sul database.
-                Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(request.getNomeLuogo());
-
-                Luogo luogo;
-
-                if(luogoExists.isEmpty()) {
-                    //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto.
-                    luogo = new LuogoBuilder()
-                            .nome(request.getNomeLuogo())
-                            .lat(request.getLat())
-                            .lng(request.getLng())
-                            .build();
-
-                    //Salvo sul database l'oggetto appena costruito
-                    luogoRepository.save(luogo);
-
-                } else {
-                    //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
-                    luogo = luogoExists.get();
-                }
-
-                //Aggiorno il luogo dell'evento
-                evento.setLuogo(luogo);
-            }
-
-            if(!request.getUsernameOrganizzatore().isBlank() && !request.getUsernameOrganizzatore().isEmpty()) {
-
-                Optional<User> organizzatoreExists = userRepository.findByUsername(request.getUsernameOrganizzatore());
-
-                //Se non esiste, lancio un'eccezione.
-                if(organizzatoreExists.isEmpty()) {
-                    throw new BadRequestException("Non esiste alcun organizzatore con questo username");
-                }
-
-                //Se non è un organizzatore, lancio un'eccezione.
-                if(!organizzatoreExists.get().getRuolo().equals(Ruolo.ORGANIZZATORE)) {
-                    throw new ForbiddenException("L'utente non ha i permessi adatti");
-                }
-
-                evento.setOrganizzatore(organizzatoreExists.get());
-            }
-
-            //Chiamo la repository e salvo i dati aggiornati dell'evento.
-            eventoRepository.save(evento);
         }
+
+        //Se l'evento esiste, lo assegno a una variabile.
+        Evento evento = eventoExists.get();
+
+        //Se il client ha compilato il campo "Titolo" e non è vuoto, aggiorno il titolo dell'evento.
+        if(!request.getTitolo().isEmpty() && !request.getTitolo().isBlank()) {
+            evento.setTitolo(request.getTitolo());
+        }
+
+        //Se il client ha compilato il campo "Descrizione" e non è vuoto, aggiorno la descrizione dell'evento.
+        if(!request.getDescrizione().isEmpty() && !request.getDescrizione().isBlank()) {
+            evento.setDescrizione(request.getDescrizione());
+        }
+
+        //La data di inizio dell'evento deve essere precedente alla data di fine dell'evento.
+        if(request.getDataFine().isBefore(request.getDataInizio()) ||
+                request.getDataInizio().isEqual(request.getDataFine())) {
+            throw new BadRequestException("La data di inizio deve essere precedente alla data di fine");
+        }
+
+        //La data di inizio dell'evento deve essere precedente alla data attuale.
+        if(request.getDataInizio().isBefore(LocalDateTime.now()) ||
+                request.getDataInizio().isEqual(LocalDateTime.now())) {
+            throw new BadRequestException("L'evento non può avvenire nel passato");
+        }
+
+        //TODO capire perché le date non vengono aggiornate.
+        //Aggiorno la data di inizio e fine dell'evento.
+        evento.setDataInizio(request.getDataInizio());
+        evento.setDataFine(request.getDataFine());
+
+        //Se il client ha compilato il campo "Nome luogo" e non è vuoto, aggiorno il nome del luogo dell'evento.
+        if(!request.getNomeLuogo().isEmpty() && !request.getNomeLuogo().isBlank()) {
+
+            //Verifico se il luogo con un dato nome è già salvato sul database.
+            Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(request.getNomeLuogo());
+
+            Luogo luogo;
+
+            if(luogoExists.isEmpty()) {
+                //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto.
+                luogo = new LuogoBuilder()
+                        .nome(request.getNomeLuogo())
+                        .lat(request.getLat())
+                        .lng(request.getLng())
+                        .build();
+
+                //Salvo sul database l'oggetto appena costruito.
+                luogoRepository.save(luogo);
+
+            } else {
+                //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
+                luogo = luogoExists.get();
+            }
+
+            //Aggiorno il luogo dell'evento.
+            evento.setLuogo(luogo);
+        }
+
+        //Se il client ha compilato il campo "Organizzatore" e non è vuoto, aggiorno l'username dell'organizzatore dell'evento.
+        if(!request.getUsernameOrganizzatore().isBlank() && !request.getUsernameOrganizzatore().isEmpty()) {
+
+            //Prendo dal db l'organizzatore con quell'username.
+            Optional<User> organizzatoreExists = userRepository.findByUsername(request.getUsernameOrganizzatore());
+
+            //Se non esiste, lancio un'eccezione.
+            if(organizzatoreExists.isEmpty()) {
+                throw new BadRequestException("Non esiste alcun organizzatore con questo username");
+            }
+
+            //Se non è un organizzatore, lancio un'eccezione.
+            if(!organizzatoreExists.get().getRuolo().equals(Ruolo.ORGANIZZATORE)) {
+                throw new ForbiddenException("L'utente non ha i permessi adatti");
+            }
+
+            //Cambio l'organizzatore dell'evento.
+            evento.setOrganizzatore(organizzatoreExists.get());
+        }
+
+        //Chiamo la repository e salvo i dati aggiornati dell'evento.
+        eventoRepository.save(evento);
     }
 
     /**
@@ -586,13 +591,9 @@ public class EventoServiceImpl implements EventoService {
     @Override
     public void iscrizioneEvento(IscrizioneEventoRequest request) {
 
-        //L'id autoincrement parte da 1.
-        if(request.getEventoId() < 1) {
-            throw new BadRequestException("Id dell'evento non valido");
-        }
-
-        if(request.getTuristaId() < 1) {
-            throw new BadRequestException("Id del turista non valido");
+        //Gli id autoincrement partono da 1.
+        if(request.getEventoId() < 1 || request.getTuristaId() < 1) {
+            throw new BadRequestException("Id non valido");
         }
 
         //Prendo l'evento dal db con quell'id.
@@ -603,10 +604,10 @@ public class EventoServiceImpl implements EventoService {
             throw new NotFoundException("Evento non trovato");
         }
 
-        //Prendo l'evento dal db con quell'id.
+        //Prendo il turista dal db con quell'id.
         Optional<User> turistaExists = userRepository.findByUserId(request.getTuristaId());
 
-        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        //Se non esiste un turista con quell'id, lancio un'eccezione.
         if(turistaExists.isEmpty()) {
             throw new NotFoundException("Turista non trovato");
         }
@@ -623,6 +624,7 @@ public class EventoServiceImpl implements EventoService {
         //Se l'evento non ha ancora nessun iscritto, inizializzo l'array e aggiungo il primo turista.
         if(evento.getIscritti().isEmpty()) {
             evento.setIscritti(new ArrayList<>(List.of(turista)));
+
         } else {
             //Se l'evento ha già degli iscritti, controllo che il turista non sia già iscritto all'evento.
             for(User turistaIscritto: evento.getIscritti()) {
@@ -635,23 +637,20 @@ public class EventoServiceImpl implements EventoService {
             evento.getIscritti().add(turista);
         }
 
-        //Aggiorno l'evento sul database
+        //Aggiorno l'evento sul database.
         eventoRepository.save(evento);
     }
 
     /**
      * Metodo per annullare l'iscrizione di un turista a un evento.
+     * @param request DTO con gli id univoci dell'evento e del turista.
      */
     @Override
     public void annullaIscrizione(IscrizioneEventoRequest request) {
 
-        //L'id autoincrement parte da 1.
-        if(request.getEventoId() < 1) {
-            throw new BadRequestException("Id dell'evento non valido");
-        }
-
-        if(request.getTuristaId() < 1) {
-            throw new BadRequestException("Id del turista non valido");
+        //Gli id autoincrement partono da 1.
+        if(request.getEventoId() < 1 || request.getTuristaId() < 1) {
+            throw new BadRequestException("Id non valido");
         }
 
         //Prendo l'evento dal db con quell'id.
@@ -665,7 +664,7 @@ public class EventoServiceImpl implements EventoService {
         //Prendo il turista dal db con quell'id.
         Optional<User> turistaExists = userRepository.findByUserId(request.getTuristaId());
 
-        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        //Se non esiste un turista con quell'id, lancio un'eccezione.
         if(turistaExists.isEmpty()) {
             throw new NotFoundException("Turista non trovato");
         }
@@ -687,54 +686,6 @@ public class EventoServiceImpl implements EventoService {
     }
 
     /**
-     * Ricevuti in ingresso data di inizio e data di fine di un evento, restituisce lo stato basato su data e ora attuali.
-     * @param dataInizio Data di inizio dell'evento.
-     * @param dataFine Data di fine dell'evento.
-     * @return Lo stato dell'evento (passato, presente o futuro).
-     */
-    private Stato getStatoEvento(LocalDateTime dataInizio, LocalDateTime dataFine) {
-        if(dataInizio.isAfter(LocalDateTime.now())) {
-            return Stato.FUTURO;
-        } else if(dataFine.isBefore(LocalDateTime.now())) {
-            return Stato.PASSATO;
-        } else {
-            return Stato.PRESENTE;
-        }
-    }
-
-    /**
-     * Code cleaning. Metodo usato da due endpoint (admin e no) per gestire il luogo di un evento.
-     * @param nomeLuogo Nome del luogo dell'evento.
-     * @param lat Latitudine del luogo dell'evento.
-     * @param lng Longitudine del luogo dell'evento.
-     * @return Un'istanza di {@link Luogo}, dopo averla salvata sul database (in caso non fosse presente).
-     */
-    private Luogo getLuogo(String nomeLuogo, String lat, String lng) {
-
-        Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(nomeLuogo);
-
-        Luogo luogo;
-
-        if(luogoExists.isEmpty()) {
-            //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto.
-            luogo = new LuogoBuilder()
-                    .lat(lat)
-                    .lng(lng)
-                    .nome(nomeLuogo)
-                    .build();
-
-            //Salvo sul database l'oggetto appena costruito
-            luogoRepository.save(luogo);
-
-        } else {
-            //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
-            luogo = luogoExists.get();
-        }
-
-        return luogo;
-    }
-
-    /**
      * Metodo per prendere tutti gli eventi a cui è iscritto un turista.
      * @param usernameTurista Username del turista, passato in modo dinamico tramite l'endpoint.
      * @return Lista di DTO con tutti i dati di ogni evento.
@@ -742,17 +693,20 @@ public class EventoServiceImpl implements EventoService {
     @Override
     public List<EventoResponse> getEventiByTurista(String usernameTurista) {
 
+        //Controllo la validità del campo "Username".
         if(usernameTurista.isEmpty() || usernameTurista.isBlank()) {
             throw new BadRequestException("Inserire un username valido");
         }
 
+        //Prendo dal db il turista con quell'username.
         Optional<User> turistaExists = userRepository.findByUsername(usernameTurista);
 
+        //Se non esiste o il ruolo non è corretto, lancio un'eccezione.
         if(turistaExists.isEmpty() || !turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
             throw new NotFoundException("Non esiste un turista con questo username");
         }
 
-        //Prendo tutti gli eventi presenti sul database.
+        //Prendo dal database tutti gli eventi a cui il turista è iscritto.
         List<Evento> eventi = eventoRepository.findAllByIscrittiIsContaining(turistaExists.get());
 
         //Se non sono presenti eventi, ritorno un array vuoto.
@@ -761,7 +715,7 @@ public class EventoServiceImpl implements EventoService {
         //Lista di username dei turisti iscritti per ogni evento.
         List<String> usernameTuristi;
 
-        //Lista di recensioni per ogni evento
+        //Lista di recensioni per ogni evento.
         List<RecensioneResponse> recensioni;
 
         //Per ogni evento, aggiungo all'array di risposta i dati dell'evento stesso.
@@ -776,7 +730,7 @@ public class EventoServiceImpl implements EventoService {
                 usernameTuristi.add(turista.getUsername());
             }
 
-            //Aggiungo tutte le recensioni dell'evento
+            //Aggiungo tutte le recensioni dell'evento.
             for(Recensione recensione : evento.getRecensioni()) {
                 recensioni.add(new RecensioneResponse(
                         recensione.getUser().getUsername(),
@@ -814,7 +768,7 @@ public class EventoServiceImpl implements EventoService {
     @Override
     public void rimuoviTuristaDaEvento(String usernameTurista, Long eventoId) {
 
-        //Controllo la validità della variabile.
+        //Controllo la validità del campo "Username".
         if(usernameTurista.isEmpty() || usernameTurista.isBlank()) {
             throw new BadRequestException("Inserire un username valido");
         }
@@ -822,7 +776,7 @@ public class EventoServiceImpl implements EventoService {
         //Chiamo il database per controllare se esiste un turista con questo username.
         Optional<User> turistaExists = userRepository.findByUsername(usernameTurista);
 
-        //Se non esiste, lancio un'eccezione.
+        //Se non esiste o il ruolo non è corretto, lancio un'eccezione.
         if(turistaExists.isEmpty() || !turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
             throw new NotFoundException("Non esiste un turista con questo username");
         }
@@ -852,5 +806,51 @@ public class EventoServiceImpl implements EventoService {
 
         //Salvo le modifiche sul database.
         eventoRepository.save(evento);
+    }
+
+    /**
+     * Ricevuti in ingresso data di inizio e data di fine di un evento, restituisce lo stato basato su data e ora attuali.
+     * @param dataInizio Data di inizio dell'evento.
+     * @param dataFine Data di fine dell'evento.
+     * @return Lo stato dell'evento (passato, presente o futuro).
+     */
+    private Stato getStatoEvento(LocalDateTime dataInizio, LocalDateTime dataFine) {
+
+        return dataInizio.isAfter(LocalDateTime.now()) ? Stato.FUTURO
+                : dataFine.isBefore(LocalDateTime.now()) ? Stato.PASSATO
+                : Stato.PRESENTE;
+    }
+
+    /**
+     * Code cleaning. Metodo usato da due endpoint (admin e no) per gestire il luogo di un evento.
+     * @param nomeLuogo Nome del luogo dell'evento.
+     * @param lat Latitudine del luogo dell'evento.
+     * @param lng Longitudine del luogo dell'evento.
+     * @return Un'istanza di {@link Luogo}, dopo averla salvata sul database (in caso non fosse presente).
+     */
+    private Luogo getLuogo(String nomeLuogo, String lat, String lng) {
+
+        //Prendo dal db il luogo con quel nome.
+        Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(nomeLuogo);
+
+        Luogo luogo;
+
+        //Se non esiste nessun luogo con un dato nome, costruisco l'oggetto tramite il pattern Builder.
+        if(luogoExists.isEmpty()) {
+            luogo = new LuogoBuilder()
+                    .lat(lat)
+                    .lng(lng)
+                    .nome(nomeLuogo)
+                    .build();
+
+            //Salvo sul database l'oggetto appena costruito
+            luogoRepository.save(luogo);
+
+        } else {
+            //Se esiste già un luogo con quel nome, lo utilizzo per salvare l'evento.
+            luogo = luogoExists.get();
+        }
+
+        return luogo;
     }
 }

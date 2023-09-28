@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Interfaccia che contiene le firme dei metodi del service.
+ * Interfaccia che contiene le firme dei metodi del service che gestisce i jwt.
  * Implementazione -> {@link JwtServiceImpl}.
  */
 public interface JwtService {
@@ -16,7 +16,7 @@ public interface JwtService {
     /**
      * Metodo usato nel filter, semplicemente estrae l'username codificato nel jwt.
      * @param token Stringa jwt.
-     * @return Username dell'utente in sessione.
+     * @return Username dell'utente estratto dal jwt.
      */
     String extractUsername(String token);
 
@@ -30,17 +30,14 @@ public interface JwtService {
     <T> T extractClaim(String token, Function<Claims, T> claimsResolver);
 
     /**
-     * Codifica solamente dati dell'utente. Se bisogna codificare anche altri parametri,
+     * Codifica nel token solamente dati dell'utente. Se bisogna codificare anche altri parametri,
      * viene usato il metodo sottostante a questo (overloading).
-     * Quindi, il processo è descritto nel metodo sottostante a questo, l'unica differenza
-     * è che se viene chiamato questo metodo allora l'HashMap sarà vuota.
-     * @param userDetails Dati dell'utente in sessione.
      * @return Stringa jwt.
      */
     String generateToken(UserDetails userDetails);
 
     /**
-     * Tramite il builder, date le informazioni in ingresso viene codificato il tutto in un'unica stringa, ovvero il jwt.
+     * Date le informazioni in ingresso viene codificato il tutto nel jwt.
      * @param extraClaims Eventuali informazioni aggiuntive da codificare nel token.
      * @param userDetails Dati dell'utente in sessione.
      * @return Stringa jwt.

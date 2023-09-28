@@ -36,7 +36,7 @@ public class RecensioneServiceImpl implements RecensioneService {
 
     /**
      * Metodo per salvare sul database una recensione di un utente.
-     * @param request DTO con i dati della recensione -> {@link InviaRecensioneRequest}.
+     * @param request DTO con i dati della recensione.
      * @param eventoId Id dell'evento, passato in modo dinamico tramite l'endpoint.
      * @param turistaId Id del turista, passato in modo dinamico tramite l'endpoint.
      */
@@ -59,7 +59,7 @@ public class RecensioneServiceImpl implements RecensioneService {
         //Prendo il turista dal db con quell'id.
         Optional<User> turistaExists = userRepository.findByUserId(turistaId);
 
-        //Se non esiste un evento con quell'id, lancio un'eccezione.
+        //Se non esiste un turista con quell'id, lancio un'eccezione.
         if(turistaExists.isEmpty()) {
             throw new NotFoundException("Turista non trovato");
         }
@@ -102,7 +102,7 @@ public class RecensioneServiceImpl implements RecensioneService {
     /**
      * Metodo per prendere tutte le recensioni di un dato evento.
      * @param eventoId Id univoco dell'evento, passato in modo dinamico tramite l'endpoint.
-     * @return Lista di DTO con i dati delle recensioni -> {@link RecensioneResponse}.
+     * @return Lista di DTO con i dati delle recensioni.
      */
     @Override
     public List<RecensioneResponse> getByEvento(Long eventoId) {
@@ -120,10 +120,10 @@ public class RecensioneServiceImpl implements RecensioneService {
             throw new NotFoundException("Evento non trovato");
         }
 
-        List<Recensione> recensioni = eventoExists.get().getRecensioni();
-
         //Inizializzo il DTO di risposta.
         List<RecensioneResponse> response = new ArrayList<>();
+
+        List<Recensione> recensioni = eventoExists.get().getRecensioni();
 
         //Aggiungo tutte le recensioni al DTO.
         for(Recensione recensione : recensioni) {
@@ -152,7 +152,7 @@ public class RecensioneServiceImpl implements RecensioneService {
             throw new BadRequestException("Id non valido");
         }
 
-        //Prendo l'evento dal db con quell'id.
+        //Prendo dal db l'evento con quell'id.
         Optional<Evento> eventoExists = eventoRepository.findById(eventoId);
 
         //Se non esiste un evento con quell'id, lancio un'eccezione.
@@ -165,18 +165,26 @@ public class RecensioneServiceImpl implements RecensioneService {
             throw new BadRequestException("Username non valido");
         }
 
+        //Prendo dal db un utente con l'username dato.
         Optional<User> turistaExists = userRepository.findByUsername(usernameTurista);
 
-        //Controllo se esiste un turista con questo username.
-        if(turistaExists.isEmpty() || !turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
+        //Controllo se esiste un utente con questo username.
+        if(turistaExists.isEmpty()) {
+            throw new NotFoundException("Non esiste un utente con questo username");
+        }
+
+        //Controllo se l'utente ha il ruolo adatto.
+        if(!turistaExists.get().getRuolo().equals(Ruolo.TURISTA)) {
             throw new ForbiddenException("L'utente non ha i permessi adatti");
         }
 
         //Chiamo il database e controllo se esiste la recensione richiesta.
-        Optional<Recensione> recensioneExists = recensioneRepository.getRecensioneByEvento_EventoIdAndUser_Username(eventoId, usernameTurista);
+        Optional<Recensione> recensioneExists =
+                recensioneRepository.getRecensioneByEvento_EventoIdAndUser_Username(eventoId, usernameTurista);
 
+        //Se non esiste lancio un'eccezione.
         if(recensioneExists.isEmpty()) {
-            throw new NotFoundException("Non esiste alcuna recensione lasciata da questo turista a questo evento");
+            throw new NotFoundException("Non esiste alcuna recensione");
         }
 
         User turista = turistaExists.get();

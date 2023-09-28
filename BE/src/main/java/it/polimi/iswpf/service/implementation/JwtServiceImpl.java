@@ -35,7 +35,8 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String extractUsername(String token) {
 
-        return extractClaim(token, Claims::getSubject); //getSubject restituisce l'attributo univoco dell'utente.
+        //getSubject restituisce l'attributo univoco dell'utente.
+        return extractClaim(token, Claims::getSubject);
     }
 
     /**
@@ -48,28 +49,27 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public <T> T extractClaim(String token, @NonNull Function<Claims, T> claimsResolver) {
 
-        final Claims claims = extractAllClaims(token); //Estraggo tutti i dati codificati nel token.
+        //Estraggo tutti i dati codificati nel token.
+        final Claims claims = extractAllClaims(token);
 
         //Estraggo il singolo dato (generico) dall'insieme di tutti i dati codificati nel token.
         return claimsResolver.apply(claims);
     }
 
     /**
-     * Codifica solamente dati dell'utente. Se bisogna codificare anche altri parametri,
+     * Codifica nel token solamente dati dell'utente. Se bisogna codificare anche altri parametri,
      * viene usato il metodo sottostante a questo (overloading).
-     * Quindi, il processo è descritto nel metodo sottostante a questo, l'unica differenza
-     * è che se viene chiamato questo metodo allora l'HashMap sarà vuota.
-     * @param userDetails Dati dell'utente in sessione.
      * @return Stringa jwt.
      */
     @Override
     public String generateToken(UserDetails userDetails) {
 
+        //Chiama il metodo sottostante passando un hashmap vuoto per altri parametri facoltativi.
         return generateToken(new HashMap<>(), userDetails);
     }
 
     /**
-     * Tramite il builder, date le informazioni in ingresso viene codificato il tutto in un'unica stringa, ovvero il jwt.
+     * Date le informazioni in ingresso viene codificato il tutto nel jwt.
      * @param extraClaims Eventuali informazioni aggiuntive da codificare nel token.
      * @param userDetails Dati dell'utente in sessione.
      * @return Stringa jwt.
@@ -77,17 +77,16 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String generateToken(
             Map<String, Object> extraClaims,
-            @NonNull UserDetails userDetails
-    ) {
+            @NonNull UserDetails userDetails) {
 
         return Jwts
-            .builder()
+            .builder() //Design patter builder.
             .setClaims(extraClaims) //Aggiungo eventuali informazioni aggiuntive da codificare.
             .setSubject(userDetails.getUsername()) //Aggiungo l'attributo univoco dell'utente.
             .setIssuedAt(new Date(System.currentTimeMillis())) //Data di creazione del token.
             .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) //Data di scadenza del token.
             .signWith(getSigninKey(), SignatureAlgorithm.HS256) //Codifico con la chiave segreta e specifico l'algoritmo.
-            .compact(); //Genera il token
+            .compact(); //Genero il token.
     }
 
     /**
@@ -100,8 +99,10 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean isTokenValid(String token, @NonNull UserDetails userDetails) {
 
+        //Estraggo l'username dal token.
         final String username = extractUsername(token);
 
+        //Controllo se l'username dell'utente loggato è uguale a quello del token e poi controllo la scadenza.
         return ((username.equals(userDetails.getUsername())) && !isTokenExpired(token));
     }
 
@@ -122,6 +123,7 @@ public class JwtServiceImpl implements JwtService {
      */
     private Date extractExpiration(String token) {
 
+        //getExpiration ritorna la data di scadenza del token.
         return extractClaim(token, Claims::getExpiration);
     }
 
@@ -134,7 +136,7 @@ public class JwtServiceImpl implements JwtService {
     private Claims extractAllClaims(String token) {
 
         return Jwts
-                .parserBuilder() //Parse per poter utilizzare il builder.
+                .parserBuilder() //Parser per poter utilizzare il builder.
                 .setSigningKey(getSigninKey()) //Setto la chiave segreta per codificare e decodificare il token.
                 .build() //Applico il pattern builder, quindi "costruisco" l'oggetto.
                 .parseClaimsJws(token) //Mando il token da decodificare.
