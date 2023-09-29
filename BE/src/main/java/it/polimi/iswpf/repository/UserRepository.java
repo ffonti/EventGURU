@@ -3,8 +3,8 @@ package it.polimi.iswpf.repository;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,4 +41,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return Un probabile utente con quella email.
      */
     Optional<User> findFirstByEmail(String email);
+
+    /**
+     * Si cercano i followers di un dato organizzatore
+     * @param organizzatore Organizzatore di cui prendere i followers.
+     * @param ruolo Ruolo degli utenti per filtrarli.
+     * @return Lista con i followers dell'organizzatore.
+     */
+    List<User> findAllBySeguitiAndRuolo(User organizzatore, Ruolo ruolo);
+
+    /**
+     * Si cercano tutti gli utenti iscritti alla newsletter.
+     * @param ruolo Ruolo degli utenti per filtrarli.
+     * @return Lista con gli utenti iscritti alla newsletter.
+     */
+    List<User> findAllByIscrittoNewsletterIsTrueAndRuolo(Ruolo ruolo);
 }

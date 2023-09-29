@@ -12,6 +12,7 @@ import it.polimi.iswpf.exception.ForbiddenException;
 import it.polimi.iswpf.exception.InternalServerErrorException;
 import it.polimi.iswpf.exception.NotFoundException;
 import it.polimi.iswpf.model.*;
+import it.polimi.iswpf.observer.publisher.EventManager;
 import it.polimi.iswpf.repository.EventoRepository;
 import it.polimi.iswpf.repository.LuogoRepository;
 import it.polimi.iswpf.repository.UserRepository;
@@ -98,6 +99,21 @@ public class EventoServiceImpl implements EventoService {
 
         //Salvo l'oggetto evento sul database.
         eventoRepository.save(evento);
+
+        //Prendo dal database i followers di un dato organizzatore.
+        List<User> followers = userRepository.findAllBySeguitiAndRuolo(organizzatoreExists.get(), Ruolo.TURISTA);
+
+        //Prendo dal database tutti i turisti iscritti alla newsletter.
+        List<User> iscrittiNewsletter = userRepository.findAllByIscrittoNewsletterIsTrueAndRuolo(Ruolo.TURISTA);
+
+        //Rimuovo dalla lista della newsletter gli utenti che sono in entrambe le liste, dando la priorità alla lista dei followers.
+        for(User follower : followers) {
+            iscrittiNewsletter.remove(follower);
+        }
+
+        //Chiamo il metodo notify del publisher, così da notificare le liste della creazione di un evento tramite i pattern Observer e Singleton.
+        EventManager.getInstance().notify(EventType.FOLLOWERS, organizzatoreExists.get(), followers, evento);
+        EventManager.getInstance().notify(EventType.NEWSLETTER, organizzatoreExists.get(), iscrittiNewsletter, evento);
     }
 
     /**

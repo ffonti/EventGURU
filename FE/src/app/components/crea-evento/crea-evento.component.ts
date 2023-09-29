@@ -6,6 +6,7 @@ import { GetEventoByIdResponse } from 'src/app/dtos/response/GetEventoByIdRespon
 import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-crea-evento',
@@ -28,7 +29,8 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
     private toastr: ToastrService,
     private eventService: EventService,
     private router: Router,
-    private mapService: MapService) { }
+    private mapService: MapService,
+    private spinnerService: SpinnerService) { }
 
   ngOnInit(): void {
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
@@ -120,6 +122,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
       if (this.ruolo === 'ORGANIZZATORE') {
         this.eventService.creaEvento(this.titolo, this.descrizione, this.dataInizio, this.dataFine, this.mapService.getCurrentLatMarker(), this.mapService.getCurrentLngMarker(), this.nomeLuogo).subscribe({
           next: (res: MessageResponse) => {
+            this.spinnerService.requestEnded();
             this.toastr.success(res.message);
             if (localStorage.getItem('ruolo') == 'ADMIN') {
               this.router.navigateByUrl('homepage/esplora');
@@ -128,6 +131,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
             }
           },
           error: (err: HttpErrorResponse) => {
+            this.spinnerService.resetSpinner();
             this.toastr.error(err.error.message);
             console.log(err);
           }

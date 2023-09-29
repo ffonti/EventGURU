@@ -8,6 +8,7 @@ import { GetAllEventiResponse } from '../dtos/response/GetAllEventiResponse';
 import { AdminCreaEventoRequest } from '../dtos/request/AdminCreaEventoRequest';
 import { MessageResponse } from '../dtos/response/MessageResponse';
 import { IscrizioneEventoRequest } from '../dtos/request/IscrizioneEventoRequest';
+import { SpinnerService } from './spinner.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +17,12 @@ export class EventService {
   private backendUrl: string = 'http://localhost:8080/api/v1/evento/';
 
   //costruttore dove istanzio le classi con cui interagire
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private spinnerService: SpinnerService) { }
 
   creaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: CreaModificaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
-
+    this.spinnerService.requestStarted();
     return this.http.post<MessageResponse>(this.backendUrl + 'crea/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
   }
 
