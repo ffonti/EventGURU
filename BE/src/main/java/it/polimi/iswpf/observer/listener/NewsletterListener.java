@@ -1,13 +1,17 @@
 package it.polimi.iswpf.observer.listener;
 
 import it.polimi.iswpf.dto.request.InviaEmailRequest;
+import it.polimi.iswpf.model.EventType;
 import it.polimi.iswpf.model.Evento;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.service._interface.EmailService;
+import it.polimi.iswpf.util.UtilMethods;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementazione dell'interfaccia del listener che contiene la logica nel metodo update
@@ -28,22 +32,29 @@ public class NewsletterListener implements EventListener {
     @Override
     public void update(User organizzatore, List<User> turisti, Evento evento) {
 
+        //HashMap dove salvare i dati dinamici da inserire nel template per personalizzare le mail.
+        Map<String, String> dynamicData = new HashMap<>();
+
+        //Aggiungo i dati e stabilisco una chiave tramite la quale accedo all'interno del template.
+        dynamicData.put("nomeOrganizzatore", organizzatore.getNome());
+        dynamicData.put("cognomeOrganizzatore", organizzatore.getCognome());
+        dynamicData.put("titolo", evento.getTitolo());
+        dynamicData.put("descrizione", evento.getDescrizione());
+        dynamicData.put("dataInizio", UtilMethods.getInstance().dateToString(evento.getDataInizio()));
+        dynamicData.put("dataFine", UtilMethods.getInstance().dateToString(evento.getDataFine()));
+
         //Scorro la lista di turisti per inviare singolarmente le mail.
         for(User turista : turisti) {
+
+            //Aggiungo l'unico dato diverso per ogni mail.
+            dynamicData.put("nomeDestinatario", turista.getNome());
 
             //Chiamo il service adatto per l'invio delle mail passandogli il DTO con tutti i dati.
             emailService.inviaEmail(new InviaEmailRequest(
                     turista.getEmail(),
-                    "Newsletter EventGURU!",
-                    "Ciao, " + turista.getUsername() + "!\n\n" +
-                    "L'organizzatore " + organizzatore.getNome() + " " + organizzatore.getCognome() +
-                    " ha creato un nuovo evento, di seguito tutte le informazioni necessarie.\n\n" +
-                    "Titolo: " + evento.getTitolo() + "\nDescrizione: " + evento.getDescrizione() +
-                    "\nData e ora d'inizio: " + evento.getDataInizio() +
-                    "\nData e ora di fine: " + evento.getDataFine() +
-                    "\n\nSe non vuoi più ricevere email della newsletter, puoi tranquillamente disattivare l'opzione " +
-                    "nella sezione \"Account\" sulla piattaforma." +
-                    "\n\nCorri ad iscriverti sulla nostra piattaforma!\n\nBuon divertimento,\nIl team EventGURU"
+                    "Newsletter EventGURU",
+                    dynamicData,
+                    EventType.NEWSLETTER
             ));
         }
     }

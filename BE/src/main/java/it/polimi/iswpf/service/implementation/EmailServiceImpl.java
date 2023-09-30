@@ -1,18 +1,32 @@
 package it.polimi.iswpf.service.implementation;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import it.polimi.iswpf.dto.request.InviaEmailRequest;
 import it.polimi.iswpf.exception.BadRequestException;
+import it.polimi.iswpf.exception.InternalServerErrorException;
 import it.polimi.iswpf.exception.NotFoundException;
+import it.polimi.iswpf.model.EventType;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -25,6 +39,7 @@ public class EmailServiceImpl implements EmailService {
     private final PasswordEncoder passwordEncoder; //Bean per codificare la password.
     private final JavaMailSender emailSender; //Bean che offre un metodo per inviare le mail.
     private final UserRepository userRepository;
+    private final Configuration config;
 
     //Caratteri con cui è possibile cosruire la password.
     private static final String CARATTERI_VALIDI = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
@@ -37,24 +52,39 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void inviaEmail(InviaEmailRequest request) {
 
-        //Controllo che tutti i campi siano compilati.
-        if(request.getEmailDestinatario().isBlank() || request.getEmailDestinatario().isEmpty() ||
-            request.getOggetto().isBlank() || request.getOggetto().isEmpty() ||
-            request.getTesto().isBlank() || request.getTesto().isEmpty()) {
-            throw new BadRequestException("Dati della mail mancanti");
+        //Messaggio che rappresenta un'email MIME.
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            //Istanzio l'oggetto che semplifica la creazione e la configurazione delle email.
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    message, //Messaggio MIME.
+                    //L'email può contenere multipart (es. ASCII speciali o allegati).
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    //Imposto la codifica UTF-8 per il contenuto dell'email.
+                    StandardCharsets.UTF_8.name());
+
+            //Scelta del template da utilizzare in base al tipo di email.
+            Template template = config.getTemplate(
+                    request.getEventType().equals(EventType.FOLLOWERS) ? "followersTemplate.ftl" :
+                    request.getEventType().equals(EventType.NEWSLETTER) ? "newsletterTemplate.ftl" :
+                    "recoveryPasswordTemplate.ftl");
+
+            //Viene elaborato il template in base ai dati forniti (i campi dinamici della HashMap).
+            String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, request.getDynamicData());
+
+            helper.setTo(request.getEmailDestinatario()); //Setto il destinatario dell'email.
+            helper.setSubject(request.getOggetto()); //Setto l'oggetto dell'mail.
+            helper.setText(html, true); //Setto il corpo della mail e specifico che si tratta di un file HTML.
+
+            //Invio l'email.
+            emailSender.send(message);
+
+        } catch(MessagingException | IOException | TemplateException e) {
+
+            //Messaggio di errore nell'eventualità di eccezioni durante il processo di creazione o invio dell'email.
+            throw new InternalServerErrorException("Errore durante l'invio della mail");
         }
-
-        //Istanza l'oggetto che verrà inviato tramite mail.
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        //Salvo i dati della mail.
-        message.setFrom("eventguru.service@gmail.com");
-        message.setTo(request.getEmailDestinatario());
-        message.setSubject(request.getOggetto());
-        message.setText(request.getTesto());
-
-        //Invio la mail tramite JavaMailSender.
-        emailSender.send(message);
     }
 
     /**
@@ -98,12 +128,18 @@ public class EmailServiceImpl implements EmailService {
         //Salvo le modifiche sul database.
         userRepository.save(user);
 
+        //HashMap dove salvare i dati dinamici da inserire nel template per personalizzare le mail.
+        Map<String, String> dynamicData = new HashMap<>();
+
+        //Aggiungo i dati e stabilisco una chiave tramite la quale accedo all'interno del template.
+        dynamicData.put("nomeTurista", user.getNome());
+        dynamicData.put("nuovaPassword", password.toString());
+
         //Invio la mail specificando, tramite il DTO, destinatario, oggetto e testo.
         inviaEmail(new InviaEmailRequest(
                 email,
-                "Nuova password EventGURU",
-                "Ciao " + user.getNome() + "!\nÈ stata appena richiesta una nuova password." +
-                "\nAdesso puoi accedere con la seguente password: "
-                + password + "\n\nCi vediamo sulla nostra piattaforma!\nIl team di EventGURU"));
+                "Cambio password EventGURU",
+                dynamicData,
+                EventType.RECOVERY_PASSWORD));
     }
 }

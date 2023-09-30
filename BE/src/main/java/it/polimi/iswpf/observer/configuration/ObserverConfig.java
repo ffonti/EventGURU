@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Classe di configurazione dell'Observer eseguita all'avvio dell'applicazione in modo da effettuare le subscribe.
+ * Grazie all'annotazione "@Configuration", il contenuto di questa classe viene eseguito appena il server viene avviato.
  */
 @Configuration
 @RequiredArgsConstructor

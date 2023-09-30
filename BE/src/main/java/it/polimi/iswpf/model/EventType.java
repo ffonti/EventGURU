@@ -4,5 +4,7 @@ public enum EventType {
 
     FOLLOWERS,
 
-    NEWSLETTER
+    NEWSLETTER,
+
+    RECOVERY_PASSWORD
 }

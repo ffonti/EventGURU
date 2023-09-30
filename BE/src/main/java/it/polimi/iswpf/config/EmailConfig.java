@@ -2,8 +2,10 @@ package it.polimi.iswpf.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
 import java.util.Properties;
 
@@ -47,5 +49,21 @@ public class EmailConfig {
         props.put("mail.debug", "true");
 
         return mailSender;
+    }
+
+    /**
+     * Bean di configurazione per FreeMarker, un motore di template usato per ottimizzare il servizio di mailing.
+     * @return Un'istanza del bean dopo aver configurato la directory dei templates.
+     */
+    @Bean
+    @Primary //Utilizzata per risolvere delle ambiguità sulla scelta tra bean dello stesso tipo.
+    public FreeMarkerConfigurationFactoryBean factoryBean() {
+
+        FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
+
+        //Seleziono la directory da cui prendere i templates.
+        bean.setTemplateLoaderPath("classpath:/templates");
+
+        return bean;
     }
 }

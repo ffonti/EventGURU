@@ -1,7 +1,10 @@
 package it.polimi.iswpf.dto.request;
 
+import it.polimi.iswpf.model.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
@@ -11,5 +14,7 @@ public class InviaEmailRequest {
 
     private String oggetto;
 
-    private String testo;
+    private Map<String, String> dynamicData;
+
+    private EventType eventType;
 }
