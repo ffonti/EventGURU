@@ -41,9 +41,7 @@ public class UtilMethods {
         //Specifico il pattern con il quale formattare la stringa contenente la data.
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-        //Formatto l'oggetto LocalDateTime in una stringa
-        String formatttedDate = date.format(formatter);
-
-        return formatttedDate;
+        //Formatto l'oggetto LocalDateTime in una stringa e lo ritorno.
+        return date.format(formatter);
     }
 }
