@@ -3,10 +3,7 @@ package it.polimi.iswpf.service.implementation;
 import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.UserBuilder;
 import it.polimi.iswpf.dto.request.UpdateUserDataRequest;
-import it.polimi.iswpf.exception.BadRequestException;
-import it.polimi.iswpf.exception.ConflictException;
-import it.polimi.iswpf.exception.InternalServerErrorException;
-import it.polimi.iswpf.exception.NotFoundException;
+import it.polimi.iswpf.exception.*;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
@@ -18,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -404,10 +402,196 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getOrganizzatoriSeguiti() {
+    void seguiOrganizzatoreThrowsPermessiNonAdatti() {
+
+        User organizzatore = new UserBuilder()
+                .userId(1L)
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        User turista = new UserBuilder()
+                .userId(2L)
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(organizzatore));
+        when(userRepository.findByUserId(2L)).thenReturn(Optional.of(turista));
+
+        assertThrows(ForbiddenException.class,
+                () -> userService.seguiOrganizzatore(1L, 2L));
     }
 
     @Test
-    void smettiSeguireOrganizzatore() {
+    void seguiOrganizzatoreThrowsTuristaSegueGiaOrganizzatore() {
+
+        User organizzatore = new UserBuilder()
+                .userId(1L)
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        User turista = new UserBuilder()
+                .userId(2L)
+                .ruolo(Ruolo.TURISTA)
+                .seguiti(List.of(organizzatore))
+                .build();
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(organizzatore));
+        when(userRepository.findByUserId(2L)).thenReturn(Optional.of(turista));
+
+        assertThrows(BadRequestException.class,
+                () -> userService.seguiOrganizzatore(1L, 2L));
+    }
+
+    @Test
+    void seguiOrganizzatoreSuccessful() {
+
+        List<User> seguiti = new ArrayList<>();
+
+        User organizzatore = new UserBuilder()
+                .userId(1L)
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        User turista = new UserBuilder()
+                .userId(2L)
+                .ruolo(Ruolo.TURISTA)
+                .seguiti(seguiti)
+                .build();
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(organizzatore));
+        when(userRepository.findByUserId(2L)).thenReturn(Optional.of(turista));
+
+        assertAll(() -> userService.seguiOrganizzatore(1L, 2L));
+    }
+
+    @Test
+    void getOrganizzatoriSeguitiThrowsIdNonValido() {
+
+        assertThrows(BadRequestException.class,
+                () -> userService.getOrganizzatoriSeguiti(0L));
+    }
+
+    @Test
+    void getOrganizzatoriSeguitiThrowsUtenteNonTrovato() {
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class,
+                () -> userService.getOrganizzatoriSeguiti(1L));
+    }
+
+    @Test
+    void getOrganizzatoriSeguitiThrowsPermessiNonAdatti() {
+
+        User turista = new UserBuilder()
+                .userId(1L)
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(turista));
+
+        assertThrows(ForbiddenException.class,
+                () -> userService.getOrganizzatoriSeguiti(1L));
+    }
+
+    @Test
+    void getOrganizzatoriSeguitiSuccessful() {
+
+        List<User> seguiti = List.of(
+                new UserBuilder()
+                        .username("ciccio")
+                        . build()
+        );
+
+        User turista = new UserBuilder()
+                .userId(1L)
+                .ruolo(Ruolo.TURISTA)
+                .seguiti(seguiti)
+                .build();
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(turista));
+
+        assertAll(() -> userService.getOrganizzatoriSeguiti(1L));
+    }
+
+    @Test
+    void smettiSeguireOrganizzatoreThrowsIdNonValido() {
+
+        assertThrows(BadRequestException.class,
+                () -> userService.smettiSeguireOrganizzatore(0L, 1L));
+    }
+
+    @Test
+    void smettiSeguireOrganizzatoreThrowsUtenteNonTrovato() {
+
+        when(userRepository.findByUserId(any())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class,
+                () -> userService.smettiSeguireOrganizzatore(1L, 2L));
+    }
+
+    @Test
+    void smettiSeguireOrganizzatoreThrowsPermessiNonAdatti() {
+
+        User organizzatore = new UserBuilder()
+                .userId(1L)
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        User turista = new UserBuilder()
+                .userId(2L)
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(organizzatore));
+        when(userRepository.findByUserId(2L)).thenReturn(Optional.of(turista));
+
+        assertThrows(ForbiddenException.class,
+                () -> userService.smettiSeguireOrganizzatore(1L, 2L));
+    }
+
+    @Test
+    void smettiSeguireOrganizzatoreThrowsTuristaNonSegueOrganizzatore() {
+
+        User organizzatore = new UserBuilder()
+                .userId(1L)
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        User turista = new UserBuilder()
+                .userId(2L)
+                .ruolo(Ruolo.TURISTA)
+                .seguiti(List.of())
+                .build();
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(organizzatore));
+        when(userRepository.findByUserId(2L)).thenReturn(Optional.of(turista));
+
+        assertThrows(BadRequestException.class,
+                () -> userService.smettiSeguireOrganizzatore(1L, 2L));
+    }
+
+    @Test
+    void smettiSeguireOrganizzatoreSuccessful() {
+
+        List<User> seguiti = new ArrayList<>();
+
+        User organizzatore = new UserBuilder()
+                .userId(1L)
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        seguiti.add(organizzatore);
+
+        User turista = new UserBuilder()
+                .userId(2L)
+                .ruolo(Ruolo.TURISTA)
+                .seguiti(seguiti)
+                .build();
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(organizzatore));
+        when(userRepository.findByUserId(2L)).thenReturn(Optional.of(turista));
+
+        assertAll(() -> userService.smettiSeguireOrganizzatore(1L, 2L));
     }
 }
