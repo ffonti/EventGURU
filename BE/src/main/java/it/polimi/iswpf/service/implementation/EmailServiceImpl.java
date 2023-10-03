@@ -12,8 +12,6 @@ import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
 import it.polimi.iswpf.service._interface.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -4,6 +4,7 @@ import it.polimi.iswpf.dto.request.DatiCirconferenza;
 import it.polimi.iswpf.dto.request.PuntoPoligono;
 import it.polimi.iswpf.dto.response.EventoResponse;
 import it.polimi.iswpf.dto.response.RecensioneResponse;
+import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.model.*;
 import it.polimi.iswpf.repository.EventoRepository;
 import it.polimi.iswpf.service._interface.LuogoService;
@@ -54,6 +55,11 @@ public class LuogoServiceImpl implements LuogoService {
     @Override
     public List<EventoResponse> getAllMarkerCoordinatesByOrganizzatore(Long organizzatoreId) {
 
+        //L'id dev'essere maggiore di 0.
+        if(organizzatoreId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
+
         //Prendo tutti gli eventi organizzati da un dato organizzatore.
         List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
 
@@ -103,6 +109,11 @@ public class LuogoServiceImpl implements LuogoService {
      */
     @Override
     public List<EventoResponse> coordinateDentroPoligonoByOrganizzatore(List<PuntoPoligono> request, Long organizzatoreId) {
+
+        //L'id dev'essere maggiore di 0.
+        if(organizzatoreId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
 
         //Prendo tutti gli eventi organizzati da un dato organizzatore.
         List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
@@ -159,6 +170,11 @@ public class LuogoServiceImpl implements LuogoService {
      */
     @Override
     public List<EventoResponse> coordinateDentroCirconferenzaByOrganizzatore(DatiCirconferenza request, Long organizzatoreId) {
+
+        //L'id dev'essere maggiore di 0.
+        if(organizzatoreId < 1) {
+            throw new BadRequestException("Id non valido");
+        }
 
         //Prendo tutti gli eventi organizzati da un dato organizzatore.
         List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);

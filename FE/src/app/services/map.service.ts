@@ -239,6 +239,7 @@ export class MapService {
         });
 
         if (this.layer._latlng === undefined) {
+          console.log(this.layer._latlngs[0]);
 
           this.markersInsidePolygonByOrganizzatore(this.layer._latlngs[0]).subscribe({
             next: (res: GetAllEventiResponse[]) => {
@@ -252,6 +253,8 @@ export class MapService {
           });
 
         } else if (this.layer._latlngs === undefined) {
+          console.log(this.layer._latlng, this.layer._mRadius);
+
 
           const centroLat: string = this.layer._latlng.lat.toString().trim();
           const centroLng: string = this.layer._latlng.lng.toString().trim();
