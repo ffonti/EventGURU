@@ -1,4 +1,4 @@
-package it.polimi.iswpf.service.implementation;
+package it.polimi.iswpf.unit.service;
 
 import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.LuogoBuilder;
@@ -8,6 +8,7 @@ import it.polimi.iswpf.dto.request.DatiCirconferenza;
 import it.polimi.iswpf.dto.request.PuntoPoligono;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.repository.EventoRepository;
+import it.polimi.iswpf.service.implementation.LuogoServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

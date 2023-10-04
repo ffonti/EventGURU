@@ -1,4 +1,4 @@
-package it.polimi.iswpf.service.implementation;
+package it.polimi.iswpf.unit.service;
 
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
@@ -7,6 +7,8 @@ import it.polimi.iswpf.exception.ConflictException;
 import it.polimi.iswpf.exception.InternalServerErrorException;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
+import it.polimi.iswpf.service.implementation.AuthenticationServiceImpl;
+import it.polimi.iswpf.service.implementation.JwtServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,4 +1,4 @@
-package it.polimi.iswpf.service.implementation;
+package it.polimi.iswpf.unit.service;
 
 import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.UserBuilder;
@@ -7,6 +7,7 @@ import it.polimi.iswpf.exception.*;
 import it.polimi.iswpf.model.Ruolo;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
+import it.polimi.iswpf.service.implementation.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

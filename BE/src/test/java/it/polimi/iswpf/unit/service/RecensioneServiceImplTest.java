@@ -1,4 +1,4 @@
-package it.polimi.iswpf.service.implementation;
+package it.polimi.iswpf.unit.service;
 
 import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.RecensioneBuilder;
@@ -14,6 +14,7 @@ import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.EventoRepository;
 import it.polimi.iswpf.repository.RecensioneRepository;
 import it.polimi.iswpf.repository.UserRepository;
+import it.polimi.iswpf.service.implementation.RecensioneServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

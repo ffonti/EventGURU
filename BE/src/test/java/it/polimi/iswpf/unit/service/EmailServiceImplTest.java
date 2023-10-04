@@ -1,4 +1,4 @@
-package it.polimi.iswpf.service.implementation;
+package it.polimi.iswpf.unit.service;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -10,6 +10,7 @@ import it.polimi.iswpf.exception.NotFoundException;
 import it.polimi.iswpf.model.EventType;
 import it.polimi.iswpf.model.User;
 import it.polimi.iswpf.repository.UserRepository;
+import it.polimi.iswpf.service.implementation.EmailServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
