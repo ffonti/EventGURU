@@ -1,6 +1,7 @@
 package it.polimi.iswpf.observer.listener;
 
 import it.polimi.iswpf.dto.request.InviaEmailRequest;
+import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.model.EventType;
 import it.polimi.iswpf.model.Evento;
 import it.polimi.iswpf.model.User;
@@ -32,6 +33,14 @@ public class FollowersListener implements EventListener {
     @Override
     public void update(User organizzatore, List<User> turisti, Evento evento) {
 
+        if(organizzatore.getNome().isEmpty() || organizzatore.getNome().isBlank() ||
+                organizzatore.getCognome().isEmpty() || organizzatore.getCognome().isBlank() ||
+                evento.getTitolo().isEmpty() || evento.getTitolo().isBlank() ||
+                evento.getDescrizione().isEmpty() || evento.getDescrizione().isBlank() ||
+                evento.getDataInizio() == null || evento.getDataFine() == null) {
+            throw new BadRequestException("Campi non esistenti");
+        }
+
         //HashMap dove salvare i dati dinamici da inserire nel template per personalizzare le mail.
         Map<String, String> dynamicData = new HashMap<>();
 
@@ -45,6 +54,11 @@ public class FollowersListener implements EventListener {
 
         //Scorro la lista di turisti per inviare singolarmente le mail.
         for(User turista : turisti) {
+
+            if(turista.getNome().isBlank() || turista.getNome().isEmpty() ||
+                    turista.getEmail().isBlank() || turista.getEmail().isEmpty()) {
+                throw new BadRequestException("Campi non esistenti");
+            }
 
             //Aggiungo l'unico dato diverso per ogni mail.
             dynamicData.put("nomeDestinatario", turista.getNome());

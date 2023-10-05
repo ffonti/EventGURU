@@ -1,5 +1,6 @@
 package it.polimi.iswpf.observer.publisher;
 
+import it.polimi.iswpf.exception.NotFoundException;
 import it.polimi.iswpf.model.EventType;
 import it.polimi.iswpf.model.Evento;
 import it.polimi.iswpf.model.User;
@@ -67,6 +68,18 @@ public class EventManager {
      * @param evento Evento organizzato.
      */
     public void notify(EventType eventType, User organizzatore, List<User> turisti, Evento evento) {
+
+        if(organizzatore == null) {
+            throw new NotFoundException("Organizzatore non esistente");
+        }
+
+        if(turisti == null) {
+            throw new NotFoundException("Turisti non esistenti");
+        }
+
+        if(evento == null) {
+            throw new NotFoundException("Evento non esistente");
+        }
 
         listeners.get(eventType).update(organizzatore, turisti, evento);
     }

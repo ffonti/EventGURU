@@ -11,10 +11,10 @@ import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.ForbiddenException;
 import it.polimi.iswpf.exception.InternalServerErrorException;
 import it.polimi.iswpf.exception.NotFoundException;
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.Luogo;
-import it.polimi.iswpf.model.Ruolo;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model.*;
+import it.polimi.iswpf.observer.listener.EventListener;
+import it.polimi.iswpf.observer.listener.FollowersListener;
+import it.polimi.iswpf.observer.listener.NewsletterListener;
 import it.polimi.iswpf.observer.publisher.EventManager;
 import it.polimi.iswpf.repository.EventoRepository;
 import it.polimi.iswpf.repository.LuogoRepository;
@@ -25,19 +25,31 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EventoServiceImplTest {
+
+    @Mock
+    FollowersListener followersListener;
+
+    @Mock
+    NewsletterListener newsletterListener;
+
+    @Mock
+    Map<EventType, EventListener> listeners;
 
     @Mock
     EventoRepository eventoRepository;
@@ -49,7 +61,7 @@ class EventoServiceImplTest {
     LuogoRepository luogoRepository;
 
     @Mock
-    EventManager eventManager = EventManager.getInstance();
+    EventManager eventManager;
 
     @InjectMocks
     EventoServiceImpl eventoService;
@@ -200,43 +212,46 @@ class EventoServiceImplTest {
                 ), 1L));
     }
 
-//    @Test
-//    void creaEventoSuccessful() {
-//
-//        User organizzatore = new UserBuilder()
-//                .ruolo(Ruolo.ORGANIZZATORE)
-//                .build();
-//
-//        User follower = new UserBuilder()
-//                .ruolo(Ruolo.TURISTA)
-//                .build();
-//
-//        List<User> followers = new ArrayList<>();
-//
-//        List<User> iscrittiNewsletter = new ArrayList<>();
-//
-//        followers.add(follower);
-//        iscrittiNewsletter.add(follower);
-//        iscrittiNewsletter.add(new User());
-//
-//        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(organizzatore));
-//
-//        when(userRepository.findAllBySeguitiAndRuolo(organizzatore, Ruolo.TURISTA))
-//                .thenReturn(followers);
-//
-//        when(userRepository.findAllByIscrittoNewsletterIsTrueAndRuolo(Ruolo.TURISTA))
-//                .thenReturn(iscrittiNewsletter);
-//
-//        assertAll(() -> eventoService.creaEvento(new CreaModificaEventoRequest(
-//                        "titolo",
-//                        "descrizione",
-//                        LocalDateTime.now().plusHours(1),
-//                        LocalDateTime.now().plusHours(2),
-//                        "1",
-//                        "1",
-//                        "nome luogo"
-//                ), 1L));
-//    }
+    @Test
+    void creaEventoSuccessful() {
+
+        ReflectionTestUtils.setField(EventManager.getInstance(), "instance", eventManager);
+
+        User organizzatore = new UserBuilder()
+                .ruolo(Ruolo.ORGANIZZATORE)
+                .build();
+
+        User follower = new UserBuilder()
+                .ruolo(Ruolo.TURISTA)
+                .build();
+
+        List<User> followers = new ArrayList<>();
+
+        List<User> iscrittiNewsletter = new ArrayList<>();
+
+        followers.add(follower);
+        iscrittiNewsletter.add(follower);
+        iscrittiNewsletter.add(new User());
+
+        when(userRepository.findByUserId(1L)).thenReturn(Optional.of(organizzatore));
+
+        when(userRepository.findAllBySeguitiAndRuolo(organizzatore, Ruolo.TURISTA))
+                .thenReturn(followers);
+
+        when(userRepository.findAllByIscrittoNewsletterIsTrueAndRuolo(Ruolo.TURISTA))
+                .thenReturn(iscrittiNewsletter);
+
+        doNothing().when(EventManager.getInstance()).notify(any(), any(), any(), any());
+
+        assertAll(() -> eventoService.creaEvento(new CreaModificaEventoRequest(
+                "titolo",
+                "descrizione",
+                LocalDateTime.now().plusHours(1),
+                LocalDateTime.now().plusHours(2),
+                "1",
+                "2",
+                "nome luogo"), 1L));
+    }
 
     @Test
     void getAllEventiThrowsIdNonValido() {
