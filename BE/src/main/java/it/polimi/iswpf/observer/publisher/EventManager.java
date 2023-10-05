@@ -1,5 +1,6 @@
 package it.polimi.iswpf.observer.publisher;
 
+import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.NotFoundException;
 import it.polimi.iswpf.model.EventType;
 import it.polimi.iswpf.model.Evento;
@@ -68,6 +69,10 @@ public class EventManager {
      * @param evento Evento organizzato.
      */
     public void notify(EventType eventType, User organizzatore, List<User> turisti, Evento evento) {
+
+        if(eventType == null) {
+            throw new BadRequestException("Tipo di evento non valido");
+        }
 
         if(organizzatore == null) {
             throw new NotFoundException("Organizzatore non esistente");

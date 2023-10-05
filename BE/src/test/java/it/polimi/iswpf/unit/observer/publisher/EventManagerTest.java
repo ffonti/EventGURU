@@ -2,6 +2,8 @@ package it.polimi.iswpf.unit.observer.publisher;
 
 import it.polimi.iswpf.builder.EventoBuilder;
 import it.polimi.iswpf.builder.UserBuilder;
+import it.polimi.iswpf.exception.BadRequestException;
+import it.polimi.iswpf.exception.NotFoundException;
 import it.polimi.iswpf.model.EventType;
 import it.polimi.iswpf.model.Evento;
 import it.polimi.iswpf.model.User;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,7 +56,35 @@ class EventManagerTest {
     }
 
     @Test
-    void testNotify() {
+    void testNotifyThrowsEventoNonValido() {
+
+        assertThrows(BadRequestException.class,
+                () -> eventManager.notify(null, null, null, null));
+    }
+
+    @Test
+    void testNotifyThrowsOrganizzatoreNonEsistente() {
+
+        assertThrows(NotFoundException.class,
+                () -> eventManager.notify(EventType.NEWSLETTER, null, null, null));
+    }
+
+    @Test
+    void testNotifyThrowsTuristiNonEsistenti() {
+
+        assertThrows(NotFoundException.class,
+                () -> eventManager.notify(EventType.NEWSLETTER, new User(), null, null));
+    }
+
+    @Test
+    void testNotifyThrowsEventoNonEsistente() {
+
+        assertThrows(NotFoundException.class,
+                () -> eventManager.notify(EventType.NEWSLETTER, new User(), List.of(new User()), null));
+    }
+
+    @Test
+    void testNotifySuccessful() {
 
         User organizzatore = new UserBuilder()
                 .nome("nome")
