@@ -6,6 +6,10 @@ import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 import { AuthService } from 'src/app/services/auth.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 
+/**
+ * componente per recuperare la password. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-recovery-password',
   templateUrl: './recovery-password.component.html',
@@ -14,8 +18,13 @@ import { SpinnerService } from 'src/app/services/spinner.service';
 export class RecoveryPasswordComponent {
   protected email: string = '';
 
-  constructor(private toastr: ToastrService, private authService: AuthService, private router: Router, private spinnerService: SpinnerService) { }
+  //costruttore dove istanzio le classi con cui interagire
+  constructor(private toastr: ToastrService,
+    private authService: AuthService,
+    private router: Router,
+    private spinnerService: SpinnerService) { }
 
+  //metodo per inviare la mail per recuperare la password
   inviaEmail(): void {
     this.authService.recuperaPassword(this.email).subscribe({
       next: (res: MessageResponse) => {

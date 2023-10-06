@@ -6,6 +6,10 @@ import { GetUserDataResponse } from 'src/app/dtos/response/GetUserDataResponse';
 import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 import { UserService } from 'src/app/services/user.service';
 
+/**
+ * componente per visualizzare i dati dell'account. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
@@ -13,7 +17,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class AccountComponent implements OnInit {
   //creo un nuovo tipo con i dati dell'utente
-  protected userData: any = {
+  protected userData = {
     username: '',
     nome: '',
     cognome: '',
@@ -56,7 +60,7 @@ export class AccountComponent implements OnInit {
         //in caso di successo compilo il form
         this.compilaCampi(res);
       },
-      error: (err: any) => {
+      error: (err: HttpErrorResponse) => {
         //in caso di errore mando l'utente al login
         console.log(err);
         this.toastr.error('Eseguire nuovamente il login');
@@ -99,7 +103,7 @@ export class AccountComponent implements OnInit {
         next: (res: GetUserDataResponse) => {
           this.toastr.success("Dati modificati con successo");
         },
-        error: (err: any) => {
+        error: (err: HttpErrorResponse) => {
           console.log(err);
           this.toastr.error(err.error.message);
         }
@@ -114,7 +118,7 @@ export class AccountComponent implements OnInit {
           this.toastr.success("Dati modificati con successo");
           this.toastr.info("Eseguire nuovamente il login");
         },
-        error: (err: any) => {
+        error: (err: HttpErrorResponse) => {
           console.log(err);
           this.toastr.error(err.error.message);
         }

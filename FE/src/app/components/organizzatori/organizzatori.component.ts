@@ -6,6 +6,10 @@ import { GetOrganizzatoriSeguiti } from 'src/app/dtos/response/GetOrganizzatoriS
 import { OrganizzatoreResponse } from 'src/app/dtos/response/OrganizzatoreResponse';
 import { UserService } from 'src/app/services/user.service';
 
+/**
+ * componente per visualizzare tutti gli organizzatori. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-organizzatori',
   templateUrl: './organizzatori.component.html',
@@ -19,14 +23,19 @@ export class OrganizzatoriComponent implements OnInit {
   protected usernameOrganizzatoriSeguiti: string[] = [];
   protected username?: string = localStorage.getItem('username')?.toString().toLowerCase().trim();
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private toastr: ToastrService, private userService: UserService, private router: Router) { }
 
+  //metodo eseguito appena viene caricato il componente
   ngOnInit(): void {
+    //prendo tutti gli organizzatori presenti sul db
     this.userService.getAllOrganizzatori().subscribe({
       next: (res: OrganizzatoreResponse[]) => {
         this.organizzatori = res;
         let giorno: string, mese: string, anno: string, ore: string, minuti: string;
         this.organizzatori.forEach(organizzatore => {
+
+          //cambio la visualizzazione della data
           let dataCreazioneAccount: string = organizzatore.dataCreazioneAccount.toString();
 
           anno = dataCreazioneAccount.slice(0, 4);
@@ -44,8 +53,10 @@ export class OrganizzatoriComponent implements OnInit {
       }
     })
 
+    //prendo dal db tutti gli organizzatori che segue il turista loggato
     this.userService.getAllOrganizzatoriSeguiti().subscribe({
       next: (res: GetOrganizzatoriSeguiti[]) => {
+        //aggiungo all'array tutti gli username degli organizzatori seguiti
         res.forEach((username: any) => {
           this.usernameOrganizzatoriSeguiti.push(username.usernameOrganizzatore);
         });
@@ -57,10 +68,12 @@ export class OrganizzatoriComponent implements OnInit {
     })
   }
 
+  //resetto l'attributo per filtrare la ricerca
   resetFiltri(): void {
     this.cercaPerNome = '';
   }
 
+  //cambio l'ordine dei dati in base da determinati attributi
   onChangeOrdinaPer(value: string): void {
     switch (value) {
       case 'NOME':
@@ -94,22 +107,27 @@ export class OrganizzatoriComponent implements OnInit {
     this.modoOrdine = 'CRESCENTE';
   }
 
+  //da crescente a decrescente o viceversa
   onChangeModoOrdine(value: string): void {
     this.organizzatori = this.organizzatori.reverse();
   }
 
+  //controllo gli attributi per filtrare la ricerca
   checkFilters(organizzatore: any): boolean {
     return organizzatore.nome.toLowerCase().trim().includes(this.cercaPerNome.toLowerCase().trim());
   }
 
+  //indirizzo l'utente alla pagina degli eventi di un dato organizzatore
   goToEventiOrganizzatore(organizzatoreId: number): void {
     this.router.navigateByUrl('homepage/esplora/' + organizzatoreId.toString().trim());
   }
 
+  //metodo per seguire un organizzatore
   seguiOrganizzatore(organizzatoreId: number, organizzatoreUsername: string): void {
     this.userService.seguiOrganizzatore(organizzatoreId.toString().trim()).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
+        //aggiungo l'username all'array di organizzatori seguiti
         this.usernameOrganizzatoriSeguiti.push(organizzatoreUsername);
       },
       error: (err: HttpErrorResponse) => {
@@ -119,10 +137,12 @@ export class OrganizzatoriComponent implements OnInit {
     })
   }
 
+  //metodo per smettere di seguire un organi
   smettiSeguireOrganizzatore(organizzatoreId: number, organizzatoreUsername: string): void {
     this.userService.smettiSeguireOrganizzatore(organizzatoreId.toString().trim()).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
+        //rimuovo l'username dalla lista di organizzatori seguiti
         this.usernameOrganizzatoriSeguiti = this.usernameOrganizzatoriSeguiti.filter((username) => {
           return username != organizzatoreUsername;
         });
@@ -134,6 +154,7 @@ export class OrganizzatoriComponent implements OnInit {
     })
   }
 
+  //controllo se un turista segue già un dato organizzatore tramite l'useranme
   checkGiaSegue(usernameOrganizzatore: string): boolean {
     let giaSegue: boolean = false;
 

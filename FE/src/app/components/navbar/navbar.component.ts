@@ -4,6 +4,10 @@ import { NavigationEnd, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 
+/**
+ * componente per la navbar. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',

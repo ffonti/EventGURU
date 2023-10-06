@@ -6,6 +6,10 @@ import { GetAllResponse } from 'src/app/dtos/response/GetAllResponse';
 import { OrganizzatoreService } from 'src/app/services/organizzatore.service';
 import { TuristaService } from 'src/app/services/turista.service';
 
+/**
+ * componente per l'admin. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-admin-page',
   templateUrl: './admin-page.component.html',

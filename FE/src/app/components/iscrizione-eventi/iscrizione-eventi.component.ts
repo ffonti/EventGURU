@@ -6,6 +6,10 @@ import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAl
 import { EventService } from 'src/app/services/event.service';
 import { RecensioneService } from 'src/app/services/recensione.service';
 
+/**
+ * componente con cui iscriversi agli eventi. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-iscrizione-eventi',
   templateUrl: './iscrizione-eventi.component.html',
@@ -29,12 +33,19 @@ export class IscrizioneEventiComponent implements OnInit {
   protected rating: number = 0;
   protected usernameRecensioni: string[] = [];
 
-  constructor(private toastr: ToastrService, private eventService: EventService, private router: Router, private recensioneService: RecensioneService) { }
+  //costruttore dove istanzio le classi con cui interagire
+  constructor(private toastr: ToastrService,
+    private eventService: EventService,
+    private router: Router,
+    private recensioneService: RecensioneService) { }
 
+  //Metodo eseguito appena viene caricato il componente
   ngOnInit(): void {
+    //prendo i dati dell'utente loggato
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
     this.username = localStorage.getItem('username')?.toString().trim().toLowerCase() || '';
 
+    //prendo tutti gli eventi a cui è iscritto un turista
     this.eventService.getEventiByTurista(this.username).subscribe({
       next: (res: GetAllEventiByOrganizzatoreResponse[]) => {
         res.forEach(evento => {
@@ -43,6 +54,7 @@ export class IscrizioneEventiComponent implements OnInit {
 
         this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.allEventi));
 
+        //cambio il formato delle date per renderle più leggibili
         this.changeFormatDate(this.allEventiWithDateFormatted);
       },
       error: (err: any) => {
@@ -53,6 +65,7 @@ export class IscrizioneEventiComponent implements OnInit {
     });
   }
 
+  //cambio il formato delle date per renderle più leggibili
   changeFormatDate(eventi: any): void {
     let giorno: string, mese: string, anno: string, ore: string, minuti: string;
 
@@ -79,11 +92,13 @@ export class IscrizioneEventiComponent implements OnInit {
     });
   }
 
+  //cambio la visualizzazione della modale
   toggleModalEliminaEvento(eventoId: number): void {
     this.eventoIdDaEliminare = eventoId;
     this.showModalEliminaEvento = !this.showModalEliminaEvento;
   }
 
+  //chiamo il backend per eliminare l'evento con un dato id
   eliminaEvento(): void {
     this.eventService.eliminaEvento(this.eventoIdDaEliminare).subscribe({
       next: (res: any) => {
@@ -99,6 +114,7 @@ export class IscrizioneEventiComponent implements OnInit {
     })
   }
 
+  //rimuovo un evento dalla visualizzazione dopo essere stato eliminato
   rimuoviEventoDaArray(eventoId: number): void {
     this.allEventi = this.allEventi.filter((evento: GetAllEventiByOrganizzatoreResponse) => {
       // return +evento.eventoId !== +eventoId;
@@ -109,6 +125,7 @@ export class IscrizioneEventiComponent implements OnInit {
     });
   }
 
+  //controllo i campi con cui filtrare la visualizzazione degli eventi
   checkFilters(evento: GetAllEventiByOrganizzatoreResponse): boolean {
     return evento.titolo.toLowerCase().trim().includes(this.cercaPerTitolo.toLowerCase().trim()) &&
       evento.nomeLuogo.toLowerCase().trim().includes(this.cercaPerLuogo.toLowerCase().trim()) &&
@@ -116,12 +133,14 @@ export class IscrizioneEventiComponent implements OnInit {
         this.cercaPerStato.toString().toLowerCase() == '');
   }
 
+  //inizializzo i campi in modo da resettare i filtri
   resetFiltri(): void {
     this.cercaPerLuogo = '';
     this.cercaPerTitolo = '';
     this.cercaPerStato = '';
   }
 
+  //ordino la visualizzazione degli eventi in base a vari parametri
   onChangeOrdinaPer(value: string): void {
     switch (value) {
       case 'DATA':
@@ -155,21 +174,26 @@ export class IscrizioneEventiComponent implements OnInit {
     this.modoOrdine = 'CRESCENTE';
   }
 
+  //cambio da crescente a decrescente, o viceversa
   onChangeModoOrdine(): void {
     this.allEventiWithDateFormatted = this.allEventiWithDateFormatted.reverse();
   }
 
+  //indirizzo l'utente alla pagina in cui modificare l'evento
   modificaEvento(eventoId: number): void {
     this.router.navigateByUrl('/homepage/creaEvento/' + eventoId.toString().trim());
   }
 
+  //metodo per iscrivere l'utente a un evento
   iscrizioneEvento(eventoId: number): void {
+    //aggiungo l'username del turista all'array con gli iscritti
     this.allEventiWithDateFormatted.forEach((evento: any) => {
       if (evento.eventoId == eventoId && this.username) {
         evento.usernameTuristi.push(this.username);
       }
     });
 
+    //iscrivo l'utente all'evento
     this.eventService.iscrizioneEvento(+eventoId).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
@@ -181,7 +205,9 @@ export class IscrizioneEventiComponent implements OnInit {
     });
   }
 
+  //metodo per annullare l'iscrizione all'evento
   annullaIscrizione(eventoId: number): void {
+    //rimuovo l'username dalla lista dell'evento
     this.allEventiWithDateFormatted.forEach((evento: any) => {
       if (evento.eventoId == eventoId) {
         evento.usernameTuristi.pop(this.username);
@@ -192,8 +218,7 @@ export class IscrizioneEventiComponent implements OnInit {
       return evento.eventoId != eventoId;
     })
 
-    console.log(this.allEventiWithDateFormatted);
-
+    //annullo l'iscrizione
     this.eventService.annullaIscrizione(+eventoId).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
@@ -205,6 +230,7 @@ export class IscrizioneEventiComponent implements OnInit {
     });
   }
 
+  //cambio la visualizzazione della modale
   toggleModalRecensione(eventoId: number): void {
     this.rating = 0;
     this.testoRecensione = '';
@@ -212,12 +238,15 @@ export class IscrizioneEventiComponent implements OnInit {
     this.showModalRecensione = !this.showModalRecensione;
   }
 
+  //metodo per inviare la recensione
   inviaRecensione(): void {
+    //controllo sul voto
     if (this.rating === 0) {
       this.toastr.warning('Inserire prima un voto');
       return;
     }
 
+    //mando la recensione al backend
     this.recensioneService.inviaRecensione(this.eventoIdDaRecensire.toString().trim(), this.rating, this.testoRecensione).subscribe({
       next: (res: any) => {
         this.toastr.success(res.message);
@@ -231,10 +260,13 @@ export class IscrizioneEventiComponent implements OnInit {
     this.showModalRecensione = !this.showModalRecensione;
   }
 
+  //assegno alla variabile il voto inserito dall'utente
   doRating(n: number): void {
     this.rating = n;
   }
 
+  //controllo se l'evento è già stato recensito
+  //TODO fixarlo
   nonAncoraRecensito(eventoId: number): boolean {
     let isRecensito: boolean = false;
     const usernameLogged: string | null = localStorage.getItem('username');

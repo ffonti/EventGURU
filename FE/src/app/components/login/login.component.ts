@@ -7,6 +7,10 @@ import { Router } from '@angular/router';
 import { LoginRequest } from 'src/app/dtos/request/LoginRequest';
 import { LoginResponse } from 'src/app/dtos/response/LoginResponse';
 
+/**
+ * componente per il login. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -65,12 +69,12 @@ export class LoginComponent implements OnInit {
 
         const ruoloLogin: string = res.ruolo.toString().trim().toUpperCase();
 
-        if(ruoloLogin === 'ORGANIZZATORE') {
+        if (ruoloLogin === 'ORGANIZZATORE') {
           this.router.navigateByUrl('homepage/eventiOrganizzati');
-        } else if(ruoloLogin === 'TURISTA' || ruoloLogin === 'ADMIN') {
+        } else if (ruoloLogin === 'TURISTA' || ruoloLogin === 'ADMIN') {
           this.router.navigateByUrl('homepage/esplora');
         }
-        
+
       },
       error: (err: HttpErrorResponse) => {
         //In caso di errore stampo un messaggio

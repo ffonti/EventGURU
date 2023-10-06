@@ -10,6 +10,10 @@ import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
 import { RecensioneService } from 'src/app/services/recensione.service';
 
+/**
+ * componente per gli organizzatori dove visualizzare i propri eventi. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-events',
   templateUrl: './events.component.html',
@@ -45,15 +49,18 @@ export class EventsComponent implements OnInit, AfterViewInit {
 
   mapDraw: any;
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private eventService: EventService,
     private toastr: ToastrService,
     private router: Router,
     private recensioneService: RecensioneService,
     private mapService: MapService) { }
 
+  //Metodo eseguito appena viene caricato il componente
   ngOnInit(): void {
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
 
+    //chiamo il backend per prendere tutti gli eventi di un dato organizzatore
     this.eventService.getEventiByOrganizzatore().subscribe({
       next: (res: GetAllEventiByOrganizzatoreResponse[]) => {
         res.forEach(evento => {
@@ -62,6 +69,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
 
         this.allEventiByOrganizzatoreWithDateFormatted = JSON.parse(JSON.stringify(this.allEventiByOrganizzatore));
 
+        //cambio il formato della date per renderle esteticamente più leggibili 
         this.changeFormatDate(this.allEventiByOrganizzatoreWithDateFormatted);
       },
       error: (err: any) => {
@@ -71,11 +79,13 @@ export class EventsComponent implements OnInit, AfterViewInit {
       }
     });
 
+    //prendo tutte le coordinate di ogni evento creato dall'organizzatore
     this.mapService.getAllMarkerCoordinatesByOrganizzatore().subscribe({
       next: (res: GetAllEventiResponse[]) => {
         this.allMarkerCoordinates = res;
         console.log(res);
 
+        //per ogni coppia di coordinate, aggiungo alla mappa un marker per simboleggiare l'evento
         this.mapDraw = this.mapService.placeMarkers(this.mapDraw, this.allMarkerCoordinates);
       },
       error: (err: HttpErrorResponse) => {
@@ -85,11 +95,13 @@ export class EventsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  //inizializzo la mappa
   ngAfterViewInit(): void {
     this.showMappaFiltro = false;
     this.mapDraw = this.mapService.initMapDrawOrganizzatore(this.mapDraw);
   }
 
+  //metodo per cambiare il formato delle date e renderle esteticamente più leggibili
   changeFormatDate(eventi: any[]): void {
     let giorno: string, mese: string, anno: string, ore: string, minuti: string;
 
@@ -116,11 +128,13 @@ export class EventsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  //cambio la visualizzazione della modale
   toggleModalEliminaEvento(eventoId: number): void {
     this.eventoIdDaEliminare = eventoId;
     this.showModalEliminaEvento = !this.showModalEliminaEvento;
   }
 
+  //metodo per eliminare un evento dato un id
   eliminaEvento(): void {
     this.eventService.eliminaEvento(this.eventoIdDaEliminare).subscribe({
       next: (res: any) => {
@@ -136,6 +150,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
     })
   }
 
+  //rimuovo dall'array l'evento eliminato
   rimuoviEventoDaArray(eventoId: number): void {
     this.allEventiByOrganizzatore = this.allEventiByOrganizzatore.filter((evento: GetAllEventiByOrganizzatoreResponse) => {
       return +evento.eventoId !== +eventoId;
@@ -146,6 +161,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  //metodo per controllare i campi con cui filtrare gli eventi
   checkFilters(evento: GetAllEventiByOrganizzatoreResponse): boolean {
     return evento.titolo.toLowerCase().trim().includes(this.cercaPerTitolo.toLowerCase().trim()) &&
       evento.nomeLuogo.toLowerCase().trim().includes(this.cercaPerLuogo.toLowerCase().trim()) &&
@@ -153,6 +169,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
         this.cercaPerStato.toString().toLowerCase() == '');
   }
 
+  //resetto i filtri inizializzando le variabili
   resetFiltri(): void {
     this.cercaPerLuogo = '';
     this.cercaPerTitolo = '';
@@ -160,6 +177,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
     this.allEventiByOrganizzatoreWithDateFormatted = JSON.parse(JSON.stringify(this.temp));
   }
 
+  //metodo per ordinare la lista degli eventi in base a determinati fattori
   onChangeOrdinaPer(value: string) {
     switch (value) {
       case 'DATA':
@@ -193,14 +211,17 @@ export class EventsComponent implements OnInit, AfterViewInit {
     this.modoOrdine = 'CRESCENTE';
   }
 
+  //passo da crescente a decrescente
   onChangeModoOrdine(value: string) {
     this.allEventiByOrganizzatoreWithDateFormatted = this.allEventiByOrganizzatoreWithDateFormatted.reverse();
   }
 
+  //indirizzo l'utente nella pagina dove potrà modificare l'evento con il form con i dati già compilati
   modificaEvento(eventoId: number) {
     this.router.navigateByUrl('/homepage/creaEvento/' + eventoId.toString().trim());
   }
 
+  //cambio la visualizzazione della modale
   toggleModalPartecipanti(eventoId: number): void {
     this.eventoIdSelected = eventoId;
     this.allEventiByOrganizzatore.forEach((evento) => {
@@ -211,6 +232,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
     this.showModalPartecipanti = !this.showModalPartecipanti;
   }
 
+  //cambio la visualizzazione della modale
   toggleModalPartecipantiNoRemove(eventoId: number): void {
     this.eventoIdSelected = eventoId;
     this.allEventiByOrganizzatore.forEach((evento) => {
@@ -221,6 +243,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
     this.showModalPartecipantiNoRemove = !this.showModalPartecipantiNoRemove;
   }
 
+  //metodo pre rimuovere un turista da un evento tramite l'id
   rimuoviTuristaDaEvento(usernameTurista: string): void {
     this.eventService.rimuoviTuristaDaEvento(usernameTurista, this.eventoIdSelected.toString().trim()).subscribe({
       next: (res: any) => {
@@ -230,6 +253,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
           return username != usernameTurista;
         });
 
+        //rimuovo anche dalla lista che viene visualizzata
         this.allEventiByOrganizzatore.forEach((evento) => {
           if (evento.eventoId == this.eventoIdSelected) {
             evento.usernameTuristi = evento.usernameTuristi.filter((username) => {
@@ -246,6 +270,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
     })
   }
 
+  //cambio la visualizzazione della modale
   toggleModalRecensioni(eventoId: number): void {
     this.eventoIdPerSingolaRecensione = eventoId;
     this.showModalRecensioni = !this.showModalRecensioni;
@@ -264,6 +289,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
     }
   }
 
+  //calcolo il voto medio tra tutti i voti delle recensioni
   calcolaVotoMedio(recensioni: RecensioneResponse[]): void {
     let counter: number = 0;
     this.votoMedio = 0;
@@ -276,19 +302,23 @@ export class EventsComponent implements OnInit, AfterViewInit {
     this.votoMedio /= counter;
   }
 
+  //cambio la visualizzazione della modale
   toggleModalSingolaRecensione(usernameTurista: string): void {
     this.showModalSingolaRecensione = !this.showModalSingolaRecensione;
     this.showModalRecensioni = !this.showModalSingolaRecensione;
 
+    //prendo la recensione fatta dal turista di un dato username
     this.singolaRecensione = this.recensioni.filter((recensione) => {
       return recensione.usernameTurista == usernameTurista;
     })[0];
 
     if (this.showModalSingolaRecensione) {
+      //prendo dal backend tutti i dati dettagliati della singola recensione
       this.recensioneService.getRecensione(this.eventoIdPerSingolaRecensione.toString().trim(), usernameTurista).subscribe({
         next: (res: RecensioneDettagliataResponse) => {
           this.recensioneDettagliata = res;
 
+          //cambio il formato di data e ora per renderlo più leggibile
           let giorno: string, mese: string, anno: string, ore: string, minuti: string;
 
           let dataCreazioneRecensione: string = res.dataCreazioneRecensione.toString();
@@ -319,11 +349,13 @@ export class EventsComponent implements OnInit, AfterViewInit {
     }
   }
 
+  //cambio la visualizzazione della mappa
   toggleMappaFiltro(): void {
     this.showMappaFiltro = !this.showMappaFiltro;
     this.mapDraw = this.mapService.removeLayers(this.mapDraw);
   }
 
+  //filtro gli eventi da visualizzare in base ai marker selezionati
   filtraEventi(): void {
     this.allEventiFiltered = this.mapService.markersAggiornati();
     this.showMappaFiltro = !this.showMappaFiltro;

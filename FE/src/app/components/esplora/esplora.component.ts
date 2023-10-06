@@ -4,11 +4,14 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetAllEventiByOrganizzatoreResponse } from 'src/app/dtos/response/GetAllEventiByOrganizzatoreResponse';
 import { GetAllEventiResponse } from 'src/app/dtos/response/GetAllEventiResponse';
-import { MarkerCoordinatesResponse } from 'src/app/dtos/response/MarkerCoordinatesResponse';
 import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
 
+/**
+ * componente dove visuaizzare le card con gli eventi. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-esplora',
   templateUrl: './esplora.component.html',
@@ -41,14 +44,18 @@ export class EsploraComponent implements OnInit, AfterViewInit {
 
   mapDraw: any;
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private eventService: EventService, private toastr: ToastrService, private router: Router, private mapService: MapService) { }
 
+  //Metodo eseguito appena viene caricato il componente
   ngOnInit(): void {
 
+    //prendo ruolo e username dell'utente loggato
     this.ruolo = localStorage.getItem('ruolo')?.toString().trim().toUpperCase();
     this.username = localStorage.getItem('username')?.toString().trim().toLowerCase() || '';
 
     this.organizzatoreId = this.router.url.split('/homepage/esplora/')[1];
+    //se esiste l'id nell'url vuol dire che è un orgaizzatore quindi prendo dal server tutti gli eventi di quell'organizzatore
     if (this.organizzatoreId !== null && this.organizzatoreId !== undefined && this.organizzatoreId !== '') {
       this.pathId = true;
       this.eventService.getEventiByOrganizzatoreId(this.organizzatoreId.toString().trim()).subscribe({
@@ -61,6 +68,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
 
           this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.allEventi));
 
+          //cambio il formato delle date per renderle esteticamente più leggibili
           this.changeFormatDate(this.allEventiWithDateFormatted);
         },
         error: (err: HttpErrorResponse) => {
@@ -72,6 +80,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    //metodo per i turisti o admin, vengono presi dal server tutti gli eventi futuri per i turisti o tutti gli eventi sul db per gli admin
     this.eventService.getAllEventi().subscribe({
       next: (res: GetAllEventiResponse[]) => {
         res.forEach(evento => {
@@ -82,6 +91,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
 
         this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.allEventi));
 
+        //cambio il formato delle date per renderle esteticamente più leggibili
         this.changeFormatDate(this.allEventiWithDateFormatted);
       },
       error: (err: any) => {
@@ -91,9 +101,11 @@ export class EsploraComponent implements OnInit, AfterViewInit {
       }
     });
 
+    //prendo tutte le coordinate degli eventi
     this.mapService.getAllMarkerCoordinates().subscribe({
       next: (res: GetAllEventiResponse[]) => {
         this.allMarkerCoordinates = res;
+        //assegno un marker alla per ogni coordinata
         this.mapDraw = this.mapService.placeMarkers(this.mapDraw, this.allMarkerCoordinates);
       },
       error: (err: HttpErrorResponse) => {
@@ -103,11 +115,13 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     });
   }
 
+  //inizializzo la mappa
   ngAfterViewInit(): void {
     this.showMappaFiltro = false;
     this.mapDraw = this.mapService.initMapDraw(this.mapDraw);
   }
 
+  //"gioco" con le stringhe per rendere le date più leggibili sul browser
   changeFormatDate(eventi: any[]): void {
     let giorno: string, mese: string, anno: string, ore: string, minuti: string;
 
@@ -134,12 +148,15 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     });
   }
 
+  //cambio la visualizzazione della modale per eliminare un dato evento
   toggleModalEliminaEvento(eventoId: number): void {
     this.eventoIdDaEliminare = eventoId;
     this.showModalEliminaEvento = !this.showModalEliminaEvento;
   }
 
+  //metodo per eliminare un evento
   eliminaEvento(): void {
+    //chiamo il backend passandogli l'id dell'evento da eliminare
     this.eventService.eliminaEvento(this.eventoIdDaEliminare).subscribe({
       next: (res: any) => {
         this.rimuoviEventoDaArray(this.eventoIdDaEliminare);
@@ -154,16 +171,14 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     })
   }
 
+  //rimuovo dalla visualizzazione l'evento eliminato
   rimuoviEventoDaArray(eventoId: number): void {
-    this.allEventi = this.allEventi.filter((evento: GetAllEventiResponse) => {
-      // return +evento.eventoId !== +eventoId;
-    });
-
     this.allEventiWithDateFormatted = this.allEventiWithDateFormatted.filter((evento: any) => {
       return +evento.eventoId !== +eventoId;
     });
   }
 
+  //controllo i campi per filtrare gli eventi
   checkFilters(evento: GetAllEventiResponse): boolean {
     return evento.titolo.toLowerCase().trim().includes(this.cercaPerTitolo.toLowerCase().trim()) &&
       evento.nomeLuogo.toLowerCase().trim().includes(this.cercaPerLuogo.toLowerCase().trim()) &&
@@ -171,6 +186,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
         this.cercaPerStato.toString().toLowerCase() == '');
   }
 
+  //azzero i campi per filtrare gli eventi
   resetFiltri(): void {
     this.cercaPerLuogo = '';
     this.cercaPerTitolo = '';
@@ -178,6 +194,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     this.allEventiWithDateFormatted = JSON.parse(JSON.stringify(this.temp));
   }
 
+  //ordino gli eventi in base a determinati parametri
   onChangeOrdinaPer(value: string): void {
     switch (value) {
       case 'DATA':
@@ -211,21 +228,26 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     this.modoOrdine = 'CRESCENTE';
   }
 
+  //passo da crescente a decrescente
   onChangeModoOrdine(): void {
     this.allEventiWithDateFormatted = this.allEventiWithDateFormatted.reverse();
   }
 
+  //vado nella pagina per modificare un evento, con i dati già compilati
   modificaEvento(eventoId: number): void {
     this.router.navigateByUrl('/homepage/creaEvento/' + eventoId.toString().trim());
   }
 
+  //metodo per far iscrivere un turista ad un evento
   iscrizioneEvento(eventoId: number): void {
+    //aggiungo l'username del turista appena iscritto alla lista
     this.allEventiWithDateFormatted.forEach((evento) => {
       if (evento.eventoId == eventoId && this.username) {
         evento.usernameTuristi.push(this.username);
       }
     });
 
+    //iscrivo il turista ad un evento
     this.eventService.iscrizioneEvento(+eventoId).subscribe({
       next: (res: MessageResponse) => {
         this.toastr.success(res.message);
@@ -237,8 +259,10 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     });
   }
 
+  //metodo per annullare l'iscrizione di un turista ad un dato evento
   annullaIscrizione(eventoId: number): void {
 
+    //rimuovo l'username del turista disiscritto dalla lista nell'evento
     this.allEventiWithDateFormatted.forEach((evento) => {
       if (evento.eventoId == eventoId && this.username) {
         evento.usernameTuristi = evento.usernameTuristi.filter((username: string) => {
@@ -247,6 +271,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
       }
     });
 
+    //chiamo il server per annullare l'iscrizione
     this.eventService.annullaIscrizione(+eventoId).subscribe({
       next: (res: MessageResponse) => {
         this.toastr.success(res.message);
@@ -258,11 +283,13 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     });
   }
 
+  //cambio la visualizzazione della modale
   toggleMappaFiltro(): void {
     this.showMappaFiltro = !this.showMappaFiltro;
     this.mapDraw = this.mapService.removeLayers(this.mapDraw);
   }
 
+  //metodo per filtrare gli eventi e visualizzarli con le date corrette
   filtraEventi(): void {
     this.allEventiFiltered = this.mapService.markersAggiornati();
     this.showMappaFiltro = !this.showMappaFiltro;
@@ -275,6 +302,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     this.allEventiWithDateFormatted = this.allEventiWithDateFormattedFiltered;
   }
 
+  //cambio la visualizzazione della modale
   toggleModalPartecipanti(eventoId: number): void {
     this.eventoIdSelected = eventoId;
     this.allEventiWithDateFormatted.forEach((evento) => {
@@ -286,6 +314,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     this.showModalPartecipanti = !this.showModalPartecipanti;
   }
 
+  //cambio la visualizzazione della modale
   toggleModalPartecipantiNoRemove(eventoId: number): void {
     this.eventoIdSelected = eventoId;
     this.allEventiByOrganizzatore.forEach((evento) => {
@@ -296,6 +325,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     this.showModalPartecipantiNoRemove = !this.showModalPartecipantiNoRemove;
   }
 
+  //rimuovo un turista da un dato evento
   rimuoviTuristaDaEvento(usernameTurista: string): void {
     this.eventService.rimuoviTuristaDaEvento(usernameTurista, this.eventoIdSelected.toString().trim()).subscribe({
       next: (res: any) => {

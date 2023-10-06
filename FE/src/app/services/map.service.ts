@@ -9,6 +9,7 @@ import { PuntoPoligono } from '../dtos/request/PuntoPoligono';
 import { DatiCirconferenza } from '../dtos/request/DatiCirconferenza';
 import { GetAllEventiResponse } from '../dtos/response/GetAllEventiResponse';
 
+//configurazione dell'immagine del marker
 const iconUrl = 'assets/marker_icon.png';
 const iconDefault = L.icon({
   iconUrl,
@@ -22,6 +23,9 @@ const iconDefault = L.icon({
 
 L.Marker.prototype.options.icon = iconDefault;
 
+/**
+ * service per la configurazione della mappa
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -43,16 +47,24 @@ export class MapService {
 
   private backendUrl: string = 'http://localhost:8080/api/v1/luogo/';
 
+  //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient, private toastr: ToastrService) {
     this.counterMarkersMarker = 0;
   }
 
+  /**
+   * inizializzazione e configurazione della mappa per poter disegnare i poligoni
+   * @param mapDraw mappa da configurare
+   * @returns mappa modificata
+   */
   initMapDraw(mapDraw: any): any {
+    //centro della mappa quando viene visualizzata
     mapDraw = L.map('mapDraw', {
       center: [41.9027835, 12.4963655], //Coordinate di Roma
       zoom: 10,
     });
 
+    //la libreria si affida a openstreetmap, una mappa open source
     const tiles = L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
@@ -65,9 +77,12 @@ export class MapService {
 
     tiles.addTo(mapDraw);
 
+    //aggiungo le features per disegnare i poligoni
     const drawFeatures = new L.FeatureGroup();
     mapDraw.addLayer(drawFeatures);
 
+    /*modifico le features per disegnare i poligoni e piazzare i marker
+    nello specifico, può solo disegnare circonferenze e poligoni di n vertici*/
     const drawControl = new L.Control.Draw({
       draw: {
         rectangle: false,
@@ -94,6 +109,7 @@ export class MapService {
     });
     mapDraw.addControl(drawControl);
 
+    //inizializzo la mappa "pulendo" tutti i layers
     mapDraw.eachLayer((layer: any) => {
       if (layer instanceof L.Marker) {
         mapDraw.removeLayer(layer);
@@ -101,20 +117,26 @@ export class MapService {
     });
     this.counterMarkersMarker = 0;
 
+    //quando viene disegnata una figura, viene eseguito quanto dentro
     mapDraw.on('draw:created', (e: any) => {
       this.layer = e.layer;
 
+      //può esistere un solo layer alla volta
       if (drawFeatures.getLayers().length) {
         mapDraw.removeLayer(e.layer);
         this.toastr.warning('Non possono esistere più poligoni!');
 
       } else {
+        //se non ci sono layer, lo aggiungo
         drawFeatures.addLayer(this.layer);
 
+        //quando viene rimosso il layer
         this.layer.on('remove', (e: any) => {
+          //prendo tutte le coordinate dei markers
           this.getAllMarkerCoordinates().subscribe({
             next: (res: GetAllEventiResponse[]) => {
               this.markersAftersDraw = res;
+              //assegno alla mappa tutti i markers
               this.mapDraw = this.placeMarkers(this.mapDraw, res);
             },
             error: (err: HttpErrorResponse) => {
@@ -124,11 +146,14 @@ export class MapService {
           });
         });
 
+        //caso in cui si sta disegnando un poligono
         if (this.layer._latlng === undefined) {
 
+          //prendo solo i markers all'interno del poligono
           this.markersInsidePolygon(this.layer._latlngs[0]).subscribe({
             next: (res: GetAllEventiResponse[]) => {
               this.markersAftersDraw = res;
+              //piazzo i marker nella mappa
               this.placeMarkers(this.mapDraw, res);
             },
             error: (err: HttpErrorResponse) => {
@@ -137,15 +162,18 @@ export class MapService {
             }
           });
 
+          //nel caso in cui si sta disegnando una circonferenza
         } else if (this.layer._latlngs === undefined) {
 
           const centroLat: string = this.layer._latlng.lat.toString().trim();
           const centroLng: string = this.layer._latlng.lng.toString().trim();
           const raggio: string = this.layer._mRadius.toString().trim();
 
+          //prendo solo i markers all'interno del poligono
           this.markersInsideCircle(centroLat, centroLng, raggio).subscribe({
             next: (res: GetAllEventiResponse[]) => {
               this.markersAftersDraw = res;
+              //piazzo i marker nella mappa
               this.placeMarkers(mapDraw, res);
             },
             error: (err: HttpErrorResponse) => {
@@ -161,12 +189,19 @@ export class MapService {
     return mapDraw;
   }
 
+  /**
+   * inizializzazione e configurazione della mappa dell'organizzatore per poter disegnare i poligoni
+   * @param mapDraw mappa da configurare
+   * @returns mappa modificata
+   */
   initMapDrawOrganizzatore(mapDraw: any): any {
+    //centro della mappa quando viene visualizzata
     mapDraw = L.map('mapDraw', {
       center: [41.9027835, 12.4963655], //Coordinate di Roma
       zoom: 10,
     });
 
+    //la libreria si affida a openstreetmap, una mappa open source
     const tiles = L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
@@ -179,9 +214,12 @@ export class MapService {
 
     tiles.addTo(mapDraw);
 
+    //aggiungo le features per disegnare i poligoni
     const drawFeatures = new L.FeatureGroup();
     mapDraw.addLayer(drawFeatures);
 
+    /*modifico le features per disegnare i poligoni e piazzare i marker
+    nello specifico, può solo disegnare circonferenze e poligoni di n vertici*/
     const drawControl = new L.Control.Draw({
       draw: {
         rectangle: false,
@@ -208,6 +246,7 @@ export class MapService {
     });
     mapDraw.addControl(drawControl);
 
+    //inizializzo la mappa "pulendo" tutti i layers
     mapDraw.eachLayer((layer: any) => {
       if (layer instanceof L.Marker) {
         mapDraw.removeLayer(layer);
@@ -215,20 +254,26 @@ export class MapService {
     });
     this.counterMarkersMarker = 0;
 
+    //quando viene disegnata una figura, viene eseguito quanto dentro
     mapDraw.on('draw:created', (e: any) => {
       this.layer = e.layer;
 
+      //può esistere un solo layer alla volta
       if (drawFeatures.getLayers().length) {
         mapDraw.removeLayer(e.layer);
         this.toastr.warning('Non possono esistere più poligoni!');
 
       } else {
+        //se non ci sono layer, lo aggiungo
         drawFeatures.addLayer(this.layer);
 
+        //quando viene rimosso il layer
         this.layer.on('remove', (e: any) => {
+          //prendo tutte le coordinate dei markers dell'organizzatore
           this.getAllMarkerCoordinatesByOrganizzatore().subscribe({
             next: (res: GetAllEventiResponse[]) => {
               this.markersAftersDraw = res;
+              //assegno alla mappa tutti i markers
               this.mapDraw = this.placeMarkers(this.mapDraw, res);
             },
             error: (err: HttpErrorResponse) => {
@@ -238,12 +283,14 @@ export class MapService {
           });
         });
 
+        //caso in cui si sta disegnando un poligono
         if (this.layer._latlng === undefined) {
-          console.log(this.layer._latlngs[0]);
 
+          //prendo solo i markers all'interno del poligono
           this.markersInsidePolygonByOrganizzatore(this.layer._latlngs[0]).subscribe({
             next: (res: GetAllEventiResponse[]) => {
               this.markersAftersDraw = res;
+              //piazzo i marker nella mappa
               this.placeMarkers(this.mapDraw, res);
             },
             error: (err: HttpErrorResponse) => {
@@ -252,17 +299,18 @@ export class MapService {
             }
           });
 
+          //nel caso in cui si sta disegnando una circonferenza
         } else if (this.layer._latlngs === undefined) {
-          console.log(this.layer._latlng, this.layer._mRadius);
-
 
           const centroLat: string = this.layer._latlng.lat.toString().trim();
           const centroLng: string = this.layer._latlng.lng.toString().trim();
           const raggio: string = this.layer._mRadius.toString().trim();
 
+          //prendo solo i markers all'interno del poligono
           this.markersInsideCircleByOrganizzatore(centroLat, centroLng, raggio).subscribe({
             next: (res: GetAllEventiResponse[]) => {
               this.markersAftersDraw = res;
+              //piazzo i marker nella mappa
               this.placeMarkers(mapDraw, res);
             },
             error: (err: HttpErrorResponse) => {
@@ -278,6 +326,11 @@ export class MapService {
     return mapDraw;
   }
 
+  /**
+   * 
+   * @param punti 
+   * @returns 
+   */
   markersInsidePolygon(punti: any): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
     const request: PuntoPoligono[] = [];

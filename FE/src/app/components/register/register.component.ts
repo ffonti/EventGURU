@@ -7,6 +7,10 @@ import { Ruolo } from 'src/app/types/Ruolo';
 import { RegisterRequest } from 'src/app/dtos/request/RegisterRequest';
 import { MessageResponse } from 'src/app/dtos/response/MessageResponse';
 
+/**
+ * componente per registrare un utente. implementa OnInit, un'interfaccia
+ * che espone un metodo che viene eseguito non appena il componente viene visualizzato.
+ */
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
