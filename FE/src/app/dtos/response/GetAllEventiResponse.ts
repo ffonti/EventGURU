@@ -9,8 +9,8 @@ export interface GetAllEventiResponse {
     dataCreazione: Date;
     stato: Stato;
     nomeLuogo: string;
-    lat: string;
-    lng: string;
+    lat: number;
+    lng: number;
     isRecensioneInviata: boolean;
     recensioni: {
         usernameTurista: string;

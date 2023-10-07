@@ -24,7 +24,8 @@ export class AccountComponent implements OnInit {
     nuovaPassword: '',
     email: '',
     vecchiaPassword: '',
-    iscrittoNewsletter: false
+    iscrittoNewsletter: false,
+    vecchia_password: ''
   };
   protected ripeti_password: string = '';
 

@@ -13,7 +13,7 @@ public class MarkerCoordinatesResponse {
 
     private String nomeLuogo;
 
-    private String lat;
+    private Float lat;
 
-    private String lng;
+    private Float lng;
 }

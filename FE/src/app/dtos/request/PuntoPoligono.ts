@@ -1,4 +1,4 @@
 export interface PuntoPoligono {
-    lat: string;
-    lng: string;
+    lat: number;
+    lng: number;
 }

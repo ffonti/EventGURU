@@ -30,14 +30,14 @@ L.Marker.prototype.options.icon = iconDefault;
   providedIn: 'root'
 })
 export class MapService {
-  currentLat: string = '';
-  currentLng: string = '';
+  currentLat: number = 0;
+  currentLng: number = 0;
   markers: string[] = [];
   mapDraw: any;
   markersAftersDraw: GetAllEventiResponse[] = [];
 
-  currentLatMarker: string = '';
-  currentLngMarker: string = '';
+  currentLatMarker: number = 0;
+  currentLngMarker: number = 0;
   counterMarkersMarker: number = 0;
   mapMarker: any;
 
@@ -165,9 +165,9 @@ export class MapService {
           //nel caso in cui si sta disegnando una circonferenza
         } else if (this.layer._latlngs === undefined) {
 
-          const centroLat: string = this.layer._latlng.lat.toString().trim();
-          const centroLng: string = this.layer._latlng.lng.toString().trim();
-          const raggio: string = this.layer._mRadius.toString().trim();
+          const centroLat: number = this.layer._latlng.lat;
+          const centroLng: number = this.layer._latlng.lng;
+          const raggio: number = this.layer._mRadius;
 
           //prendo solo i markers all'interno del poligono
           this.markersInsideCircle(centroLat, centroLng, raggio).subscribe({
@@ -302,9 +302,9 @@ export class MapService {
           //nel caso in cui si sta disegnando una circonferenza
         } else if (this.layer._latlngs === undefined) {
 
-          const centroLat: string = this.layer._latlng.lat.toString().trim();
-          const centroLng: string = this.layer._latlng.lng.toString().trim();
-          const raggio: string = this.layer._mRadius.toString().trim();
+          const centroLat: number = this.layer._latlng.lat;
+          const centroLng: number = this.layer._latlng.lng;
+          const raggio: number = this.layer._mRadius;
 
           //prendo solo i markers all'interno del poligono
           this.markersInsideCircleByOrganizzatore(centroLat, centroLng, raggio).subscribe({
@@ -335,8 +335,8 @@ export class MapService {
     const header = this.getHeader();
     const request: PuntoPoligono[] = [];
     punti.forEach((punto: PuntoPoligono) => {
-      let lat: string = punto.lat.toString();
-      let lng: string = punto.lng.toString();
+      let lat: number = punto.lat;
+      let lng: number = punto.lng;
       request.push({ lat, lng });
     })
 
@@ -350,7 +350,7 @@ export class MapService {
    * @param raggio raggio della circonferenza
    * @returns coordinate dei marker dentro la circonferenza
    */
-  markersInsideCircle(centroLat: string, centroLng: string, raggio: string): Observable<GetAllEventiResponse[]> {
+  markersInsideCircle(centroLat: number, centroLng: number, raggio: number): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
     const request: DatiCirconferenza = { centroLat, centroLng, raggio };
 
@@ -418,8 +418,8 @@ export class MapService {
         return;
 
       } else {
-        this.currentLatMarker = e.layer._latlng.lat.toString();
-        this.currentLngMarker = e.layer._latlng.lng.toString();
+        this.currentLatMarker = e.layer._latlng.lat;
+        this.currentLngMarker = e.layer._latlng.lng;
 
         //se non ci sono markers, lo aggiungo
         const marker = L.marker([+this.currentLatMarker, +this.currentLngMarker]);
@@ -439,22 +439,22 @@ export class MapService {
   }
 
   //ritorno la latitudine del marker selezionato
-  getCurrentLat(): string {
+  getCurrentLat(): number {
     return this.currentLat;
   }
 
   //ritorno la longitudine del marker selezionato
-  getCurrentLng(): string {
+  getCurrentLng(): number {
     return this.currentLng;
   }
 
   //ritorno la latitudine del marker corrente
-  getCurrentLatMarker(): string {
+  getCurrentLatMarker(): number {
     return this.currentLatMarker;
   }
 
   //ritorno la longitudine del marker corrente
-  getCurrentLngMarker(): string {
+  getCurrentLngMarker(): number {
     return this.currentLngMarker;
   }
 
@@ -552,8 +552,8 @@ export class MapService {
     const request: PuntoPoligono[] = [];
     //popolo il DTO
     punti.forEach((punto: PuntoPoligono) => {
-      let lat: string = punto.lat.toString();
-      let lng: string = punto.lng.toString();
+      let lat: number = punto.lat;
+      let lng: number = punto.lng;
       request.push({ lat, lng });
     })
 
@@ -567,7 +567,7 @@ export class MapService {
    * @param raggio raggio della circonferenza
    * @returns array di DTO con i dati degli eventi
    */
-  markersInsideCircleByOrganizzatore(centroLat: string, centroLng: string, raggio: string): Observable<GetAllEventiResponse[]> {
+  markersInsideCircleByOrganizzatore(centroLat: number, centroLng: number, raggio: number): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
     const request: DatiCirconferenza = { centroLat, centroLng, raggio };
 

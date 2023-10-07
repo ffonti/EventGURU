@@ -86,6 +86,11 @@
                       Annulla iscrizione
                     </button>
                   </ng-container>
+                  <ng-container *ngIf="evento.stato === 'PRESENTE'">
+                    <div class="flex-center w-full">
+                      <p class="font-semibold text-gray-500">Evento in corso</p>
+                    </div>
+                  </ng-container>
                   <ng-container *ngIf="evento.usernameTuristi.includes(username) && evento.stato === 'PASSATO'">
                     <ng-container *ngIf="nonAncoraRecensito(evento.eventoId); else recensito">
                       <button class="btn-submit" (click)="toggleModalRecensione(evento.eventoId)">
@@ -131,19 +136,29 @@
               <textarea [(ngModel)]="testoRecensione" class="input-form h-40"></textarea>
             </div>
             <div class="flex-center gap-5">
-              <span [ngClass]="rating >= 1 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'" (click)="doRating(1)">
+              <span
+                [ngClass]="rating >= 1 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'"
+                (click)="doRating(1)">
                 {{ rating >= 1 ? 'star' : 'star_border' }}
               </span>
-              <span [ngClass]="rating >= 2 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'" (click)="doRating(2)">
+              <span
+                [ngClass]="rating >= 2 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'"
+                (click)="doRating(2)">
                 {{ rating >= 2 ? 'star' : 'star_border' }}
               </span>
-              <span [ngClass]="rating >= 3 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'" (click)="doRating(3)">
+              <span
+                [ngClass]="rating >= 3 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'"
+                (click)="doRating(3)">
                 {{ rating >= 3 ? 'star' : 'star_border' }}
               </span>
-              <span [ngClass]="rating >= 4 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'" (click)="doRating(4)">
+              <span
+                [ngClass]="rating >= 4 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'"
+                (click)="doRating(4)">
                 {{ rating >= 4 ? 'star' : 'star_border' }}
               </span>
-              <span [ngClass]="rating >= 5 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'" (click)="doRating(5)">
+              <span
+                [ngClass]="rating >= 5 ? 'material-icons cursor-pointer text-yellow-400' : 'material-icons cursor-pointer'"
+                (click)="doRating(5)">
                 {{ rating >= 5 ? 'star' : 'star_border' }}
               </span>
             </div>

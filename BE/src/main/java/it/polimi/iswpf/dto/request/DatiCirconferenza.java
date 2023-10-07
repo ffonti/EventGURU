@@ -7,9 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DatiCirconferenza {
 
-    private String centroLat;
+    private Float centroLat;
 
-    private String centroLng;
+    private Float centroLng;
 
-    private String raggio;
+    private Float raggio;
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PuntoPoligono {
 
-    private String lat;
+    private Float lat;
 
-    private String lng;
+    private Float lng;
 }

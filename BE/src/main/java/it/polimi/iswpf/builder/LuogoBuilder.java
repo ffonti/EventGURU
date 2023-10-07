@@ -18,8 +18,8 @@ public class LuogoBuilder {
     //Attributi del model Luogo
     private Long luogoId;
     private String nome;
-    private String lat;
-    private String lng;
+    private Float lat;
+    private Float lng;
     private List<Evento> eventi;
 
     /**
@@ -47,7 +47,7 @@ public class LuogoBuilder {
      * @param lat Valore della latitudine settato.
      * @return Un'istanza della classe stessa.
      */
-    public LuogoBuilder lat(String lat) {
+    public LuogoBuilder lat(Float lat) {
         this.lat = lat;
         return this;
     }
@@ -57,7 +57,7 @@ public class LuogoBuilder {
      * @param lng Valore della longitudine settato.
      * @return Un'istanza della classe stessa.
      */
-    public LuogoBuilder lng(String lng) {
+    public LuogoBuilder lng(Float lng) {
         this.lng = lng;
         return this;
     }

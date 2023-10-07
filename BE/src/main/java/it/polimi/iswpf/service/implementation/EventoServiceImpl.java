@@ -77,8 +77,8 @@ public class EventoServiceImpl implements EventoService {
         //Controllo validità di tutti i campi.
         if(request.getTitolo().isEmpty() || request.getTitolo().isBlank() ||
             request.getDescrizione().isEmpty() || request.getDescrizione().isBlank() ||
-            request.getLng().isEmpty() || request.getLng().isBlank() ||
-            request.getLat().isEmpty() || request.getLat().isBlank() ||
+            request.getLat().isNaN() || request.getLng().isNaN() ||
+            request.getLat().isInfinite() || request.getLng().isInfinite() ||
             request.getNomeLuogo().isEmpty() || request.getNomeLuogo().isBlank()) {
             throw new BadRequestException("Compilare tutti i campi");
         }
@@ -152,7 +152,7 @@ public class EventoServiceImpl implements EventoService {
         List<String> usernameTuristi;
 
         //Lista di DTO con i dati di ogni recensione
-        List<RecensioneResponse> recensioni = new ArrayList<>();
+        List<RecensioneResponse> recensioni;
 
         //Per ogni evento presente sul database, salvo tutti i campi nell'array di risposta.
         for(Evento evento : eventi.get()) {
@@ -458,8 +458,8 @@ public class EventoServiceImpl implements EventoService {
         //Controllo validità di tutti i campi.
         if(request.getTitolo().isEmpty() || request.getTitolo().isBlank() ||
                 request.getDescrizione().isEmpty() || request.getDescrizione().isBlank() ||
-                request.getLng().isEmpty() || request.getLng().isBlank() ||
-                request.getLat().isEmpty() || request.getLat().isBlank() ||
+                request.getLat().isNaN() || request.getLng().isNaN() ||
+                request.getLat().isInfinite() || request.getLng().isInfinite() ||
                 request.getNomeLuogo().isEmpty() || request.getNomeLuogo().isBlank() ||
                 request.getUsernameOrganizzatore().isEmpty() || request.getUsernameOrganizzatore().isBlank()) {
             throw new BadRequestException("Compilare tutti i campi");
@@ -842,7 +842,7 @@ public class EventoServiceImpl implements EventoService {
      * @param lng Longitudine del luogo dell'evento.
      * @return Un'istanza di {@link Luogo}, dopo averla salvata sul database (in caso non fosse presente).
      */
-    private Luogo getLuogo(String nomeLuogo, String lat, String lng) {
+    private Luogo getLuogo(String nomeLuogo, Float lat, Float lng) {
 
         //Prendo dal db il luogo con quel nome.
         Optional<Luogo> luogoExists = luogoRepository.getLuogoByNome(nomeLuogo);

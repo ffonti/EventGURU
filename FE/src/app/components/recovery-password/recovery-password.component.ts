@@ -26,6 +26,11 @@ export class RecoveryPasswordComponent {
 
   //metodo per inviare la mail per recuperare la password
   inviaEmail(): void {
+    if (this.email === '') {
+      this.toastr.warning('Inserire prima una mail');
+      return;
+    }
+
     this.authService.recuperaPassword(this.email).subscribe({
       next: (res: MessageResponse) => {
         this.spinnerService.requestEnded();

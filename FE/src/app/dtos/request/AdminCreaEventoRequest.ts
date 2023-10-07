@@ -3,8 +3,8 @@ export interface AdminCreaEventoRequest {
     descrizione: string;
     dataInizio: Date;
     dataFine: Date;
-    lat: string;
-    lng: string;
+    lat: number;
+    lng: number;
     nomeLuogo: string;
     usernameOrganizzatore: string;
 }

@@ -36,11 +36,11 @@ public class Luogo {
     @Column(name = "nome", nullable = false, unique = true, columnDefinition = "VARCHAR(50)")
     private String nome;
 
-    @Column(name = "lat", columnDefinition = "VARCHAR(20)", updatable = false, nullable = false)
-    private String lat;
+    @Column(name = "lat", updatable = false, nullable = false)
+    private Float lat;
 
-    @Column(name = "lng", columnDefinition = "VARCHAR(20)", updatable = false, nullable = false)
-    private String lng;
+    @Column(name = "lng", updatable = false, nullable = false)
+    private Float lng;
 
     @OneToMany(mappedBy = "luogo", fetch = FetchType.LAZY)
     private List<Evento> eventi; //Eventi in un dato luogo.

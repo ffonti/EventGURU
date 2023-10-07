@@ -17,9 +17,9 @@ public class AdminCreaModificaEventoRequest {
 
     private LocalDateTime dataFine;
 
-    private String lat;
+    private Float lat;
 
-    private String lng;
+    private Float lng;
 
     private String nomeLuogo;
 

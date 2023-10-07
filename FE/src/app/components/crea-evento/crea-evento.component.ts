@@ -181,7 +181,7 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
     this.dataInizio = res.dataInizio;
     this.dataFine = res.dataFine;
     this.nomeLuogo = res.nomeLuogo;
-    this.mapMarker = this.mapService.addMarker(this.mapMarker, +res.lat, +res.lng);
+    this.mapMarker = this.mapService.addMarker(this.mapMarker, res.lat, res.lng);
     this.usernameOrganizzatore = res.usernameOrganizzatore;
   }
 }

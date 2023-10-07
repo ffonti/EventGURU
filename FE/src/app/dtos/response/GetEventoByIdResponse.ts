@@ -9,7 +9,7 @@ export interface GetEventoByIdResponse {
     dataCreazione: Date;
     stato: Stato;
     nomeLuogo: string;
-    lat: string;
-    lng: string;
+    lat: number;
+    lng: number;
     usernameOrganizzatore: string;
 }

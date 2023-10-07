@@ -33,7 +33,7 @@ export class EventService {
    * @param nomeLuogo nome del luogo dell'evento
    * @returns messaggio di avvenuta registrazione
    */
-  creaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string): Observable<MessageResponse> {
+  creaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: number, lng: number, nomeLuogo: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: CreaModificaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
     this.spinnerService.requestStarted();
@@ -52,7 +52,7 @@ export class EventService {
    * @param usernameOrganizzatore username dell'organizzatore dell'evento
    * @returns messaggio di avvenuta registrazione
    */
-  adminCreaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, usernameOrganizzatore: string): Observable<MessageResponse> {
+  adminCreaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: number, lng: number, nomeLuogo: string, usernameOrganizzatore: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: AdminCreaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo, usernameOrganizzatore };
 
@@ -71,7 +71,7 @@ export class EventService {
    * @param eventoId id dell'evento da modificare
    * @returns messaggio di avvenuta modifica
    */
-  modificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, eventoId: string): Observable<MessageResponse> {
+  modificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: number, lng: number, nomeLuogo: string, eventoId: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: CreaModificaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo };
 
@@ -91,7 +91,7 @@ export class EventService {
    * @param usernameOrganizzatore useranme dell'organizzatore
    * @returns messaggio di avvenuta modifica
    */
-  adminModificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: string, lng: string, nomeLuogo: string, eventoId: string, usernameOrganizzatore: string): Observable<MessageResponse> {
+  adminModificaEvento(titolo: string, descrizione: string, dataInizio: Date, dataFine: Date, lat: number, lng: number, nomeLuogo: string, eventoId: string, usernameOrganizzatore: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: AdminCreaEventoRequest = { titolo, descrizione, dataInizio, dataFine, lat, lng, nomeLuogo, usernameOrganizzatore };
 

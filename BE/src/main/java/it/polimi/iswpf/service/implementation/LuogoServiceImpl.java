@@ -81,6 +81,14 @@ public class LuogoServiceImpl implements LuogoService {
     @Override
     public List<EventoResponse> coordinateDentroPoligono(List<PuntoPoligono> request) {
 
+        //Controllo la validità delle coordinate.
+        for(PuntoPoligono punto : request) {
+            if(punto.getLat().isNaN() || punto.getLat().isInfinite() ||
+                    punto.getLng().isNaN() || punto.getLng().isInfinite()) {
+                throw new BadRequestException("Coordinate non valide");
+            }
+        }
+
         //Prendo tutti gli eventi presenti sul database.
         List<Evento> eventi = eventoRepository.findAll();
 
@@ -89,8 +97,8 @@ public class LuogoServiceImpl implements LuogoService {
         //Per ogni evento futuro all'interno del poligono disegnato dall'utente, aggiungo i dati al DTO.
         for(Evento evento : eventi) {
             if(isMarkerInsidePolygon(
-                Float.parseFloat(evento.getLuogo().getLat()),
-                Float.parseFloat(evento.getLuogo().getLng()),
+                evento.getLuogo().getLat(),
+                evento.getLuogo().getLng(),
                 request) &&
                 evento.getDataInizio().isAfter(LocalDateTime.now())) {
 
@@ -115,6 +123,14 @@ public class LuogoServiceImpl implements LuogoService {
             throw new BadRequestException("Id non valido");
         }
 
+        //Controllo la validità delle coordinate.
+        for(PuntoPoligono punto : request) {
+            if(punto.getLat().isNaN() || punto.getLat().isInfinite() ||
+                    punto.getLng().isNaN() || punto.getLng().isInfinite()) {
+                throw new BadRequestException("Coordinate non valide");
+            }
+        }
+
         //Prendo tutti gli eventi organizzati da un dato organizzatore.
         List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
 
@@ -123,8 +139,8 @@ public class LuogoServiceImpl implements LuogoService {
         //Per ogni evento all'interno del poligono disegnato dall'utente, aggiungo i dati al DTO.
         for(Evento evento : eventi) {
             if(isMarkerInsidePolygon(
-                    Float.parseFloat(evento.getLuogo().getLat()),
-                    Float.parseFloat(evento.getLuogo().getLng()),
+                    evento.getLuogo().getLat(),
+                    evento.getLuogo().getLng(),
                     request)) {
 
                 buildCoordinatesResponse(response, evento);
@@ -142,6 +158,13 @@ public class LuogoServiceImpl implements LuogoService {
     @Override
     public List<EventoResponse> coordinateDentroCirconferenza(DatiCirconferenza request) {
 
+        //Controllo la validità delle coordinate.
+        if(request.getCentroLat().isNaN() || request.getCentroLat().isInfinite() ||
+                request.getCentroLng().isNaN() || request.getCentroLng().isInfinite() ||
+                request.getRaggio().isNaN() || request.getRaggio().isInfinite()) {
+            throw new BadRequestException("Coordinate non valide");
+        }
+
         //Prendo tutti gli eventi presenti sul database.
         List<Evento> eventi = eventoRepository.findAll();
 
@@ -150,8 +173,8 @@ public class LuogoServiceImpl implements LuogoService {
         //Per ogni evento futuro all'interno della circonferenza disegnata dall'utente, aggiungo i dati al DTO.
         for(Evento evento : eventi) {
             if(isMarkerInsideCircumference(
-                Float.parseFloat(evento.getLuogo().getLat()),
-                Float.parseFloat(evento.getLuogo().getLng()),
+                evento.getLuogo().getLat(),
+                evento.getLuogo().getLng(),
                 request) &&
                 evento.getDataInizio().isAfter(LocalDateTime.now())) {
 
@@ -176,6 +199,13 @@ public class LuogoServiceImpl implements LuogoService {
             throw new BadRequestException("Id non valido");
         }
 
+        //Controllo la validità delle coordinate.
+        if(request.getCentroLat().isNaN() || request.getCentroLat().isInfinite() ||
+                request.getCentroLng().isNaN() || request.getCentroLng().isInfinite() ||
+                request.getRaggio().isNaN() || request.getRaggio().isInfinite()) {
+            throw new BadRequestException("Coordinate non valide");
+        }
+
         //Prendo tutti gli eventi organizzati da un dato organizzatore.
         List<Evento> eventi = eventoRepository.findAllByOrganizzatoreUserId(organizzatoreId);
 
@@ -184,8 +214,8 @@ public class LuogoServiceImpl implements LuogoService {
         //Per ogni evento all'interno della circonferenza disegnata dall'utente, aggiungo i dati al DTO.
         for(Evento evento : eventi) {
             if(isMarkerInsideCircumference(
-                    Float.parseFloat(evento.getLuogo().getLat()),
-                    Float.parseFloat(evento.getLuogo().getLng()),
+                    evento.getLuogo().getLat(),
+                    evento.getLuogo().getLng(),
                     request)) {
 
                 buildCoordinatesResponse(response, evento);
@@ -253,11 +283,11 @@ public class LuogoServiceImpl implements LuogoService {
         for(int i = 0, j = request.size() - 1; i < request.size(); j = i++) {
 
             //Per ogni coppia di punti consecutivi nel poligono, vengono estratte le coordinate.
-            float latI = Float.parseFloat(request.get(i).getLat());
-            float lngI = Float.parseFloat(request.get(i).getLng());
+            float latI = request.get(i).getLat();
+            float lngI = request.get(i).getLng();
 
-            float latJ = Float.parseFloat(request.get(j).getLat());
-            float lngJ = Float.parseFloat(request.get(j).getLng());
+            float latJ = request.get(j).getLat();
+            float lngJ = request.get(j).getLng();
 
             //Booleano che indica se il segmento orizzontale che passa per il marker interseca il segmento considerato.
             boolean intersect =
@@ -289,10 +319,10 @@ public class LuogoServiceImpl implements LuogoService {
 
         //Calcolo la distanza in metri tra le coordinate del marker e le coordinate del centro della circonferenza.
         float distanzaDalCentroAlMarker = distanceInMetersBetweenEarthCoordinates(
-                lat, lng, Float.parseFloat(request.getCentroLat()), Float.parseFloat(request.getCentroLng()));
+                lat, lng, request.getCentroLat(), request.getCentroLng());
 
         //Se la distanza appena calcolata è minore del raggio, vuol dire che il marker si trova all'interno della circonferenza.
-        return distanzaDalCentroAlMarker <= Float.parseFloat(request.getRaggio());
+        return distanzaDalCentroAlMarker <= request.getRaggio();
     }
 
     /**
