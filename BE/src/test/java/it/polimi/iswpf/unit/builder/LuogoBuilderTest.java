@@ -23,8 +23,8 @@ class LuogoBuilderTest {
         assertAll(() -> luogoBuilder
                 .luogoId(1L)
                 .nome("nome luogo")
-                .lat("1")
-                .lng("1")
+                .lat(1F)
+                .lng(1F)
                 .eventi(List.of(new Evento()))
                 .build());
     }

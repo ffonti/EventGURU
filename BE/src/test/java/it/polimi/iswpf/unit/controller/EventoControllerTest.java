@@ -28,7 +28,7 @@ class EventoControllerTest {
     void creaEvento() {
 
         CreaModificaEventoRequest request =
-                new CreaModificaEventoRequest("", "", LocalDateTime.now(), LocalDateTime.now(), "", "" , "");
+                new CreaModificaEventoRequest("", "", LocalDateTime.now(), LocalDateTime.now(), 0F, 0F, "");
 
         assertAll(() -> eventoController.creaEvento(request, "1"));
     }
@@ -55,7 +55,7 @@ class EventoControllerTest {
     void modificaEvento() {
 
         CreaModificaEventoRequest request =
-                new CreaModificaEventoRequest("", "", LocalDateTime.now(), LocalDateTime.now(), "", "" , "");
+                new CreaModificaEventoRequest("", "", LocalDateTime.now(), LocalDateTime.now(), 0F, 0F, "");
 
         assertAll(() -> eventoController.modificaEvento(request, "1"));
     }
@@ -78,7 +78,7 @@ class EventoControllerTest {
     void adminCreaEvento() {
 
         AdminCreaModificaEventoRequest request =
-                new AdminCreaModificaEventoRequest("", "", LocalDateTime.now(), LocalDateTime.now(), "", "" , "", "");
+                new AdminCreaModificaEventoRequest("", "", LocalDateTime.now(), LocalDateTime.now(), 0F, 0F, "", "");
 
         assertAll(() -> eventoController.adminCreaEvento(request));
     }
@@ -87,7 +87,7 @@ class EventoControllerTest {
     void adminModificaEvento() {
 
         AdminCreaModificaEventoRequest request =
-                new AdminCreaModificaEventoRequest("", "", LocalDateTime.now(), LocalDateTime.now(), "", "" , "", "");
+                new AdminCreaModificaEventoRequest("", "", LocalDateTime.now(), LocalDateTime.now(), 0F, 0F, "", "");
 
         assertAll(() -> eventoController.adminModificaEvento(request, "1"));
     }

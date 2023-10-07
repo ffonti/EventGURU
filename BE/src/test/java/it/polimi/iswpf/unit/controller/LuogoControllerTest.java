@@ -55,7 +55,7 @@ class LuogoControllerTest {
     @Test
     void coordinateDentroCirconferenza() {
 
-        DatiCirconferenza request = new DatiCirconferenza("", "", "");
+        DatiCirconferenza request = new DatiCirconferenza(0F, 0F, 0F);
 
         assertAll(() -> luogoController.coordinateDentroCirconferenza(request));
     }
@@ -63,7 +63,7 @@ class LuogoControllerTest {
     @Test
     void coordinateDentroCirconferenzaByOrganizzatore() {
 
-        DatiCirconferenza request = new DatiCirconferenza("", "", "");
+        DatiCirconferenza request = new DatiCirconferenza(0F, 0F, 0F);
 
         assertAll(() -> luogoController.coordinateDentroCirconferenzaByOrganizzatore(request, "1"));
     }

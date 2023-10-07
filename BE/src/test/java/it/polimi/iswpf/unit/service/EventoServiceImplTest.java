@@ -75,8 +75,8 @@ class EventoServiceImplTest {
                         "descrizione",
                         LocalDateTime.now(),
                         LocalDateTime.now().plusHours(1),
-                        "1",
-                        "1",
+                        1F,
+                        1F,
                         "nome luogo"
                 ), 0L));
     }
@@ -92,8 +92,8 @@ class EventoServiceImplTest {
                         "descrizione",
                         LocalDateTime.now(),
                         LocalDateTime.now().plusHours(1),
-                        "1",
-                        "1",
+                        1F,
+                        1F,
                         "nome luogo"
                 ), 1L));
     }
@@ -111,8 +111,8 @@ class EventoServiceImplTest {
                         "descrizione",
                         LocalDateTime.now(),
                         LocalDateTime.now().plusHours(1),
-                        "1",
-                        "1",
+                        1F,
+                        1F,
                         "nome luogo"
                 ), 1L));
     }
@@ -130,8 +130,8 @@ class EventoServiceImplTest {
                         "descrizione",
                         LocalDateTime.now().plusHours(1),
                         LocalDateTime.now(),
-                        "1",
-                        "1",
+                        1F,
+                        1F,
                         "nome luogo"
                 ), 1L));
     }
@@ -149,8 +149,8 @@ class EventoServiceImplTest {
                         "descrizione",
                         LocalDateTime.now(),
                         LocalDateTime.now(),
-                        "1",
-                        "1",
+                        1F,
+                        1F,
                         "nome luogo"
                 ), 1L));
     }
@@ -168,8 +168,8 @@ class EventoServiceImplTest {
                         "descrizione",
                         LocalDateTime.now().minusHours(1),
                         LocalDateTime.now(),
-                        "1",
-                        "1",
+                        1F,
+                        1F,
                         "nome luogo"
                 ), 1L));
     }
@@ -187,8 +187,8 @@ class EventoServiceImplTest {
                         "descrizione",
                         LocalDateTime.now(),
                         LocalDateTime.now().plusHours(1),
-                        "1",
-                        "1",
+                        1F,
+                        1F,
                         "nome luogo"
                 ), 1L));
     }
@@ -206,8 +206,8 @@ class EventoServiceImplTest {
                         "descrizione",
                         LocalDateTime.now().plusHours(1),
                         LocalDateTime.now().plusHours(2),
-                        "1",
-                        "1",
+                        1F,
+                        1F,
                         ""
                 ), 1L));
     }
@@ -248,8 +248,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo"), 1L));
     }
 
@@ -300,8 +300,8 @@ class EventoServiceImplTest {
                                 .dataFine(LocalDateTime.now().plusHours(2))
                                 .dataCreazione(LocalDateTime.now())
                                 .luogo(new LuogoBuilder()
-                                        .lat("1")
-                                        .lng("1")
+                                        .lat(1F)
+                                        .lng(1F)
                                         .nome("nome luogo")
                                         .build())
                                 .organizzatore(organizzatore)
@@ -374,8 +374,8 @@ class EventoServiceImplTest {
                         .dataFine(LocalDateTime.now().plusHours(2))
                         .dataCreazione(LocalDateTime.now())
                         .luogo(new LuogoBuilder()
-                                .lat("1")
-                                .lng("1")
+                                .lat(1F)
+                                .lng(1F)
                                 .nome("nome luogo")
                                 .build())
                         .organizzatore(organizzatore)
@@ -416,8 +416,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(2),
                 LocalDateTime.now().plusHours(1),
-                "1",
-                "1",
+                1F,
+                1F,
                 "nome luogo"
         );
 
@@ -435,8 +435,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().minusHours(2),
                 LocalDateTime.now().plusHours(1),
-                "1",
-                "1",
+                1F,
+                1F,
                 "nome luogo"
         );
 
@@ -454,8 +454,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "1",
+                1F,
+                1F,
                 "nome luogo"
         );
 
@@ -474,8 +474,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "1",
+                1F,
+                1F,
                 "nome luogo"
         );
 
@@ -510,8 +510,8 @@ class EventoServiceImplTest {
                         .dataFine(LocalDateTime.now().plusHours(2))
                         .dataCreazione(LocalDateTime.now())
                         .luogo(new LuogoBuilder()
-                                .lat("1")
-                                .lng("1")
+                                .lat(1F)
+                                .lng(1F)
                                 .nome("nome luogo")
                                 .build())
                         .organizzatore(organizzatore)
@@ -536,8 +536,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore"
         );
@@ -554,8 +554,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now(),
                 LocalDateTime.now().plusHours(1),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore"
         );
@@ -572,8 +572,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 ""
         );
@@ -590,8 +590,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore"
         );
@@ -610,8 +610,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore"
         );
@@ -632,8 +632,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore"
         );
@@ -669,8 +669,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now(),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore");
 
@@ -687,9 +687,9 @@ class EventoServiceImplTest {
                 "titolo",
                 "descrizione",
                 LocalDateTime.now().minusHours(1),
-                LocalDateTime.now().minusHours(1),
-                "1",
-                "2",
+                LocalDateTime.now().plusHours(1),
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore");
 
@@ -707,8 +707,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore");
 
@@ -728,8 +728,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore");
 
@@ -753,8 +753,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore");
 
@@ -997,8 +997,8 @@ class EventoServiceImplTest {
                         .dataFine(LocalDateTime.now().plusHours(2))
                         .dataCreazione(LocalDateTime.now())
                         .luogo(new LuogoBuilder()
-                                .lat("1")
-                                .lng("2")
+                                .lat(1F)
+                                .lng(1F)
                                 .nome("nome luogo")
                                 .build())
                         .organizzatore(new UserBuilder().username("aa").build())
@@ -1101,8 +1101,8 @@ class EventoServiceImplTest {
                         .dataFine(LocalDateTime.now().minusHours(1))
                         .dataCreazione(LocalDateTime.now())
                         .luogo(new LuogoBuilder()
-                                .lat("1")
-                                .lng("1")
+                                .lat(1F)
+                                .lng(1F)
                                 .nome("nome luogo")
                                 .build())
                         .organizzatore(organizzatore)
@@ -1134,8 +1134,8 @@ class EventoServiceImplTest {
                         .dataFine(LocalDateTime.now().plusHours(2))
                         .dataCreazione(LocalDateTime.now())
                         .luogo(new LuogoBuilder()
-                                .lat("1")
-                                .lng("1")
+                                .lat(1F)
+                                .lng(1F)
                                 .nome("nome luogo")
                                 .build())
                         .organizzatore(organizzatore)
@@ -1160,8 +1160,8 @@ class EventoServiceImplTest {
                 "descrizione",
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(2),
-                "1",
-                "2",
+                1F,
+                1F,
                 "nome luogo",
                 "username organizzatore"
         );
