@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { GetAllResponse } from '../dtos/response/GetAllResponse';
 import { Observable } from 'rxjs';
 
+/**
+ * service per gestire le interazioni col backend riguardo l'organizzatore
+ */
 @Injectable({
   providedIn: 'root'
 })

@@ -7,6 +7,9 @@ import { OrganizzatoreResponse } from '../dtos/response/OrganizzatoreResponse';
 import { GetOrganizzatoriSeguiti } from '../dtos/response/GetOrganizzatoriSeguiti';
 import { MessageResponse } from '../dtos/response/MessageResponse';
 
+/**
+ * service per gestire le interazioni col backend riguardo l'utente.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -60,24 +63,28 @@ export class UserService {
     return this.http.delete<MessageResponse>(this.backendUrl + 'adminDelete/' + username, { headers: header });
   }
 
+  //metodo per prendere tutti gli organizzatori salvati sul database
   getAllOrganizzatori(): Observable<OrganizzatoreResponse[]> {
     const header = this.getHeader();
 
     return this.http.get<OrganizzatoreResponse[]>(this.backendUrl + 'getAllOrganizzatori', { headers: header });
   }
 
+  //metodo per far seguire ad un turista un organizzatore
   seguiOrganizzatore(organizzatoreId: string): Observable<MessageResponse> {
     const header = this.getHeader();
 
     return this.http.get<MessageResponse>(this.backendUrl + 'seguiOrganizzatore/' + organizzatoreId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
+  //metodo per far smettere di seguire ad un turista un organizzatore
   smettiSeguireOrganizzatore(organizzatoreId: string): Observable<MessageResponse> {
     const header = this.getHeader();
 
     return this.http.get<MessageResponse>(this.backendUrl + 'smettiSeguireOrganizzatore/' + organizzatoreId + '/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
+  //metodo per prendere tutti gli organizzatori seguiti da un dato turista
   getAllOrganizzatoriSeguiti(): Observable<GetOrganizzatoriSeguiti[]> {
     const header = this.getHeader();
 

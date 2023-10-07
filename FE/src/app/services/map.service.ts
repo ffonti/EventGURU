@@ -327,9 +327,9 @@ export class MapService {
   }
 
   /**
-   * 
-   * @param punti 
-   * @returns 
+   * metodo che costruisce il DTO con i vertici del poligono e ritorna solo i punti dentro il poligono
+   * @param punti array con i vertici del poligono
+   * @returns coordinate dei marker dentro il poligono
    */
   markersInsidePolygon(punti: any): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
@@ -343,6 +343,13 @@ export class MapService {
     return this.http.post<GetAllEventiResponse[]>(this.backendUrl + 'coordinateDentroPoligono', request, { headers: header });
   }
 
+  /**
+   * metodo che costruisce il DTO con i dati della circonferenza e ritorna solo i punti all'interno
+   * @param centroLat latitudine del centro
+   * @param centroLng longitudine del centro
+   * @param raggio raggio della circonferenza
+   * @returns coordinate dei marker dentro la circonferenza
+   */
   markersInsideCircle(centroLat: string, centroLng: string, raggio: string): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
     const request: DatiCirconferenza = { centroLat, centroLng, raggio };
@@ -350,12 +357,19 @@ export class MapService {
     return this.http.post<GetAllEventiResponse[]>(this.backendUrl + 'coordinateDentroCirconferenza', request, { headers: header });
   }
 
+  /**
+   * inizializzazione e configurazione della mappa per piazzare il marker
+   * @param mapMarker mappa da configurare
+   * @returns mappa modificata
+   */
   initMapMarker(mapMarker: any): any {
+    //centro della mappa quando viene visualizzata
     mapMarker = L.map('mapMarker', {
       center: [41.9027835, 12.4963655], //Coordinate di Roma
       zoom: 10,
     });
 
+    //la libreria si affida a openstreetmap, una mappa open source
     const tiles = L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
@@ -367,9 +381,11 @@ export class MapService {
     );
     tiles.addTo(mapMarker);
 
+    //aggiungo le features per disegnare i poligoni
     const drawFeatures = new L.FeatureGroup();
     mapMarker.addLayer(drawFeatures);
 
+    /*modifico le features, nello specifico è possibile solo piazzare i marker*/
     const drawControl = new L.Control.Draw({
       draw: {
         rectangle: false,
@@ -384,6 +400,7 @@ export class MapService {
     });
     mapMarker.addControl(drawControl);
 
+    //inizializzo la mappa "pulendo" tutti i layers
     mapMarker.eachLayer((layer: any) => {
       if (layer instanceof L.Marker) {
         mapMarker.removeLayer(layer);
@@ -391,7 +408,10 @@ export class MapService {
     });
     this.counterMarkersMarker = 0;
 
+    //quando viene disegnata una figura, viene eseguito quanto dentro
     mapMarker.on('draw:created', (e: any) => {
+
+      //può esistere un solo marker alla volta
       if (this.counterMarkersMarker) {
         this.toastr.warning('Inserire un solo marker alla volta');
         this.toastr.info('Puoi rimuovere un marker cliccandolo');
@@ -401,10 +421,12 @@ export class MapService {
         this.currentLatMarker = e.layer._latlng.lat.toString();
         this.currentLngMarker = e.layer._latlng.lng.toString();
 
+        //se non ci sono markers, lo aggiungo
         const marker = L.marker([+this.currentLatMarker, +this.currentLngMarker]);
         marker.addTo(mapMarker);
 
         this.counterMarkersMarker++;
+        //al click sul marker viene rimosso
         marker.on('click', (e: any) => {
           marker.remove();
           this.counterMarkersMarker--;
@@ -416,22 +438,33 @@ export class MapService {
     return mapMarker;
   }
 
+  //ritorno la latitudine del marker selezionato
   getCurrentLat(): string {
     return this.currentLat;
   }
 
+  //ritorno la longitudine del marker selezionato
   getCurrentLng(): string {
     return this.currentLng;
   }
 
+  //ritorno la latitudine del marker corrente
   getCurrentLatMarker(): string {
     return this.currentLatMarker;
   }
 
+  //ritorno la longitudine del marker corrente
   getCurrentLngMarker(): string {
     return this.currentLngMarker;
   }
 
+  /**
+   * aggiungo un marker ad una determinata mappa
+   * @param mapMarker mappa a cui aggiungere il marker
+   * @param lat latitudine del marker
+   * @param lng longitudine del marker
+   * @returns mappa col marker aggiunto
+   */
   addMarker(mapMarker: any, lat: number, lng: number): any {
     const marker = L.marker([lat, lng]);
     marker.addTo(mapMarker);
@@ -443,20 +476,32 @@ export class MapService {
     return mapMarker;
   }
 
+  /**
+   * metodo per prendere le coordinate di tutti i markers
+   * @returns array di DTO con le coordinate e i dati degli eventi
+   */
   getAllMarkerCoordinates(): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
 
     return this.http.get<GetAllEventiResponse[]>(this.backendUrl + 'getAllMarkerCoordinates', { headers: header });
   }
 
+  /**
+   * metodo per piazzare nella mappa i DTO con diversi markers
+   * @param mapMarker mappa in cui piazzare i markers
+   * @param allMarkerCoordinates array di DTO con i markers da piazzare
+   * @returns mappa aggiornata con i markers
+   */
   placeMarkers(mapMarker: any, allMarkerCoordinates: GetAllEventiResponse[]): any {
 
+    //rimuovo tutti i layers della mappa
     mapMarker.eachLayer((layer: any) => {
       if (layer instanceof L.Marker) {
         mapMarker.removeLayer(layer);
       }
     });
 
+    //aggiungo i marker alla mappa e aggiungo un popup con il titolo
     allMarkerCoordinates.forEach((coordinate: GetAllEventiResponse) => {
       let marker = L.marker([+coordinate.lat, +coordinate.lng]);
       marker.bindPopup(L.popup().setContent(coordinate.titolo));
@@ -467,10 +512,16 @@ export class MapService {
     return mapMarker;
   }
 
+  //ritorno tutti i marker dopo aver disegnto il poligono
   markersAggiornati(): GetAllEventiResponse[] {
     return this.markersAftersDraw;
   }
 
+  /**
+   * rimuovo tutti i poligoni disegnati nella mappa
+   * @param map mappa da cui rimuovere i poligoni
+   * @returns mappa aggiornata
+   */
   removeLayers(map: any): any {
     map.eachLayer((layer: any) => {
       if (layer instanceof L.Polygon || layer instanceof L.Circle) {
@@ -481,15 +532,25 @@ export class MapService {
     return map;
   }
 
+  /**
+   * prendo dal database tutti i marker degli eventi creati da un dato organizzatore
+   * @returns array di DTO con i dati degli eventi
+   */
   getAllMarkerCoordinatesByOrganizzatore(): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
 
     return this.http.get<GetAllEventiResponse[]>(this.backendUrl + 'getAllMarkerCoordinates/' + localStorage.getItem('id')?.toString().trim(), { headers: header });
   }
 
+  /**
+   * prendo tutti gli eventi dentro un poligono di un dato orgnizzatore
+   * @param punti vertici del poligono
+   * @returns array di DTO con i dati dei markers
+   */
   markersInsidePolygonByOrganizzatore(punti: any): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
     const request: PuntoPoligono[] = [];
+    //popolo il DTO
     punti.forEach((punto: PuntoPoligono) => {
       let lat: string = punto.lat.toString();
       let lng: string = punto.lng.toString();
@@ -499,6 +560,13 @@ export class MapService {
     return this.http.post<GetAllEventiResponse[]>(this.backendUrl + 'coordinateDentroPoligono/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
   }
 
+  /**
+   * prendo tutti gli eventi dentro una circonferenza di un dato orgnizzatore
+   * @param centroLat latitudine del centro
+   * @param centroLng longitudine del centro
+   * @param raggio raggio della circonferenza
+   * @returns array di DTO con i dati degli eventi
+   */
   markersInsideCircleByOrganizzatore(centroLat: string, centroLng: string, raggio: string): Observable<GetAllEventiResponse[]> {
     const header = this.getHeader();
     const request: DatiCirconferenza = { centroLat, centroLng, raggio };
@@ -506,6 +574,7 @@ export class MapService {
     return this.http.post<GetAllEventiResponse[]>(this.backendUrl + 'coordinateDentroCirconferenza/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
   }
 
+  //creo l'header con il token da mandare al backend
   private getHeader(): HttpHeaders {
     return new HttpHeaders({
       'Authorization': localStorage.getItem('token') ? `${localStorage.getItem('token')}` : '',

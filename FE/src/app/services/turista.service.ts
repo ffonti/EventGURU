@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetAllResponse } from '../dtos/response/GetAllResponse';
 
+/**
+ * service per gestire le interazioni col backend riguardo il turista
+ */
 @Injectable({
   providedIn: 'root'
 })

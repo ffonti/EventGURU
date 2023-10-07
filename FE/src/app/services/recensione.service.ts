@@ -6,6 +6,9 @@ import { RecensioneResponse } from '../dtos/response/RecensioneResponse';
 import { RecensioneDettagliataResponse } from '../dtos/response/RecensioneDettagliataResponse';
 import { MessageResponse } from '../dtos/response/MessageResponse';
 
+/**
+ * service per gestire le interazioni col backend riguardo le recensioni
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -15,6 +18,13 @@ export class RecensioneService {
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
 
+  /**
+   * metodo per salvare una recensione sul database
+   * @param eventoId id dell'evento
+   * @param voto voto della recensione
+   * @param testo testo della recensione
+   * @returns messaggio di avvenuto invio della recensione
+   */
   inviaRecensione(eventoId: string, voto: number, testo: string): Observable<MessageResponse> {
     const header = this.getHeader();
     const request: inviaRecensioneRequest = { voto, testo };
@@ -22,12 +32,23 @@ export class RecensioneService {
     return this.http.post<MessageResponse>(this.backendUrl + 'inviaRecensione/' + eventoId + '/' + localStorage.getItem('id')?.toString().trim(), request, { headers: header });
   }
 
+  /**
+   * chiamo il backend per prendere le recensioni di un dato evento
+   * @param eventoId id dell'evento
+   * @returns array di DTO con le recensioni
+   */
   getRecensioniByEvento(eventoId: string): Observable<RecensioneResponse[]> {
     const header = this.getHeader();
 
     return this.http.get<RecensioneResponse[]>(this.backendUrl + 'getByEvento/' + eventoId, { headers: header });
   }
 
+  /**
+   * chiamo il backend per prendere i dati dettagliati di una singola recensione
+   * @param eventoId id dell'evento
+   * @param usernameTurista useranme del turista
+   * @returns DTO con i dati dettagliati della singola recensione
+   */
   getRecensione(eventoId: string, usernameTurista: string): Observable<RecensioneDettagliataResponse> {
     const header = this.getHeader();
 
