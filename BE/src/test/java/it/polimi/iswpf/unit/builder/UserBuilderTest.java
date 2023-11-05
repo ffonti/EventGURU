@@ -1,10 +1,10 @@
 package it.polimi.iswpf.unit.builder;
 
 import it.polimi.iswpf.builder.UserBuilder;
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.Recensione;
-import it.polimi.iswpf.model.Ruolo;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model.entity.Evento;
+import it.polimi.iswpf.model.entity.Recensione;
+import it.polimi.iswpf.model._enum.Ruolo;
+import it.polimi.iswpf.model.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

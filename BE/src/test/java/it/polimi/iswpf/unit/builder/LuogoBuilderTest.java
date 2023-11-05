@@ -1,7 +1,7 @@
 package it.polimi.iswpf.unit.builder;
 
 import it.polimi.iswpf.builder.LuogoBuilder;
-import it.polimi.iswpf.model.Evento;
+import it.polimi.iswpf.model.entity.Evento;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

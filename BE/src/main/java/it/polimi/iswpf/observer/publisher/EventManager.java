@@ -2,9 +2,9 @@ package it.polimi.iswpf.observer.publisher;
 
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.NotFoundException;
-import it.polimi.iswpf.model.EventType;
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model._enum.EventType;
+import it.polimi.iswpf.model.entity.Evento;
+import it.polimi.iswpf.model.entity.User;
 import it.polimi.iswpf.observer.listener.EventListener;
 
 import java.util.HashMap;
@@ -20,6 +20,7 @@ public class EventManager {
 
     //Unica istanza statica della classe.
     private static EventManager instance;
+
     //HashMap per tutte le implementazioni dei listeners.
     private Map<EventType, EventListener> listeners = new HashMap<>();
 

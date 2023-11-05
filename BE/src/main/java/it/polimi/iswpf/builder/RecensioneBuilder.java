@@ -1,8 +1,8 @@
 package it.polimi.iswpf.builder;
 
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.Recensione;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model.entity.Evento;
+import it.polimi.iswpf.model.entity.Recensione;
+import it.polimi.iswpf.model.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -5,8 +5,11 @@ import it.polimi.iswpf.dto.request.PuntoPoligono;
 import it.polimi.iswpf.dto.response.EventoResponse;
 import it.polimi.iswpf.dto.response.RecensioneResponse;
 import it.polimi.iswpf.exception.BadRequestException;
-import it.polimi.iswpf.model.*;
-import it.polimi.iswpf.repository.EventoRepository;
+import it.polimi.iswpf.model.entity.Evento;
+import it.polimi.iswpf.model.entity.Recensione;
+import it.polimi.iswpf.model._enum.Stato;
+import it.polimi.iswpf.model.entity.User;
+import it.polimi.iswpf.model.repository.EventoRepository;
 import it.polimi.iswpf.service._interface.LuogoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -279,7 +282,8 @@ public class LuogoServiceImpl implements LuogoService {
         //Flag utilizzato per tenere traccia se il marker è all'interno del poligono.
         boolean isInside = false;
 
-        //Ciclo che scorre tutti i segmenti del poligono (quindi i vertici due a due). "i" è l'indice corrente e "j" è l'indice precedente.
+        /*Ciclo che scorre tutti i segmenti del poligono (quindi i vertici due a due).
+        "i" è l'indice corrente e "j" è l'indice precedente.*/
         for(int i = 0, j = request.size() - 1; i < request.size(); j = i++) {
 
             //Per ogni coppia di punti consecutivi nel poligono, vengono estratte le coordinate.

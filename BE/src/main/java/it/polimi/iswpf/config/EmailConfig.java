@@ -34,7 +34,7 @@ public class EmailConfig {
         //Account creato con il solo scopo di dimostrare il funzionamento di questo servizio.
         mailSender.setUsername("eventguru.service@gmail.com");
         //Password generata appositamente per l'uso in sviluppo.
-        mailSender.setPassword("ktpz weaz pwjh iuxv");
+        mailSender.setPassword("hvwb yqqt tmkc vaks");
 
         Properties props = mailSender.getJavaMailProperties();
 

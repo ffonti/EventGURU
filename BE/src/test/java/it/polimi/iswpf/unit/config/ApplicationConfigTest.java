@@ -1,7 +1,7 @@
 package it.polimi.iswpf.unit.config;
 
 import it.polimi.iswpf.config.ApplicationConfig;
-import it.polimi.iswpf.repository.UserRepository;
+import it.polimi.iswpf.model.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

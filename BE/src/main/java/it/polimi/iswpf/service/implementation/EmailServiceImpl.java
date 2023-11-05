@@ -7,9 +7,9 @@ import it.polimi.iswpf.dto.request.InviaEmailRequest;
 import it.polimi.iswpf.exception.BadRequestException;
 import it.polimi.iswpf.exception.InternalServerErrorException;
 import it.polimi.iswpf.exception.NotFoundException;
-import it.polimi.iswpf.model.EventType;
-import it.polimi.iswpf.model.User;
-import it.polimi.iswpf.repository.UserRepository;
+import it.polimi.iswpf.model._enum.EventType;
+import it.polimi.iswpf.model.entity.User;
+import it.polimi.iswpf.model.repository.UserRepository;
 import it.polimi.iswpf.service._interface.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
     private final UserRepository userRepository;
     private final Configuration config;
 
-    //Caratteri con cui è possibile cosruire la password.
+    //Caratteri con cui è possibile costruire la password.
     private static final String CARATTERI_VALIDI = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
     private static final Integer LUNGHEZZA_PASSWORD = 20;
 

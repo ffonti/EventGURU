@@ -1,7 +1,7 @@
 package it.polimi.iswpf.exception.controller;
 
 import it.polimi.iswpf.exception.*;
-import it.polimi.iswpf.exception.model.Exception;
+import it.polimi.iswpf.exception.entity.Exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,7 +19,7 @@ public class ExceptionHandlerController {
      * @return Risposta di errore al client con messaggio e status.
      */
     @ExceptionHandler(value = BadRequestException.class)
-    public ResponseEntity<Object> handleBadRequestException(BadRequestException e) {
+    public ResponseEntity<Exception> handleBadRequestException(BadRequestException e) {
 
         Exception customException = new Exception(e.getMessage(), HttpStatus.BAD_REQUEST);
 
@@ -32,7 +32,7 @@ public class ExceptionHandlerController {
      * @return Risposta di errore al client con messaggio e status.
      */
     @ExceptionHandler(value = ForbiddenException.class)
-    public ResponseEntity<Object> handleForbiddenException(ForbiddenException e) {
+    public ResponseEntity<Exception> handleForbiddenException(ForbiddenException e) {
 
         Exception customException = new Exception(e.getMessage(), HttpStatus.FORBIDDEN);
 
@@ -45,7 +45,7 @@ public class ExceptionHandlerController {
      * @return Risposta di errore al client con messaggio e status.
      */
     @ExceptionHandler(value = NotFoundException.class)
-    public ResponseEntity<Object> handleNotFoundException(NotFoundException e) {
+    public ResponseEntity<Exception> handleNotFoundException(NotFoundException e) {
 
         Exception customException = new Exception(e.getMessage(), HttpStatus.NOT_FOUND);
 
@@ -58,7 +58,7 @@ public class ExceptionHandlerController {
      * @return Risposta di errore al client con messaggio e status.
      */
     @ExceptionHandler(value = ConflictException.class)
-    public ResponseEntity<Object> handleConflictException(ConflictException e) {
+    public ResponseEntity<Exception> handleConflictException(ConflictException e) {
 
         Exception customException = new Exception(e.getMessage(), HttpStatus.CONFLICT);
 
@@ -71,7 +71,7 @@ public class ExceptionHandlerController {
      * @return Risposta di errore al client con messaggio e status.
      */
     @ExceptionHandler(value = InternalServerErrorException.class)
-    public ResponseEntity<Object> handleInternalServerErrorException(InternalServerErrorException e) {
+    public ResponseEntity<Exception> handleInternalServerErrorException(InternalServerErrorException e) {
 
         Exception customException = new Exception(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 

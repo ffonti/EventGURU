@@ -2,9 +2,9 @@ package it.polimi.iswpf.observer.listener;
 
 import it.polimi.iswpf.dto.request.InviaEmailRequest;
 import it.polimi.iswpf.exception.BadRequestException;
-import it.polimi.iswpf.model.EventType;
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model._enum.EventType;
+import it.polimi.iswpf.model.entity.Evento;
+import it.polimi.iswpf.model.entity.User;
 import it.polimi.iswpf.service._interface.EmailService;
 import it.polimi.iswpf.util.UtilMethods;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +66,7 @@ public class NewsletterListener implements EventListener {
             //Chiamo il service adatto per l'invio delle mail passandogli il DTO con tutti i dati.
             emailService.inviaEmail(new InviaEmailRequest(
                     turista.getEmail(),
-                    "Newsletter EventGURU",
+                    "Newsletter di EventGURU",
                     dynamicData,
                     EventType.NEWSLETTER
             ));

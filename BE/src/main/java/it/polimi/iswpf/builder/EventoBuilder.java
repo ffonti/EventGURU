@@ -1,6 +1,7 @@
 package it.polimi.iswpf.builder;
 
-import it.polimi.iswpf.model.*;
+import it.polimi.iswpf.model._enum.Stato;
+import it.polimi.iswpf.model.entity.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

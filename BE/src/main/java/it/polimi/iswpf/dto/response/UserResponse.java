@@ -1,6 +1,6 @@
 package it.polimi.iswpf.dto.response;
 
-import it.polimi.iswpf.model.Ruolo;
+import it.polimi.iswpf.model._enum.Ruolo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

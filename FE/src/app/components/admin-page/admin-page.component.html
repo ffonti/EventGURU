@@ -1,12 +1,12 @@
 <!-- Header -->
 <div class="flex-center flex-col mt-[4%] space-y-4">
-  <h1 class="mb-2 text-3xl font-bold text-gray-900">Admin page</h1>
+  <!-- <h1 class="mb-2 text-3xl font-bold text-gray-900">Admin page</h1> -->
 </div>
 
 <!-- Body -->
 <div class="flex-center gap-10 mt-[4%]">
   <!-- Per turisti -->
-  <div class="modal w-[30%] h-80">
+  <div class="modal w-[30%] h-50">
 
     <!-- Logo -->
     <div>
@@ -18,11 +18,11 @@
     <!-- Card centerata -->
     <div class="mt-5 flex-center flex-col w-full">
 
-      <p class="mb-3 font-normal text-gray-700">
+      <!-- <p class="mb-3 font-normal text-gray-700">
         Elenco di tutti i turisti registrati nella piattaforma.
         È presente un bottone per ognuno di loro che porterà alla
         pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
-      </p>
+      </p> -->
 
       <div class="w-full relative">
         <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameTurista"
@@ -40,7 +40,7 @@
   </div>
 
   <!-- Per organizzatori -->
-  <div class="modal w-[30%] h-80">
+  <div class="modal w-[30%] h-50">
 
     <!-- Logo -->
     <div>
@@ -52,11 +52,11 @@
     <!-- Card centerata -->
     <div class="mt-5 flex-center flex-col w-full">
 
-      <p class="mb-3 font-normal text-gray-700">
+      <!-- <p class="mb-3 font-normal text-gray-700">
         Elenco di tutti gli organizzatori registrati nella piattaforma.
         È presente un bottone per ognuno di loro che porterà alla
         pagina dove si potranno modificare i dati dell'utente o eliminare l'utente stesso.
-      </p>
+      </p> -->
 
       <div class="w-full relative">
         <input type="text" placeholder="Cerca per username" [(ngModel)]="usernameOrganizzatore"
@@ -75,7 +75,7 @@
   </div>
 
   <!-- Per eventi -->
-  <div class="modal w-[30%] h-80">
+  <div class="modal w-[30%] h-60">
 
     <!-- Logo -->
     <div>
@@ -87,18 +87,18 @@
     <!-- Card centerata -->
     <div class="mt-5 flex-center flex-col w-full">
 
-      <p class="mb-3 font-normal text-gray-700">
+      <!-- <p class="mb-3 font-normal text-gray-700">
         Elenco di tutti gli eventi presenti nella piattaforma.
         È presente una serie di filtri in modo da visualizzare tutte le categorie
         di eventi e ordinarli. Vi è inoltre la possibilità di modificare o eliminare gli eventi
         e poi visualizzare e rimuovere i partecipanti.
-      </p>
+      </p> -->
 
       <div class="w-full h-4 relative">
       </div>
 
       <a (click)="goToEsploraPage()"
-        class="mt-[2%] w-full justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer">
+        class="mt-[8%] w-full justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer">
         Visualizza
       </a>
     </div>
@@ -119,9 +119,9 @@
         class="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-[#F5F5F5] outline-none focus:outline-none">
         <div class="p-5 max-h-[95vh] overflow-y-auto mt-[2%]">
 
-          <table class="table-fixed w-full">
+          <table class="table-fixed w-full border-2 border-avrblue">
             <thead class="bg-white table-dark sticky top-0">
-              <tr class="divide-x-2 uppercase">
+              <tr class="divide-x-2 border-2 border-avrblue divide-avrblue uppercase">
                 <th class="w-28" scope="col"></th>
                 <th class="w-20" scope="col">
                   <div class=" flex-center">
@@ -230,7 +230,7 @@
             <tbody>
               <!-- Riga con dati dinamici -->
               <ng-container *ngFor="let user of usersList; let i = index">
-                <tr class="odd:bg-table even:bg-transparent h-10 divide-x-2 text-center">
+                <tr class="odd:bg-table even:bg-transparent h-10 divide-x-2 divide-avrblue text-center">
                   <td>
                     <p class="cursor-pointer btn-submit" (click)="goToAccountPage(user.username)">Modifica</p>
                   </td>

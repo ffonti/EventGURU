@@ -1,6 +1,6 @@
 package it.polimi.iswpf.config;
 
-import it.polimi.iswpf.repository.UserRepository;
+import it.polimi.iswpf.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

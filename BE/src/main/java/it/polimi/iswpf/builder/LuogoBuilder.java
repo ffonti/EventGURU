@@ -1,7 +1,7 @@
 package it.polimi.iswpf.builder;
 
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.Luogo;
+import it.polimi.iswpf.model.entity.Evento;
+import it.polimi.iswpf.model.entity.Luogo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

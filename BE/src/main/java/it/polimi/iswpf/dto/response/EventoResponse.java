@@ -1,6 +1,6 @@
 package it.polimi.iswpf.dto.response;
 
-import it.polimi.iswpf.model.Stato;
+import it.polimi.iswpf.model._enum.Stato;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

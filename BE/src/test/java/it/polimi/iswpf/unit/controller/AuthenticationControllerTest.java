@@ -4,7 +4,7 @@ import it.polimi.iswpf.controller.AuthenticationController;
 import it.polimi.iswpf.dto.request.LoginRequest;
 import it.polimi.iswpf.dto.request.RegisterRequest;
 import it.polimi.iswpf.dto.response.LoginResponse;
-import it.polimi.iswpf.model.Ruolo;
+import it.polimi.iswpf.model._enum.Ruolo;
 import it.polimi.iswpf.service.implementation.AuthenticationServiceImpl;
 import it.polimi.iswpf.service.implementation.EmailServiceImpl;
 import org.junit.jupiter.api.Test;

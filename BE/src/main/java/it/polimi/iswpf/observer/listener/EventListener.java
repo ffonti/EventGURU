@@ -1,7 +1,7 @@
 package it.polimi.iswpf.observer.listener;
 
-import it.polimi.iswpf.model.Evento;
-import it.polimi.iswpf.model.User;
+import it.polimi.iswpf.model.entity.Evento;
+import it.polimi.iswpf.model.entity.User;
 
 import java.util.List;
 

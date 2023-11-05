@@ -1,6 +1,6 @@
 package it.polimi.iswpf.dto.request;
 
-import it.polimi.iswpf.model.EventType;
+import it.polimi.iswpf.model._enum.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
