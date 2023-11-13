@@ -16,7 +16,7 @@ import { MessageResponse } from '../dtos/response/MessageResponse';
   providedIn: 'root'
 })
 export class AuthService {
-  private backendUrl: string = 'http://localhost:8080/api/v1/auth/';
+  private backendUrl: string = 'http://localhost/api/v1/auth/';
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private toastr: ToastrService) { }
