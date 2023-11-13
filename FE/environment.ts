@@ -1,0 +1,1 @@
+export const globalBackendUrl: string = 'http://localhost/api/v1/';

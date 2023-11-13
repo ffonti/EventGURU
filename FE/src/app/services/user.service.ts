@@ -6,6 +6,7 @@ import { UpdateUserDataRequest } from '../dtos/request/UpdateUserDataRequest';
 import { OrganizzatoreResponse } from '../dtos/response/OrganizzatoreResponse';
 import { GetOrganizzatoriSeguiti } from '../dtos/response/GetOrganizzatoriSeguiti';
 import { MessageResponse } from '../dtos/response/MessageResponse';
+import { globalBackendUrl } from 'environment';
 
 /**
  * service per gestire le interazioni col backend riguardo l'utente.
@@ -14,7 +15,7 @@ import { MessageResponse } from '../dtos/response/MessageResponse';
   providedIn: 'root'
 })
 export class UserService {
-  private backendUrl: string = 'http://localhost:8080/api/v1/user/';
+  private backendUrl: string = globalBackendUrl + 'user/';
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }

@@ -9,6 +9,7 @@ import { AdminCreaEventoRequest } from '../dtos/request/AdminCreaEventoRequest';
 import { MessageResponse } from '../dtos/response/MessageResponse';
 import { IscrizioneEventoRequest } from '../dtos/request/IscrizioneEventoRequest';
 import { SpinnerService } from './spinner.service';
+import { globalBackendUrl } from 'environment';
 
 /**
  * service per chiamare il backend riguardo gli eventi
@@ -17,7 +18,7 @@ import { SpinnerService } from './spinner.service';
   providedIn: 'root'
 })
 export class EventService {
-  private backendUrl: string = 'http://localhost:8080/api/v1/evento/';
+  private backendUrl: string = globalBackendUrl + 'evento/';
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient, private spinnerService: SpinnerService) { }

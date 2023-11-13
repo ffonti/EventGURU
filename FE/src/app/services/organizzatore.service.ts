@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GetAllResponse } from '../dtos/response/GetAllResponse';
 import { Observable } from 'rxjs';
+import { globalBackendUrl } from 'environment';
 
 /**
  * service per gestire le interazioni col backend riguardo l'organizzatore
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs';
 })
 export class OrganizzatoreService {
 
-  private backendUrl: string = 'http://localhost:8080/api/v1/user/';
+  private backendUrl: string = globalBackendUrl + 'user/';
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }

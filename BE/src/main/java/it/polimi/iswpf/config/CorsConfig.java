@@ -12,36 +12,53 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * Il Cross-Origin Resource Sharing (CORS) è un meccanismo che usa header HTTP addizionali
- * per indicare che un dominio dispone dell'autorizzazione per accedere alle risorse selezionate
- * **/
+ * Bean utili per la gestione dei CORS. Grazie all'annotazione "@Configuration",
+ * il contenuto di questa classe viene eseguito appena il server viene avviato.
+ */
 @Configuration
 public class CorsConfig {
 
+   /**
+    * Bean utile per la configurazione base dei CORS.
+    * @return Istanza di CorsFilter inizializzata con la configurazione CORS.
+    */
    @Bean
    public CorsFilter corsFilter() {
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-      CorsConfiguration config = new CorsConfiguration();
-      config.setAllowCredentials(false);
-      config.addAllowedOrigin("*"); // e.g. http://domain1.com
-      config.addAllowedMethod("*");
-      config.addAllowedHeader("*");
 
-      source.registerCorsConfiguration("/**", config);
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); //Configurazione CORS basata su url.
+      CorsConfiguration config = new CorsConfiguration();
+
+      config.setAllowCredentials(false); //Disattiva la richiesta di credenziali.
+      config.addAllowedOrigin("*"); //Consente l'accesso da qualsiasi origine.
+      config.addAllowedMethod("*"); //Consente tutti i metodi HTTP.
+      config.addAllowedHeader("*"); //Consente tutti gli header.
+
+      source.registerCorsConfiguration("/**", config); //Registra la configurazione precedente.
 
       return new CorsFilter(source);
    }
+
+   /**
+    * Configurazione avanzata dei CORS.
+    * @return Oggetto FilterRegistrationBean configurato.
+    */
    @Bean
    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); //Configurazione CORS basata su url.
       CorsConfiguration config = new CorsConfiguration();
-      config.setAllowCredentials(false);
-      config.setAllowedOrigins(Arrays.asList("http://localhost:8080", "*"));
-      config.setAllowedMethods(Collections.singletonList("*"));
-      config.setAllowedHeaders(Collections.singletonList("*"));
-      source.registerCorsConfiguration("/**", config);
+
+      config.setAllowCredentials(false); //Disattiva la richiesta di credenziali.
+      config.setAllowedOrigins(Arrays.asList("http://localhost:8080", "*")); //Consente l'accesso solo dalla porta locale 8080.
+      config.setAllowedMethods(Collections.singletonList("*")); //Qualsiasi metodo è consentito.
+      config.setAllowedHeaders(Collections.singletonList("*")); //Qualsiasi header è consentito.
+      source.registerCorsConfiguration("/**", config); //Registro la configurazione precedente.
+
+      //Registro la configurazione precedente.
       FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+      //Imposta l'ordine di esecuzione del filtro al valore più alto.
       bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+
       return bean;
    }
 }

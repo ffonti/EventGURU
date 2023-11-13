@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { SpinnerService } from './spinner.service';
 import { ToastrService } from 'ngx-toastr';
 import { MessageResponse } from '../dtos/response/MessageResponse';
+import { globalBackendUrl } from 'environment';
 
 /**
  * service che chiama il backend per l'autenticazione.
@@ -16,7 +17,7 @@ import { MessageResponse } from '../dtos/response/MessageResponse';
   providedIn: 'root'
 })
 export class AuthService {
-  private backendUrl: string = 'http://localhost/api/v1/auth/';
+  private backendUrl: string = globalBackendUrl + 'auth/';
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private toastr: ToastrService) { }

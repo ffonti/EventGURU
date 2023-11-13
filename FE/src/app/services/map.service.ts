@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { PuntoPoligono } from '../dtos/request/PuntoPoligono';
 import { DatiCirconferenza } from '../dtos/request/DatiCirconferenza';
 import { GetAllEventiResponse } from '../dtos/response/GetAllEventiResponse';
+import { globalBackendUrl } from 'environment';
 
 //configurazione dell'immagine del marker
 const iconUrl = 'assets/marker_icon.png';
@@ -45,7 +46,7 @@ export class MapService {
   layer: any = undefined;
   visualizzaMarkers: boolean = false;
 
-  private backendUrl: string = 'http://localhost:8080/api/v1/luogo/';
+  private backendUrl: string = globalBackendUrl + 'luogo/';
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient, private toastr: ToastrService) {

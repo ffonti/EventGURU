@@ -5,6 +5,7 @@ import { inviaRecensioneRequest } from '../dtos/request/InviaRecensioneRequest';
 import { RecensioneResponse } from '../dtos/response/RecensioneResponse';
 import { RecensioneDettagliataResponse } from '../dtos/response/RecensioneDettagliataResponse';
 import { MessageResponse } from '../dtos/response/MessageResponse';
+import { globalBackendUrl } from 'environment';
 
 /**
  * service per gestire le interazioni col backend riguardo le recensioni
@@ -13,7 +14,7 @@ import { MessageResponse } from '../dtos/response/MessageResponse';
   providedIn: 'root'
 })
 export class RecensioneService {
-  private backendUrl: string = 'http://localhost:8080/api/v1/recensione/';
+  private backendUrl: string = globalBackendUrl + 'recensione/';
 
   //costruttore dove istanzio le classi con cui interagire
   constructor(private http: HttpClient) { }
