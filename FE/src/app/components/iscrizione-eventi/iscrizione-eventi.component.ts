@@ -266,7 +266,6 @@ export class IscrizioneEventiComponent implements OnInit {
   }
 
   //controllo se l'evento è già stato recensito
-  //TODO fixarlo
   nonAncoraRecensito(eventoId: number): boolean {
     let isRecensito: boolean = false;
     const usernameLogged: string | null = localStorage.getItem('username');
@@ -276,6 +275,7 @@ export class IscrizioneEventiComponent implements OnInit {
 
     let usernameRecensioniFilter: any = [];
 
+    //popolo l'array di username delle recensioni
     evento.recensioni.forEach((recensione: any) => {
       usernameRecensioniFilter.push(recensione.usernameTurista);
     });

@@ -31,6 +31,7 @@ export class RecoveryPasswordComponent {
       return;
     }
 
+    //chiamo il backend per effettuare il recupero password
     this.authService.recuperaPassword(this.email).subscribe({
       next: (res: MessageResponse) => {
         this.spinnerService.requestEnded();

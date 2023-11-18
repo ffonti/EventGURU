@@ -84,6 +84,9 @@ export class CreaEventoComponent implements OnInit, AfterViewInit {
     this.toastr.info('Dati resettati');
   }
 
+  /**
+   * metodo che chiama i services per creare o modificare un evento
+   */
   creaOModificaEvento(): void {
 
     this.eventoId = this.router.url.split('/homepage/creaEvento/')[1];

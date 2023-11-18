@@ -294,6 +294,7 @@ export class EsploraComponent implements OnInit, AfterViewInit {
     this.allEventiFiltered = this.mapService.markersAggiornati();
     this.showMappaFiltro = !this.showMappaFiltro;
 
+    //cambio il formato alle date
     this.allEventiWithDateFormattedFiltered = JSON.parse(JSON.stringify(this.allEventiFiltered));
     this.changeFormatDate(this.allEventiWithDateFormattedFiltered);
 
@@ -305,6 +306,8 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   //cambio la visualizzazione della modale
   toggleModalPartecipanti(eventoId: number): void {
     this.eventoIdSelected = eventoId;
+
+    //prendo gli username dei partecipanti all'evento in questione
     this.allEventiWithDateFormatted.forEach((evento) => {
       if (evento.eventoId == eventoId) {
         this.usernamePartecipanti = evento.usernameTuristi;
@@ -317,6 +320,8 @@ export class EsploraComponent implements OnInit, AfterViewInit {
   //cambio la visualizzazione della modale
   toggleModalPartecipantiNoRemove(eventoId: number): void {
     this.eventoIdSelected = eventoId;
+
+    //prendo gli username dei partecipanti all'evento in questione
     this.allEventiByOrganizzatore.forEach((evento) => {
       if (evento.eventoId == eventoId) {
         this.usernamePartecipanti = evento.usernameTuristi;
@@ -331,10 +336,12 @@ export class EsploraComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.toastr.success(res.message);
 
+        //rimuovo l'username del turista dall'array
         this.usernamePartecipanti = this.usernamePartecipanti.filter((username) => {
           return username != usernameTurista;
         });
 
+        //rimuovo l'username dagli eventi
         this.allEventiByOrganizzatore.forEach((evento) => {
           if (evento.eventoId == this.eventoIdSelected) {
             evento.usernameTuristi = evento.usernameTuristi.filter((username) => {

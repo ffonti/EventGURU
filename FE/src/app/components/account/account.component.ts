@@ -70,6 +70,14 @@ export class AccountComponent implements OnInit {
     })
   }
 
+  /**
+   * metodo per verificare se l'utente è un turista, utile per visualizzare l'opzione della newsletter.
+   * @returns  true se è un turista, false se non lo è
+   */
+  isTurista(): boolean {
+    return localStorage.getItem('ruolo')?.toString().toUpperCase() === 'TURISTA';
+  }
+
   /* per gestire la visualizzazione dell'icona nell'input password
   il parametro "type" stabilisce iltipo di password di cui cambiare l'icona */
   toggleShowPassword(type: string): void {

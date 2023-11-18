@@ -138,6 +138,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
   eliminaEvento(): void {
     this.eventService.eliminaEvento(this.eventoIdDaEliminare).subscribe({
       next: (res: any) => {
+        //rimuovo l'evento dall'array per non visualizzarlo più
         this.rimuoviEventoDaArray(this.eventoIdDaEliminare);
         this.eventoIdDaEliminare = 0;
         this.showModalEliminaEvento = !this.showModalEliminaEvento;
@@ -224,6 +225,8 @@ export class EventsComponent implements OnInit, AfterViewInit {
   //cambio la visualizzazione della modale
   toggleModalPartecipanti(eventoId: number): void {
     this.eventoIdSelected = eventoId;
+
+    //seleziono i partecipanti all'evento in questione
     this.allEventiByOrganizzatore.forEach((evento) => {
       if (evento.eventoId == eventoId) {
         this.usernamePartecipanti = evento.usernameTuristi;
@@ -235,6 +238,8 @@ export class EventsComponent implements OnInit, AfterViewInit {
   //cambio la visualizzazione della modale
   toggleModalPartecipantiNoRemove(eventoId: number): void {
     this.eventoIdSelected = eventoId;
+
+    //seleziono i partecipanti all'evento in questione
     this.allEventiByOrganizzatore.forEach((evento) => {
       if (evento.eventoId == eventoId) {
         this.usernamePartecipanti = evento.usernameTuristi;
@@ -249,6 +254,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.toastr.success(res.message);
 
+        //rimuovo l'userame dall'array
         this.usernamePartecipanti = this.usernamePartecipanti.filter((username) => {
           return username != usernameTurista;
         });
@@ -274,6 +280,8 @@ export class EventsComponent implements OnInit, AfterViewInit {
   toggleModalRecensioni(eventoId: number): void {
     this.eventoIdPerSingolaRecensione = eventoId;
     this.showModalRecensioni = !this.showModalRecensioni;
+
+    //se la modale è aperta, prendo le recensioni da visualizzare
     if (this.showModalRecensioni) {
       this.recensioneService.getRecensioniByEvento(eventoId.toString().trim()).subscribe({
         next: (res: RecensioneResponse[]) => {
@@ -294,6 +302,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
     let counter: number = 0;
     this.votoMedio = 0;
 
+    //media aritmetica
     recensioni.forEach((recensione) => {
       this.votoMedio += recensione.voto;
       counter++;

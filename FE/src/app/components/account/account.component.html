@@ -70,21 +70,23 @@
                 </div>
               </div>
 
-              <div class="w-full">
-                <label for="iscritto-newsletter" class="label-form">Iscritto alla newsletter</label>
-                <div class="flex justify-center gap-3 ml-[1%]">
-                  <div class="flex-center gap-1">
-                    <input [checked]="userData.iscrittoNewsletter" type="radio" [value]=true
-                      [(ngModel)]="userData.iscrittoNewsletter">
-                    <label for="Sì" class="label-form">Sì</label>
-                  </div>
-                  <div class="flex-center gap-1">
-                    <input [checked]="!userData.iscrittoNewsletter" type="radio" [value]=false
-                      [(ngModel)]="userData.iscrittoNewsletter">
-                    <label for="No" class="label-form">No</label>
+              <ng-container *ngIf="isTurista()">
+                <div class="w-full">
+                  <label for="iscritto-newsletter" class="label-form">Iscritto alla newsletter</label>
+                  <div class="flex justify-center gap-3 ml-[1%]">
+                    <div class="flex-center gap-1">
+                      <input [checked]="userData.iscrittoNewsletter" type="radio" [value]=true
+                        [(ngModel)]="userData.iscrittoNewsletter">
+                      <label for="Sì" class="label-form">Sì</label>
+                    </div>
+                    <div class="flex-center gap-1">
+                      <input [checked]="!userData.iscrittoNewsletter" type="radio" [value]=false
+                        [(ngModel)]="userData.iscrittoNewsletter">
+                      <label for="No" class="label-form">No</label>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ng-container>
             </div>
           </div>
           <div class="w-full flex flex-col space-y-4">
